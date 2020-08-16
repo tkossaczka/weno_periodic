@@ -16,7 +16,7 @@ problem = transport_equation
 #problem = Buckley_Leverett
 #problem = heat_equation
 #problem = PME
-my_problem = problem(space_steps=10, time_steps=None, params = params)
+my_problem = problem(space_steps=50, time_steps=None, params = params)
 params = my_problem.params
 #V_t, S_t, tt_t = train_model.full_WENO(my_problem, trainable=True, plot=True, vectorized=False)
 V_nt, S_nt, tt_nt = train_model.full_WENO(my_problem, trainable=False, plot=True, vectorized=False)

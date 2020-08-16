@@ -1,11 +1,7 @@
 from define_WENO_Network import WENONetwork
 import torch
 from torch import optim
-from define_problem_Digital import Digital_option
-from define_problem_heat_eq import heat_equation
-from define_problem_Call import Call_option
-from define_problem_Buckley_Leverett import Buckley_Leverett
-from define_problem_PME import PME
+from define_problem_transport_eq import transport_equation
 
 torch.set_default_dtype(torch.float64)
 
@@ -15,28 +11,20 @@ train_model = WENONetwork()
 # DROP PROBLEM FOR TRAINING
 #params = None
 #problem_class = Buckley_Leverett
-problem_class = Digital_option
+problem_class = transport_equation
 
 def monotonicity_loss(u, problem_class, params, problem_main):
     # _, exact = problem_main.exact(first_step=True)
     # exact = torch.Tensor(exact)
     # error = torch.max(torch.abs(u-exact))
-    monotonicity = torch.sum(torch.max(u[:-1]-u[1:], torch.Tensor([0.0])))
-    loss = monotonicity #+ error
+    # monotonicity = torch.sum(torch.max(u[:-1]-u[1:], torch.Tensor([0.0])))
+    # loss = monotonicity #+ error
 
-    # u_left = torch.zeros()
-    # u_right = torch.zeros()
-    # for k in range(0,len(S)):
-    #     if S[k]<-0.25:
-    #         u_left[k] = u[k]
-    #     else:
-    #         u_right[k] = u[k]
-    #
     # peeks_left = torch.sum(torch.max(u_left[:-1]-u_left[1:], torch.Tensor([0.0])))
     # peeks_right = torch.sum(torch.abs(torch.min(u_right[:-1] - u_right[1:], torch.Tensor([0.0]))))
 
-    # overflows = torch.sum(torch.abs(torch.min(u, torch.Tensor([0.0])) +
-    #                                 (torch.max(u, torch.Tensor([1.0]))-torch.Tensor([1.0])))) # *(torch.max(x, torch.Tensor([1.0])) != 1)))
+    overflows = torch.sum(torch.abs(torch.min(u, torch.Tensor([0.0])) +
+                                    (torch.max(u, torch.Tensor([1.0]))-torch.Tensor([1.0])))) # *(torch.max(x, torch.Tensor([1.0])) != 1)))
     # problem_ex = problem_class(space_steps=100*2*2*2*2*2*2*2, time_steps=50*4*4*4*4*4*4*4, params=params)
     # _, u_ex = train_model.compute_exact(problem_class, problem_ex, 100, 50,
     #                                                       just_one_time_step=True, trainable=False)

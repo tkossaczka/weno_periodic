@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from scipy.stats import norm
+from initial_condition_switch import init_cond_switch
 
 class transport_equation():
     def __init__(self, space_steps, time_steps=None, params=None, w5_minus='Lax-Friedrichs'):
@@ -23,7 +23,7 @@ class transport_equation():
 
     def init_params(self):
         params = dict()
-        params["T"] = 50 #5 #1
+        params["T"] = 10 #5 #1
         params["e"] = 10 ** (-13)
         params["L"] = 0 #0 # -1
         params["R"] = 2 #2 # 1
@@ -38,7 +38,7 @@ class transport_equation():
         R = self.params["R"]
         m = self.space_steps
         h = (np.abs(L) + np.abs(R)) / m
-        n = np.ceil(T / ((2/3) * h**(5/3)))  #0.4
+        n = np.ceil(T / ((2/3) * h**(5/3)))  #0.4 pre sinus
         n = int(n)
         t = T / n
         x = np.linspace(L, R-h, m)
@@ -46,14 +46,18 @@ class transport_equation():
         return n, t, h, x, time
 
     def __compute_initial_condition(self):
-        m = self.space_steps
+        #m = self.space_steps
         x = self.x
-        u_init = torch.zeros(m)
-        for k in range(0, m ):
-            if x[k] > 1:
-                u_init[k] = 1
-            else:
-                u_init[k] = 0
+        IC_object = init_cond_switch(x)
+        u_init = IC_object.case_6(x)
+        u_init = torch.Tensor(u_init)
+
+        # u_init = torch.zeros(m)
+        # for k in range(0, m ):
+        #     if x[k] > 1:
+        #         u_init[k] = 1
+        #     else:
+        #         u_init[k] = 0
         # for k in range(0, m ):
         #     u_init[k] = np.sin(np.pi*x[k])
         return u_init

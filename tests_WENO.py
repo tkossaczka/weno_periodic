@@ -5,7 +5,7 @@ from define_WENO_Network import WENONetwork
 from define_problem_transport_eq import transport_equation
 
 train_model = WENONetwork()
-#train_model = torch.load('model')
+train_model = torch.load('model')
 
 torch.set_default_dtype(torch.float64)
 
@@ -25,7 +25,7 @@ problem = transport_equation
 #problem = Digital_option_GS
 #problem = Buckley_Leverett
 
-problem_main = problem(space_steps=50, time_steps=None, params = params)
+problem_main = problem(space_steps=100, time_steps=None, params = params)
 params = problem_main.get_params()
 #problem_ex = problem(space_steps=100*2*2, time_steps=40*4*4, params = params)
 #problem_ex = problem(space_steps=100*2*2*2*2*2*2*2, time_steps=40*4*4*4*4*4*4*4, params = params)
@@ -34,7 +34,7 @@ uu=u.detach().numpy()
 _,x,t = problem_main.transformation(u)
 #plt.plot(x, uu[:, -1])
 n=uu.shape[1]
-plt.plot(x,uu[:,0],x,uu[:,int(np.ceil(n/5))],x,u[:,int(np.ceil(n/2))],x,u[:,-1])
+plt.plot(x,uu[:,0],x,uu[:,int(np.ceil(n/5))],x,uu[:,int(np.ceil(3*n/5))],x,u[:,-1])
 #params = problem_main.get_params()
 
 #u_exact, u_exact_adjusted = train_model.compute_exact(Buckley_Leverett, problem_ex, 100, 40, just_one_time_step = True, trainable= False)
