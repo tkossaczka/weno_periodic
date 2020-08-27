@@ -4,7 +4,7 @@ from transport_exact_solution import transport_exact_solution
 
 # for du/dt = -du/dx
 
-class init_cond_switch():
+class exact_cond_switch():
     def __init__(self, x):
         self.Lx = x[-1] - x[0]
         self.xmid = 1

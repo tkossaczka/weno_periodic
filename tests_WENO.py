@@ -32,6 +32,7 @@ params = problem_main.get_params()
 #problem_ex = problem(space_steps=100*2*2*2*2*2*2*2, time_steps=40*4*4*4*4*4*4*4, params = params)
 u = train_model.run_weno(problem_main, vectorized=False, trainable = False, just_one_time_step = False)
 uu=u.detach().numpy()
+uex = problem_main.exact()
 _,x,t = problem_main.transformation(u)
 #plt.plot(x, uu[:, -1])
 n=uu.shape[1]
@@ -39,21 +40,26 @@ plt.plot(x,uu[:,0],x,uu[:,-1])
 # plt.plot(x,uu[:,0],x,uu[:,int(np.ceil(n/5))],x,uu[:,int(np.ceil(3*n/5))],x,u[:,-1])
 #params = problem_main.get_params()
 
+error = problem_main.err(u)
+
+plt.figure(1)
 plt.plot(x,uu[:,0],x,uu[:,int(np.ceil(n/5))],x,uu[:,int(np.ceil(2*n/5))],x,uu[:,int(np.ceil(3*n/5))],x,uu[:,-1])
 
 plt.figure(2)
-X, Y = np.meshgrid(x, t, indexing="ij")
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-ax.plot_surface(X, Y, uu)
-
-X, Y = np.meshgrid(x, t, indexing="ij")
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-ax.plot_surface(X, Y, uex)
-
-plt.figure(2)
 plt.plot(x,uex[:,0],x,uex[:,-1])
+
+# plt.figure(3)
+# X, Y = np.meshgrid(x, t, indexing="ij")
+# fig = plt.figure()
+# ax = fig.gca(projection='3d')
+# ax.plot_surface(X, Y, uu)
+#
+# plt.figure(4)
+# X, Y = np.meshgrid(x, t, indexing="ij")
+# fig = plt.figure()
+# ax = fig.gca(projection='3d')
+# ax.plot_surface(X, Y, uex)
+
 
 #u_exact, u_exact_adjusted = train_model.compute_exact(Buckley_Leverett, problem_ex, 100, 40, just_one_time_step = True, trainable= False)
 

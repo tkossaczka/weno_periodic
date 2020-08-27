@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 from initial_condition_switch import init_cond_switch
+from exact_solution_switch import exact_cond_switch
 
 class transport_equation():
     def __init__(self, space_steps, time_steps=None, params=None, w5_minus='Lax-Friedrichs'):
@@ -23,7 +24,7 @@ class transport_equation():
 
     def init_params(self):
         params = dict()
-        params["T"] = 10 #5 #1
+        params["T"] = 1 #5 #1
         params["e"] = 10 ** (-13)
         params["L"] = 0 #0 # -1
         params["R"] = 2 #2 # 1
@@ -49,7 +50,7 @@ class transport_equation():
         #m = self.space_steps
         x = self.x
         IC_object = init_cond_switch(x)
-        u_init = IC_object.case_6(x)
+        u_init = IC_object.case_1(x)
         u_init = torch.Tensor(u_init)
 
         # u_init = torch.zeros(m)
@@ -89,22 +90,30 @@ class transport_equation():
         return u_der
 
     def exact(self):
-        m = self.space_steps
-        n,_, _,_,_ = self.__compute_n_t_h_x_time()
-        x, time = self.x, self.time
-        uex = np.zeros((m, n + 1))
-        for k in range(0, n + 1):
-            for j in range(0, m):
-                uex[j, k] = np.sin(np.pi*(x[j]-time[k]))
-        u_ex = uex[:, n]
-        return u_ex
+        x = self.x
+        t = self.time
+        EC_object = exact_cond_switch(x)
+        u_exact = EC_object.case_1(x,t)
+        # m = self.space_steps
+        # n,_, _,_,_ = self.__compute_n_t_h_x_time()
+        # x, time = self.x, self.time
+        # uex = np.zeros((m, n + 1))
+        # for k in range(0, n + 1):
+        #     for j in range(0, m):
+        #         uex[j, k] = np.sin(np.pi*(x[j]-time[k]))
+        # u_ex = uex[:, n]
+        return u_exact
 
-    def err(self, u_last):
-        u_ex = self.exact()
-        u_last = u_last.detach().numpy()
-        xerr = np.absolute(u_ex - u_last)
-        xmaxerr = np.max(xerr)
-        return xmaxerr
+    def err(self, u):
+        uex = self.exact()
+        t = self.time
+        #u_last = u_last.detach().numpy()
+        u = u.detach().numpy()
+        error =np.zeros(t.shape[0])
+        for i in range(0,t.shape[0]):
+            error[i] = np.max(np.absolute(uex[:,i] - u[:,i]))
+        #xmaxerr = np.max(xerr)
+        return error
 
     def transformation(self, u):
         u = u
