@@ -49,7 +49,7 @@ class transport_equation():
         #m = self.space_steps
         x = self.x
         IC_object = init_cond_switch(x)
-        u_init = IC_object.case_1(x)
+        u_init = IC_object.case_6(x)
         u_init = torch.Tensor(u_init)
 
         # u_init = torch.zeros(m)

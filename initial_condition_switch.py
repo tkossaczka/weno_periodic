@@ -32,8 +32,6 @@ class init_cond_switch():
         for k in range(0, x.shape[0]):
             if x[k] >= self.xmid - 0.3 and x[k] <= self.xmid + 0.3:
                 u0[k] = 1
-            else:
-                u0[k] = 0
         return u0
 
     def case_7(self,x): # Oleg's trapezoidal left
@@ -41,8 +39,6 @@ class init_cond_switch():
         for k in range(0, x.shape[0] ):
             if x[k] >= self.xmid-0.3 and x[k] <= self.xmid + 0.3:
                 u0[k] = np.exp(x[k])
-            else:
-                u0[k] = 0
         return u0
 
     def case_8(self,x): # Oleg's trapezoidal right
@@ -50,6 +46,4 @@ class init_cond_switch():
         for k in range(0, x.shape[0] ):
             if x[k] >= self.xmid-0.3 and x[k] <= self.xmid + 0.3:
                 u0[k] = np.exp(-x[k])
-            else:
-                u0[k] = 0
         return u0
