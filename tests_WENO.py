@@ -6,7 +6,7 @@ from define_WENO_Network import WENONetwork
 from define_problem_transport_eq import transport_equation
 
 train_model = WENONetwork()
-train_model = torch.load('model')
+train_model = torch.load('model3')
 
 torch.set_default_dtype(torch.float64)
 
@@ -30,20 +30,26 @@ problem_main = problem(space_steps=50, time_steps=None, params = params)
 params = problem_main.get_params()
 #problem_ex = problem(space_steps=100*2*2, time_steps=40*4*4, params = params)
 #problem_ex = problem(space_steps=100*2*2*2*2*2*2*2, time_steps=40*4*4*4*4*4*4*4, params = params)
-u = train_model.run_weno(problem_main, vectorized=False, trainable = False, just_one_time_step = False)
-uu=u.detach().numpy()
+
+u, nn = train_model.init_run_weno(problem_main, vectorized=False, just_one_time_step=False)
+for k in range(nn):
+    uu = train_model.run_weno(problem_main, u, mweno=False,mapped=False,vectorized=False,trainable=True,k=k)
+    u[:,k+1]=uu
+
+#u = train_model.run_weno(problem_main, vectorized=False, trainable = False, just_one_time_step = False)
+u=u.detach().numpy()
 uex = problem_main.exact()
 _,x,t = problem_main.transformation(u)
 #plt.plot(x, uu[:, -1])
-n=uu.shape[1]
-plt.plot(x,uu[:,0],x,uu[:,-1])
+n=u.shape[1]
+plt.plot(x,u[:,0],x,u[:,-1])
 # plt.plot(x,uu[:,0],x,uu[:,int(np.ceil(n/5))],x,uu[:,int(np.ceil(3*n/5))],x,u[:,-1])
 #params = problem_main.get_params()
 
 error = problem_main.err(u)
 
 plt.figure(1)
-plt.plot(x,uu[:,0],x,uu[:,int(np.ceil(n/5))],x,uu[:,int(np.ceil(2*n/5))],x,uu[:,int(np.ceil(3*n/5))],x,uu[:,-1])
+plt.plot(x,u[:,0],x,u[:,int(np.ceil(n/5))],x,u[:,int(np.ceil(2*n/5))],x,u[:,int(np.ceil(3*n/5))],x,u[:,-1])
 
 plt.figure(2)
 plt.plot(x,uex[:,0],x,uex[:,-1])

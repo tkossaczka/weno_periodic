@@ -5,7 +5,7 @@ from define_problem_transport_eq import transport_equation
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('model')
+train_model = torch.load('model3')
 
 params=None
 #params = {'T': 0.4, 'e': 1e-13, 'L': 1, 'R': 1, 'C': 0.2}

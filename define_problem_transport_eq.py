@@ -24,7 +24,7 @@ class transport_equation():
 
     def init_params(self):
         params = dict()
-        params["T"] = 1 #5 #1
+        params["T"] = 10 #5 #1
         params["e"] = 10 ** (-13)
         params["L"] = 0 #0 # -1
         params["R"] = 2 #2 # 1
@@ -104,14 +104,25 @@ class transport_equation():
         # u_ex = uex[:, n]
         return u_exact
 
-    def err(self, u):
+    # def err(self, u):
+    #     uex = self.exact()
+    #     t = self.time
+    #     #u_last = u_last.detach().numpy()
+    #     u = u.detach().numpy()
+    #     error =np.zeros(t.shape[0])
+    #     for i in range(0,t.shape[0]):
+    #         error[i] = np.max(np.absolute(uex[:,i] - u[:,i]))
+    #     #xmaxerr = np.max(xerr)
+    #     return error
+
+    def err(self, u, k):
         uex = self.exact()
+        uex = uex[:,k]
         t = self.time
         #u_last = u_last.detach().numpy()
         u = u.detach().numpy()
         error =np.zeros(t.shape[0])
-        for i in range(0,t.shape[0]):
-            error[i] = np.max(np.absolute(uex[:,i] - u[:,i]))
+        error = np.max(np.absolute(uex - u))
         #xmaxerr = np.max(xerr)
         return error
 

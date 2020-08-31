@@ -107,10 +107,10 @@ class WENONetwork(nn.Module):
             betan_corrected_list = []
             for k, beta in enumerate([betap0, betap1, betap2]):
                 shift = k -1
-                betap_corrected_list.append(beta * (beta_multiplicators[3+shift:-3+shift]))
+                betap_corrected_list.append(beta * (beta_multiplicators))
             for k, beta in enumerate([betan0, betan1, betan2]):
                 shift = k - 1
-                betan_corrected_list.append(beta * (beta_multiplicators[3+shift:-3+shift]))
+                betan_corrected_list.append(beta * (beta_multiplicators))
             [betap0, betap1, betap2] = betap_corrected_list
             [betan0, betan1, betan2] = betan_corrected_list
 
@@ -281,82 +281,85 @@ class WENONetwork(nn.Module):
         dif_final = 0.5 * dif_left + 0.5 * dif_right
         return dif_final
 
-    def run_weno(self, problem, trainable, vectorized, just_one_time_step):
-        mweno = False
-        mapped = False
+    def init_run_weno(self, problem, vectorized, just_one_time_step):
         m = problem.space_steps
-        e = problem.params['e']
         n, t, h = problem.time_steps, problem.t, problem.h
-        #x, time = problem.x, problem.time
-        #term_2 = problem.der_2()
-        term_1 = problem.der_1()
-        #term_0 = problem.der_0()
-        #term_const = problem.der_const()
-        #w5_minus = problem.w5_minus
+        # x, time = problem.x, problem.time
+        # w5_minus = problem.w5_minus
 
         if vectorized:
-            u = torch.zeros(m,1)
+            u = problem.initial_condition
         else:
-            u = torch.zeros((m, n+1))
-
-        u[:,0] = problem.initial_condition
+            u = torch.zeros((m, n + 1))
+            u[:, 0] = problem.initial_condition
 
         if just_one_time_step is True:
             nn = 1
         else:
             nn = n
+        return u, nn
 
-        for l in range(1, nn+1):
-            u = torch.Tensor(u)
-            if vectorized:
-                ll=1
-            else:
-                ll=l
+    def run_weno(self, problem, u, mweno, mapped, vectorized, trainable, k):
+        n, t, h = problem.time_steps, problem.t, problem.h
+        e = problem.params['e']
+        # term_2 = problem.der_2()
+        term_1 = problem.der_1()
+        # term_0 = problem.der_0()
+        # term_const = problem.der_const()
 
-            uu_conv = problem.funct_convection(u[:, ll - 1])
-            #uu_diff = problem.funct_diffusion(u[:, ll - 1])
-            #RHSd = self.WENO6(uu_diff, e, mweno=mweno, mapped=mapped, trainable=trainable)
-            max_der = torch.max(torch.abs(problem.funct_derivative(u[:, ll - 1])))
-            RHSc_p = self.WENO5(0.5*(uu_conv+max_der*u[:, ll - 1]), e, w5_minus=False, mweno=mweno, mapped=mapped, trainable=trainable)
-            RHSc_n = self.WENO5(0.5*(uu_conv-max_der*u[:, ll - 1]), e, w5_minus=True, mweno=mweno, mapped=mapped, trainable=trainable)
-            RHSc = RHSc_p + RHSc_n
-            # u1 = u[:, ll - 1] + t * ((term_2 / h ** 2) * RHSd - (term_1 / h) * RHSc + term_0 * u[:, ll - 1])
-            u1 = u[:, ll - 1] + t * ( - (term_1 / h) * RHSc )
+        u = torch.Tensor(u)
+        if vectorized:
+            uu = u
+            #ll=1
+        else:
+            uu = u[:,k]
+            #ll=k
 
-            uu1_conv = problem.funct_convection(u1)
-            #uu1_diff = problem.funct_diffusion(u1)
-            #RHS1d = self.WENO6(uu1_diff, e, mweno=mweno, mapped=mapped, trainable=trainable)
-            max_der = torch.max(torch.abs(problem.funct_derivative(u1)))
-            RHS1c_p = self.WENO5(0.5*(uu1_conv+max_der*u1), e, w5_minus=False, mweno=mweno, mapped=mapped, trainable=trainable)
-            RHS1c_n = self.WENO5(0.5*(uu1_conv-max_der*u1), e, w5_minus=True, mweno=mweno, mapped=mapped, trainable=trainable)
-            RHS1c = RHS1c_p + RHS1c_n
-            # u2 = 0.75*u[:,ll-1]+0.25*u1+0.25*t*((term_2/h ** 2)*RHS1d-(term_1/h)*RHS1c+term_0*u1)
-            u2 = 0.75*u[:,ll-1]+0.25*u1+0.25*t*(-(term_1/h)*RHS1c)
+        uu_conv = problem.funct_convection(uu)
+        #uu_diff = problem.funct_diffusion(u[:, ll - 1])
+        #RHSd = self.WENO6(uu_diff, e, mweno=mweno, mapped=mapped, trainable=trainable)
+        max_der = torch.max(torch.abs(problem.funct_derivative(uu)))
+        RHSc_p = self.WENO5(0.5*(uu_conv+max_der*uu), e, w5_minus=False, mweno=mweno, mapped=mapped, trainable=trainable)
+        RHSc_n = self.WENO5(0.5*(uu_conv-max_der*uu), e, w5_minus=True, mweno=mweno, mapped=mapped, trainable=trainable)
+        RHSc = RHSc_p + RHSc_n
+        # u1 = u[:, ll - 1] + t * ((term_2 / h ** 2) * RHSd - (term_1 / h) * RHSc + term_0 * u[:, ll - 1])
+        u1 = uu + t * ( - (term_1 / h) * RHSc )
 
-            uu2_conv = problem.funct_convection(u2)
-            #uu2_diff = problem.funct_diffusion(u2)
-            #RHS2d = self.WENO6(uu2_diff, e, mweno=mweno, mapped=mapped, trainable=trainable)
-            max_der = torch.max(torch.abs(problem.funct_derivative(u2)))
-            RHS2c_p = self.WENO5(0.5 * (uu2_conv + max_der * u2), e, w5_minus=False, mweno=mweno, mapped=mapped,
-                                 trainable=trainable)
-            RHS2c_n = self.WENO5(0.5 * (uu2_conv - max_der * u2), e, w5_minus=True, mweno=mweno, mapped=mapped,
-                                 trainable=trainable)
-            RHS2c = RHS2c_p + RHS2c_n
-            # if vectorized:
-            #     u[:, 0] = (1 / 3) * u[:, ll - 1] + (2 / 3) * u2 + (2 / 3) * t * (
-            #             (term_2 / h ** 2) * RHS2d - (term_1 / h) * RHS2c + term_0 * u2)
-            # else:
-            #     u[:, l] = (1 / 3) * u[:, ll - 1] + (2 / 3) * u2+ (2 / 3) * t * (
-            #             (term_2 / h ** 2) * RHS2d - (term_1 / h) * RHS2c + term_0 * u2)
-            if vectorized:
-                u[:, 0] = (1 / 3) * u[:, ll - 1] + (2 / 3) * u2 + (2 / 3) * t * (- (term_1 / h) * RHS2c)
-            else:
-                u[:, l] = (1 / 3) * u[:, ll - 1] + (2 / 3) * u2+ (2 / 3) * t * (- (term_1 / h) * RHS2c)
+        uu1_conv = problem.funct_convection(u1)
+        #uu1_diff = problem.funct_diffusion(u1)
+        #RHS1d = self.WENO6(uu1_diff, e, mweno=mweno, mapped=mapped, trainable=trainable)
+        max_der = torch.max(torch.abs(problem.funct_derivative(u1)))
+        RHS1c_p = self.WENO5(0.5*(uu1_conv+max_der*u1), e, w5_minus=False, mweno=mweno, mapped=mapped, trainable=trainable)
+        RHS1c_n = self.WENO5(0.5*(uu1_conv-max_der*u1), e, w5_minus=True, mweno=mweno, mapped=mapped, trainable=trainable)
+        RHS1c = RHS1c_p + RHS1c_n
+        # u2 = 0.75*u[:,ll-1]+0.25*u1+0.25*t*((term_2/h ** 2)*RHS1d-(term_1/h)*RHS1c+term_0*u1)
+        u2 = 0.75*uu+0.25*u1+0.25*t*(-(term_1/h)*RHS1c)
 
-        return u
+        uu2_conv = problem.funct_convection(u2)
+        #uu2_diff = problem.funct_diffusion(u2)
+        #RHS2d = self.WENO6(uu2_diff, e, mweno=mweno, mapped=mapped, trainable=trainable)
+        max_der = torch.max(torch.abs(problem.funct_derivative(u2)))
+        RHS2c_p = self.WENO5(0.5 * (uu2_conv + max_der * u2), e, w5_minus=False, mweno=mweno, mapped=mapped,
+                             trainable=trainable)
+        RHS2c_n = self.WENO5(0.5 * (uu2_conv - max_der * u2), e, w5_minus=True, mweno=mweno, mapped=mapped,
+                             trainable=trainable)
+        RHS2c = RHS2c_p + RHS2c_n
+        # if vectorized:
+        #     u[:, 0] = (1 / 3) * u[:, ll - 1] + (2 / 3) * u2 + (2 / 3) * t * (
+        #             (term_2 / h ** 2) * RHS2d - (term_1 / h) * RHS2c + term_0 * u2)
+        # else:
+        #     u[:, l] = (1 / 3) * u[:, ll - 1] + (2 / 3) * u2+ (2 / 3) * t * (
+        #             (term_2 / h ** 2) * RHS2d - (term_1 / h) * RHS2c + term_0 * u2)
+        if vectorized:
+            u_ret = (1 / 3) * uu + (2 / 3) * u2 + (2 / 3) * t * (- (term_1 / h) * RHS2c)
+        else:
+            u[:, k+1] = (1 / 3) * uu + (2 / 3) * u2+ (2 / 3) * t * (- (term_1 / h) * RHS2c)
+            u_ret = u[:,k+1]
 
-    def forward(self, problem):
-        u = self.run_weno(problem, trainable=True, vectorized=True, just_one_time_step = True)
+        return u_ret
+
+    def forward(self, problem, u_ret, k):
+        u = self.run_weno(problem,u_ret,mweno=False,mapped=False,vectorized=True,trainable=True,k=k)
         V,_,_ = problem.transformation(u)
         return V
 
@@ -365,7 +368,10 @@ class WENONetwork(nn.Module):
         return S, t
 
     def full_WENO(self, problem, trainable, plot=True, vectorized=False):
-        u = self.run_weno(problem, trainable=trainable, vectorized=vectorized, just_one_time_step=False)
+        u, nn = self.init_run_weno(problem, vectorized=vectorized, just_one_time_step=False)
+        for k in range(nn):
+            uu = self.run_weno(problem, u, mweno=False,mapped=False,vectorized=vectorized,trainable=trainable,k=k)
+            u[:,k+1]=uu
         V, S, tt = problem.transformation(u)
         V = V.detach().numpy()
         if plot:
@@ -401,8 +407,9 @@ class WENONetwork(nn.Module):
         u_last = u
         u_ex_last = u_ex
         xerr = torch.abs(u_ex_last - u_last)
-        xmaxerr = torch.max(xerr)
-        return xmaxerr
+        # xmaxerr = torch.max(xerr)
+        xmeanerr = torch.mean(xerr)
+        return xmeanerr
 
     def order_compute(self, iterations, initial_space_steps, initial_time_steps, params, problem_class, trainable):
         problem = problem_class(space_steps=initial_space_steps, time_steps=initial_time_steps, params=params)
