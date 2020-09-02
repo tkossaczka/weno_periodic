@@ -33,7 +33,7 @@ params = problem_main.get_params()
 
 u, nn = train_model.init_run_weno(problem_main, vectorized=False, just_one_time_step=False)
 for k in range(nn):
-    uu = train_model.run_weno(problem_main, u, mweno=False,mapped=False,vectorized=False,trainable=True,k=k)
+    uu = train_model.run_weno(problem_main, u, mweno=True,mapped=False,vectorized=False,trainable=True,k=k)
     u[:,k+1]=uu
 
 #u = train_model.run_weno(problem_main, vectorized=False, trainable = False, just_one_time_step = False)
@@ -89,4 +89,5 @@ plt.plot(x,uex[:,0],x,uex[:,-1])
 #
 # u_whole_exact=my_problem.whole_exact()
 # error_whole= uu-u_whole_exact
+
 

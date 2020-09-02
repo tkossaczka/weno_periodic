@@ -107,10 +107,10 @@ class WENONetwork(nn.Module):
             betan_corrected_list = []
             for k, beta in enumerate([betap0, betap1, betap2]):
                 shift = k -1
-                betap_corrected_list.append(beta * (beta_multiplicators))
+                betap_corrected_list.append(beta * torch.roll(beta_multiplicators, shifts=shift, dims=0))
             for k, beta in enumerate([betan0, betan1, betan2]):
                 shift = k - 1
-                betan_corrected_list.append(beta * (beta_multiplicators))
+                betan_corrected_list.append(beta * torch.roll(beta_multiplicators, shifts=shift, dims=0))
             [betap0, betap1, betap2] = betap_corrected_list
             [betan0, betan1, betan2] = betan_corrected_list
 
@@ -359,7 +359,7 @@ class WENONetwork(nn.Module):
         return u_ret
 
     def forward(self, problem, u_ret, k):
-        u = self.run_weno(problem,u_ret,mweno=False,mapped=False,vectorized=True,trainable=True,k=k)
+        u = self.run_weno(problem,u_ret,mweno=True,mapped=False,vectorized=True,trainable=True,k=k)
         V,_,_ = problem.transformation(u)
         return V
 
@@ -370,7 +370,7 @@ class WENONetwork(nn.Module):
     def full_WENO(self, problem, trainable, plot=True, vectorized=False):
         u, nn = self.init_run_weno(problem, vectorized=vectorized, just_one_time_step=False)
         for k in range(nn):
-            uu = self.run_weno(problem, u, mweno=False,mapped=False,vectorized=vectorized,trainable=trainable,k=k)
+            uu = self.run_weno(problem, u, mweno=True, mapped=False,vectorized=vectorized,trainable=trainable,k=k)
             u[:,k+1]=uu
         V, S, tt = problem.transformation(u)
         V = V.detach().numpy()
@@ -406,10 +406,11 @@ class WENONetwork(nn.Module):
     def compute_error(self, u, u_ex):
         u_last = u
         u_ex_last = u_ex
-        xerr = torch.abs(u_ex_last - u_last)
+        xerr =(u_ex_last - u_last)**2
         # xmaxerr = torch.max(xerr)
-        xmeanerr = torch.mean(xerr)
-        return xmeanerr
+        err = torch.mean(xerr)
+        #print(xerr)
+        return err
 
     def order_compute(self, iterations, initial_space_steps, initial_time_steps, params, problem_class, trainable):
         problem = problem_class(space_steps=initial_space_steps, time_steps=initial_time_steps, params=params)

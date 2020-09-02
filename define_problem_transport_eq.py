@@ -24,7 +24,7 @@ class transport_equation():
 
     def init_params(self):
         params = dict()
-        params["T"] = 10 #5 #1
+        params["T"] = 5 #5 #1
         params["e"] = 10 ** (-13)
         params["L"] = 0 #0 # -1
         params["R"] = 2 #2 # 1
@@ -50,7 +50,7 @@ class transport_equation():
         #m = self.space_steps
         x = self.x
         IC_object = init_cond_switch(x)
-        u_init = IC_object.case_1(x)
+        u_init = IC_object.case_8(x)
         u_init = torch.Tensor(u_init)
 
         # u_init = torch.zeros(m)
@@ -93,7 +93,7 @@ class transport_equation():
         x = self.x
         t = self.time
         EC_object = exact_cond_switch(x)
-        u_exact = EC_object.case_1(x,t)
+        u_exact = EC_object.case_8(x,t)
         # m = self.space_steps
         # n,_, _,_,_ = self.__compute_n_t_h_x_time()
         # x, time = self.x, self.time
@@ -120,9 +120,9 @@ class transport_equation():
         uex = uex[:,k]
         t = self.time
         #u_last = u_last.detach().numpy()
-        u = u.detach().numpy()
-        error =np.zeros(t.shape[0])
-        error = np.max(np.absolute(uex - u))
+        #u = u.detach().numpy()
+        #error =np.zeros(t.shape[0])
+        error = np.mean((uex - u)**2)
         #xmaxerr = np.max(xerr)
         return error
 

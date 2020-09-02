@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 import matplotlib.pyplot as plt
 from define_WENO_Network import WENONetwork
 from define_problem_transport_eq import transport_equation
@@ -18,22 +19,29 @@ problem = transport_equation
 #problem = PME
 my_problem = problem(space_steps=50, time_steps=None, params = params)
 params = my_problem.params
-#V_t, S_t, tt_t = train_model.full_WENO(my_problem, trainable=True, plot=True, vectorized=False)
-V_nt, S_nt, tt_nt = train_model.full_WENO(my_problem, trainable=False, plot=True, vectorized=False)
+V_t, S_t, tt_t = train_model.full_WENO(my_problem, trainable=True, plot=False, vectorized=False)
+V_nt, S_nt, tt_nt = train_model.full_WENO(my_problem, trainable=False, plot=False, vectorized=False)
 
-# u_exact = my_problem.exact()
-# plt.figure(2)
-# plt.plot(S_t,V_t[:,1]) #,S,u_exact)
-# V_last = V[:,-1]
-# error = my_problem.err(V_last)
+u_exact = my_problem.exact()
+# plt.figure(3)
+# plt.plot(S_t,V_t[:,-1],S_t,u_exact[:,-1])
+V_t_last = V_t[:,-1]
+error_t = np.mean((u_exact[:,-1] - V_t_last)**2)
+#error_t = my_problem.err(V_t_last,-1)
+
+# plt.figure(4)
+# plt.plot(S_nt,V_nt[:,-1],S_nt,u_exact[:,-1])
+V_nt_last = V_nt[:,-1]
+error_nt = np.mean((u_exact[:,-1] - V_nt_last)**2)
+# error_nt = my_problem.err(V_nt_last,-1)
 
 plt.figure(2)
 for k in range(0,len(V_nt[0])):
     plt.plot(S_nt,V_nt[:,k])
-#
-# plt.figure(3)
-# for k in range(0,len(V_t[0])):
-#     plt.plot(S_t,V_t[:,k])
+
+plt.figure(3)
+for k in range(0,len(V_t[0])):
+    plt.plot(S_t,V_t[:,k])
 
 # plt.plot(S_nt,V_nt[:,-1])
 # plt.plot(S_t,V_t[:,-1])
