@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from define_WENO_Network import WENONetwork
 from define_problem_transport_eq import transport_equation
+from define_problem_Buckley_Leverett import Buckley_Leverett
 
 train_model = WENONetwork()
 train_model = torch.load('model3')
@@ -19,14 +20,14 @@ params=None
 
 #problem = PME
 #problem = heat_equation
-problem = transport_equation
+#problem = transport_equation
 #problem= Digital_option
 #problem= Call_option
 #problem = Call_option_GS
 #problem = Digital_option_GS
-#problem = Buckley_Leverett
+problem = Buckley_Leverett
 
-problem_main = problem(space_steps=50, time_steps=None, params = params)
+problem_main = problem(ic_numb=6,space_steps=50, time_steps=None, params = params)
 params = problem_main.get_params()
 #problem_ex = problem(space_steps=100*2*2, time_steps=40*4*4, params = params)
 #problem_ex = problem(space_steps=100*2*2*2*2*2*2*2, time_steps=40*4*4*4*4*4*4*4, params = params)
@@ -38,21 +39,29 @@ for k in range(nn):
 
 #u = train_model.run_weno(problem_main, vectorized=False, trainable = False, just_one_time_step = False)
 u=u.detach().numpy()
-uex = problem_main.exact()
+#uex = problem_main.exact()
 _,x,t = problem_main.transformation(u)
-#plt.plot(x, uu[:, -1])
+#plt.plot(x, u[:, -1])
 n=u.shape[1]
 plt.plot(x,u[:,0],x,u[:,-1])
 # plt.plot(x,uu[:,0],x,uu[:,int(np.ceil(n/5))],x,uu[:,int(np.ceil(3*n/5))],x,u[:,-1])
 #params = problem_main.get_params()
 
-error = problem_main.err(u)
+# error = problem_main.err(u)
+#
+# plt.figure(1)
+# plt.plot(x,u[:,0],x,u[:,int(np.ceil(n/5))],x,u[:,int(np.ceil(2*n/5))],x,u[:,int(np.ceil(3*n/5))],x,u[:,-1])
+#
+# plt.figure(2)
+# plt.plot(x,uex[:,0],x,uex[:,-1])
 
-plt.figure(1)
-plt.plot(x,u[:,0],x,u[:,int(np.ceil(n/5))],x,u[:,int(np.ceil(2*n/5))],x,u[:,int(np.ceil(3*n/5))],x,u[:,-1])
 
-plt.figure(2)
-plt.plot(x,uex[:,0],x,uex[:,-1])
+
+problem_ex = problem(ic_numb=6, space_steps=50 * 2 * 2, time_steps=None, params=params)
+_, u_ex = train_model.compute_exact(Buckley_Leverett, problem_ex, 50, 25,
+                                            just_one_time_step=False, trainable=False)
+
+
 
 # plt.figure(3)
 # X, Y = np.meshgrid(x, t, indexing="ij")

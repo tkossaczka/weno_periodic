@@ -1,15 +1,15 @@
 import numpy as np
 import torch
-from initial_condition_switch import init_cond_switch
-from exact_solution_switch import exact_cond_switch
+from initial_condition_switch import init_cond
+from exact_solution_switch import exact_sol
 
 class transport_equation():
-    def __init__(self, space_steps, time_steps=None, params=None, w5_minus='Lax-Friedrichs'):
+    def __init__(self, ic_numb, space_steps, time_steps=None, params=None, w5_minus='Lax-Friedrichs'):
         """
         Atributes needed to be initialized to make WENO network functional
         space_steps, time_steps, initial_condition, boundary_condition, x, time, h, n
         """
-
+        self.ic_numb = ic_numb
         self.params = params
         if params is None:
             self.init_params()
@@ -24,7 +24,7 @@ class transport_equation():
 
     def init_params(self):
         params = dict()
-        params["T"] = 5 #5 #1
+        params["T"] = 1 #5 #5 #1
         params["e"] = 10 ** (-13)
         params["L"] = 0 #0 # -1
         params["R"] = 2 #2 # 1
@@ -49,8 +49,8 @@ class transport_equation():
     def __compute_initial_condition(self):
         #m = self.space_steps
         x = self.x
-        IC_object = init_cond_switch(x)
-        u_init = IC_object.case_8(x)
+        ic_numb = self.ic_numb
+        u_init = init_cond(ic_numb,x)
         u_init = torch.Tensor(u_init)
 
         # u_init = torch.zeros(m)
@@ -92,8 +92,8 @@ class transport_equation():
     def exact(self):
         x = self.x
         t = self.time
-        EC_object = exact_cond_switch(x)
-        u_exact = EC_object.case_8(x,t)
+        ic_numb = self.ic_numb
+        u_exact = exact_sol(ic_numb,x,t)
         # m = self.space_steps
         # n,_, _,_,_ = self.__compute_n_t_h_x_time()
         # x, time = self.x, self.time

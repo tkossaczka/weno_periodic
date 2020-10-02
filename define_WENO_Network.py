@@ -388,27 +388,47 @@ class WENONetwork(nn.Module):
         V_classic, S, tt = problem.transformation(u_classic)
         plt.plot(S, V_classic.detach().numpy()[:,1], S, V_trained.detach().numpy()[:,1])
 
-    def compute_exact(self,problem_class, problem, space_steps, time_steps, just_one_time_step, trainable):
+    def compute_exact_end(self, problem_class, problem, space_steps, time_steps, just_one_time_step, trainable):
         if hasattr(problem_class, 'exact'):
             print('nic netreba')
         else:
-            #u_exact,_,_ = self.full_WENO(problem, trainable=False, plot=False, vectorized=False)
-            u_exact = self.run_weno(problem, trainable=trainable, vectorized=True , just_one_time_step=just_one_time_step)
+            u, nn = self.init_run_weno(problem, vectorized=True, just_one_time_step=just_one_time_step)
+            for k in range(nn):
+                u = self.run_weno(problem, u, mweno=True, mapped=False, vectorized=True, trainable=trainable, k=k)
+        u_exact = u
         space_steps_exact = problem.space_steps
         time_steps_exact = problem.time_steps
         divider_space = space_steps_exact / space_steps
         divider_time = time_steps_exact / time_steps
         divider_space = int(divider_space)
         divider_time = int(divider_time)
-        u_exact_adjusted = u_exact[0:space_steps_exact+1:divider_space,0:time_steps_exact+1:divider_time]
+        u_exact_adjusted = u_exact[0:space_steps_exact+1:divider_space] #,0:time_steps_exact+1:divider_time]
+        return u_exact, u_exact_adjusted
+
+    def compute_exact(self, problem_class, problem, space_steps, time_steps, just_one_time_step, trainable):
+        if hasattr(problem_class, 'exact'):
+            print('nic netreba')
+        else:
+            u = np.zeros((space_steps,time_steps))
+            u[:,0], nn = self.init_run_weno(problem, vectorized=True, just_one_time_step=just_one_time_step)
+            for k in range(nn):
+                u[:,k+1] = self.run_weno(problem, u[:,k], mweno=True, mapped=False, vectorized=False, trainable=trainable, k=k)
+        u_exact = u
+        space_steps_exact = problem.space_steps
+        time_steps_exact = problem.time_steps
+        divider_space = space_steps_exact / space_steps
+        divider_time = time_steps_exact / time_steps
+        divider_space = int(divider_space)
+        divider_time = int(divider_time)
+        u_exact_adjusted = u_exact[0:space_steps_exact+1:divider_space, 0:time_steps_exact+1:divider_time]
         return u_exact, u_exact_adjusted
 
     def compute_error(self, u, u_ex):
         u_last = u
         u_ex_last = u_ex
         xerr =(u_ex_last - u_last)**2
-        # xmaxerr = torch.max(xerr)
-        err = torch.mean(xerr)
+        err = torch.max(xerr)
+        #err = torch.mean(xerr)
         #print(xerr)
         return err
 
