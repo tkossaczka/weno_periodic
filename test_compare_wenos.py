@@ -1,28 +1,23 @@
 import torch
 import matplotlib.pyplot as plt
-from define_problem_Digital import Digital_option
 from define_WENO_Network import WENONetwork
-from define_problem_heat_eq import heat_equation
-from define_problem_Call import Call_option
-from define_problem_PME import PME
-from define_problem_Digital_GS import Digital_option_GS
 from define_problem_Buckley_Leverett import Buckley_Leverett
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('model')
+train_model = torch.load('model3')
 
 params=None
+#params =  {'T': 0.4, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.25}
 #params = {'T': 0.4, 'e': 1e-13, 'L': 1, 'R': 1, 'C': 0.5}
 #params = {'T': 0.4, 'e': 1e-13, 'L': 1, 'R': 1, 'C': 0.7360486548170379}
 #params = {'T': 2, 'e': 1e-13, 'L': 6, 'power' : 5}
 #params = {'sigma': 0.3, 'rate': 0.1, 'E': 50, 'T': 1, 'e': 1e-13, 'xl': -6, 'xr': 1.5}
 #params = {'sigma': 0.3, 'rate': 0.25, 'E': 50, 'T': 1, 'e': 1e-13, 'xl': -1.5, 'xr': 2, 'psi': 30}
 #problem = Call_option
-problem= Digital_option
 #problem = PME
-#problem = Buckley_Leverett
-my_problem = problem(space_steps=160, time_steps=None, params = params)
+problem = Buckley_Leverett
+my_problem = problem(ic_numb=6,space_steps=100, time_steps=None, params = params)
 #u = train_model.run_weno( my_problem, traina0le=False, vectorized=False)
 train_model.compare_wenos(my_problem)
 params = my_problem.get_params()

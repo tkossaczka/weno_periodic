@@ -19,7 +19,7 @@ def monotonicity_loss(u): #, problem_class, params, problem_main):
     loss = monotonicity
     return loss
 
-def exact_overflows_loss(u, u_ex): #, problem_class, params, problem_main):                                                    just_one_time_step=True, trainable=False)
+def exact_overflows_loss(u, u_ex): #, problem_class, params, problem_main):  just_one_time_step=True, trainable=False)
     u_max = torch.max(u_ex)
     u_min = torch.min(u_ex)
     overflows = torch.sum(torch.abs(torch.min(u, u_min)-u_min) + torch.max(u, u_max)-u_max )
@@ -27,13 +27,10 @@ def exact_overflows_loss(u, u_ex): #, problem_class, params, problem_main):     
     loss = error + overflows
     return loss
 
-def exact2_overflows_loss(u, u_ex): #, problem_class, params, problem_main):                                                    just_one_time_step=True, trainable=False)
-    u_max = torch.max([1.0])
-    u_min = torch.min([0.0])
+def exact2_overflows_loss(u, u_ex): #, problem_class, params, problem_main): just_one_time_step=True, trainable=False)
+    u_max = torch.Tensor([1.0])
+    u_min = torch.Tensor([0.0])
     overflows = torch.sum(torch.abs(torch.min(u, u_min)-u_min) + torch.max(u, u_max)-u_max )
-    problem_ex = problem_class(ic_numb=6, space_steps=60*2*2, time_steps=10*4*4, params=params)
-    _, u_ex = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, 10,
-                                            just_one_time_step=False, trainable=False)
     error = train_model.compute_error(u, u_ex)
     loss = error + overflows
     return loss
@@ -51,69 +48,28 @@ def overflows_loss(u): #, problem_class, params, problem_main):
     return loss
 
 
+# problem_ex = problem_class(ic_numb=6, space_steps=60*2*2, time_steps=10*4*4, params=params)
+#     _, u_ex = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, 10,
+#                                             just_one_time_step=False, trainable=False)
+
 #optimizer = optim.SGD(train_model.parameters(), lr=0.1)
 optimizer = optim.Adam(train_model.parameters())
 
-# for p in range(1,9):
-#     print(p)
-#     problem_main = problem_class(ic_numb=p, space_steps=100, time_steps=None, params=None)
-#     V_init, nn = train_model.init_run_weno(problem_main,vectorized=True,just_one_time_step=False)
-#     u_exact =  problem_main.exact()
-#     u_exact = torch.Tensor(u_exact)
-#
-#     for j in range(5):
-#         V_train = V_init
-#         print(j)
-#         for k in range(nn+1):
-#             # Forward path
-#             #params = None
-#             #params = {'T': 0.4, 'e': 1e-13, 'L': 1, 'R': 1, 'C': 0.5}
-#             #params = {'sigma': 0.3, 'rate': 0.1, 'E': 50, 'T': 1, 'e': 1e-13, 'xl': -6, 'xr': 1.5}
-#             #my_problem = Digital_option(space_steps=160, time_steps=1,params=params)
-#             #my_problem = heat_equation(space_steps=160, time_steps=1, params=None)
-#             #my_problem = Buckley_Leverett(space_steps=200, time_steps=1,params=params)
-#
-#             #problem_main = problem_class(space_steps=160, time_steps=None, params=params)
-#             #problem_main = problem_class(space_steps=100, time_steps=50, params=params)
-#
-#             V_train = train_model.forward(problem_main,V_train,k)
-#             # Train model:
-#             optimizer.zero_grad()  # Clear gradients
-#             # Calculate loss
-#             params = problem_main.get_params()
-#             #loss = monotonicity_loss(V_train[:,1], problem_class, params, problem_main)  # Digital
-#             #loss = monotonicity_loss(V_train, problem_class, params=params)  # Buckley
-#             #loss = error_overflows_loss(V_train, u_exact[:,k])
-#             loss = overflows_loss(V_train)
-#             loss.backward()  # Backward pass
-#             optimizer.step()  # Optimize weights
-#             #g = train_model.parameters()
-#             #x = g.__next__()
-#             #print(x.detach().numpy().sum(axis=0))
-#             print(k, loss.data.numpy())
-#             V_train.detach_()
-#             #print(params)
-
-
 for j in range(100):
     problem_main = problem_class(ic_numb=6, space_steps=60, time_steps=10, params=None)
+    params = problem_main.get_params()
+    problem_ex = problem_class(ic_numb=6, space_steps=60 * 2 * 2, time_steps=10 * 4 * 4, params=params)
+    _, u_ex = train_model.compute_exact(Buckley_Leverett, problem_ex, 60, 10, just_one_time_step=False, trainable=False)
     V_init, nn = train_model.init_run_weno(problem_main, vectorized=True, just_one_time_step=False)
     V_train = V_init
-    params = problem_main.get_params()
     print(j)
     print(params)
-    for k in range(nn+1):
+    for k in range(nn):
         # Forward path
         #params = None
         #params = {'T': 0.4, 'e': 1e-13, 'L': 1, 'R': 1, 'C': 0.5}
-        #params = {'sigma': 0.3, 'rate': 0.1, 'E': 50, 'T': 1, 'e': 1e-13, 'xl': -6, 'xr': 1.5}
-        #my_problem = Digital_option(space_steps=160, time_steps=1,params=params)
-        #my_problem = heat_equation(space_steps=160, time_steps=1, params=None)
         #my_problem = Buckley_Leverett(space_steps=200, time_steps=1,params=params)
-
         #problem_main = problem_class(space_steps=160, time_steps=None, params=params)
-        #problem_main = problem_class(space_steps=100, time_steps=50, params=params)
-
         V_train = train_model.forward(problem_main,V_train,k)
         # Train model:
         optimizer.zero_grad()  # Clear gradients
@@ -122,7 +78,8 @@ for j in range(100):
         #loss = monotonicity_loss(V_train[:,1], problem_class, params, problem_main)  # Digital
         #loss = monotonicity_loss(V_train, problem_class, params=params)  # Buckley
         #loss = error_overflows_loss(V_train, u_exact[:,k])
-        loss = overflows_loss(V_train)
+        #loss = overflows_loss(V_train)
+        loss = exact2_overflows_loss(V_train, u_ex[:,k+1])
         loss.backward()  # Backward pass
         optimizer.step()  # Optimize weights
         #g = train_model.parameters()
@@ -131,9 +88,6 @@ for j in range(100):
         print(k, loss.data.numpy())
         V_train.detach_()
         #print(params)
-
-
-
 
 
 #plt.plot(S, V_train.detach().numpy())

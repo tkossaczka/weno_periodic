@@ -39,7 +39,7 @@ class transport_equation():
         R = self.params["R"]
         m = self.space_steps
         h = (np.abs(L) + np.abs(R)) / m
-        n = np.ceil(T / ((2/3) * h**(5/3)))  #0.4 pre sinus
+        n = np.ceil(T / ((0.4) * h**(5/3)))  #0.4 pre sinus
         n = int(n)
         t = T / n
         x = np.linspace(L, R-h, m)
@@ -115,14 +115,14 @@ class transport_equation():
     #     #xmaxerr = np.max(xerr)
     #     return error
 
-    def err(self, u, k):
+    def err(self, u):
         uex = self.exact()
-        uex = uex[:,k]
+        uex = uex[:,-1]
         t = self.time
         #u_last = u_last.detach().numpy()
-        #u = u.detach().numpy()
+        u = u.detach().numpy()
         #error =np.zeros(t.shape[0])
-        error = np.mean((uex - u)**2)
+        error = np.max((uex - u)**2)
         #xmaxerr = np.max(xerr)
         return error
 
