@@ -428,8 +428,8 @@ class WENONetwork(nn.Module):
         u_last = u
         u_ex_last = u_ex
         xerr =(u_ex_last - u_last)**2
-        err = torch.max(xerr)
-        #err = torch.mean(xerr)
+        #err = torch.max(xerr)
+        err = torch.mean(xerr)
         #print(xerr)
         return err
 

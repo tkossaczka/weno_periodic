@@ -12,7 +12,7 @@ train_model = torch.load('model3')
 params = None
 #params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.4336634929945137}
 #params = {'T': 0.4, 'e': 1e-13, 'L': 1, 'R': 1, 'C': 0.2}
-#params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.8092717532100926} #100 space steps, good
+#params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.8092717532100926}   {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 2.0868858027855617}  #100 space steps, good
 #problem = transport_equation
 problem = Buckley_Leverett
 my_problem = problem(ic_numb=6,space_steps=100, time_steps=None, params = params)
@@ -54,6 +54,8 @@ problem_ex = problem(ic_numb=6, space_steps=100*2, time_steps=None, params = par
 _, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 100, time_steps, just_one_time_step = False, trainable= False)
 error_nt = train_model.compute_error(V_nt[:,-1], u_exact_adjusted)
 error_t = train_model.compute_error(V_t[:,-1], u_exact_adjusted)
+error_nt_max = np.max(np.abs(V_nt[:, -1]-u_exact_adjusted.detach().numpy()))
+error_t_max = np.max(np.abs(V_t[:, -1]-u_exact_adjusted.detach().numpy()))
 plt.plot(S_nt, V_nt[:, -1],  S_t, V_t[:,-1] ,S_nt, u_exact_adjusted)
 
 
