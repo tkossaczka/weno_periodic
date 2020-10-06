@@ -391,7 +391,7 @@ class WENONetwork(nn.Module):
 
     def compute_exact_end(self, problem_class, problem, space_steps, time_steps, just_one_time_step, trainable):
         if hasattr(problem_class, 'exact'):
-            print('nic netreba')
+            print('nothing to do')
         else:
             u, nn = self.init_run_weno(problem, vectorized=True, just_one_time_step=just_one_time_step)
             for k in range(nn):
@@ -427,9 +427,9 @@ class WENONetwork(nn.Module):
     def compute_error(self, u, u_ex):
         u_last = u
         u_ex_last = u_ex
-        xerr =(u_ex_last - u_last)**2
-        #err = torch.max(xerr)
-        err = torch.mean(xerr)
+        xerr =torch.abs(u_ex_last - u_last)
+        err = torch.max(xerr)
+        #err = torch.mean(xerr)
         #print(xerr)
         return err
 

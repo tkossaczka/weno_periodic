@@ -15,7 +15,7 @@ params = None
 #params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.8092717532100926}   {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 2.0868858027855617}  #100 space steps, good
 #problem = transport_equation
 problem = Buckley_Leverett
-my_problem = problem(ic_numb=6,space_steps=100, time_steps=None, params = params)
+my_problem = problem(ic_numb=6,space_steps=60, time_steps=None, params = params)
 params = my_problem.params
 V_t, S_t, tt_t = train_model.full_WENO(my_problem, trainable=True, plot=False, vectorized=False)
 V_nt, S_nt, tt_nt = train_model.full_WENO(my_problem, trainable=False, plot=False, vectorized=False)
@@ -50,12 +50,12 @@ time_steps = tt_nt.shape[0]
 # plt.plot(S_nt,V_nt[:,-1])
 # plt.plot(S_t,V_t[:,-1])
 
-problem_ex = problem(ic_numb=6, space_steps=100*2, time_steps=None, params = params)
-_, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 100, time_steps, just_one_time_step = False, trainable= False)
+problem_ex = problem(ic_numb=6, space_steps=60*2, time_steps=None, params = params)
+_, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, time_steps, just_one_time_step = False, trainable= False)
 error_nt = train_model.compute_error(V_nt[:,-1], u_exact_adjusted)
 error_t = train_model.compute_error(V_t[:,-1], u_exact_adjusted)
-error_nt_max = np.max(np.abs(V_nt[:, -1]-u_exact_adjusted.detach().numpy()))
-error_t_max = np.max(np.abs(V_t[:, -1]-u_exact_adjusted.detach().numpy()))
+error_nt_mean = np.mean((V_nt[:, -1]-u_exact_adjusted.detach().numpy())**2)
+error_t_mean = np.mean((V_t[:, -1]-u_exact_adjusted.detach().numpy())**2)
 plt.plot(S_nt, V_nt[:, -1],  S_t, V_t[:,-1] ,S_nt, u_exact_adjusted)
 
 
