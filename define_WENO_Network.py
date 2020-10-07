@@ -408,7 +408,7 @@ class WENONetwork(nn.Module):
 
     def compute_exact(self, problem_class, problem, space_steps, time_steps, just_one_time_step, trainable):
         if hasattr(problem_class, 'exact'):
-            print('nic netreba')
+            print('nothing to do')
         else:
             space_steps_exact = problem.space_steps
             time_steps_exact = problem.time_steps
@@ -460,8 +460,10 @@ class WENONetwork(nn.Module):
                 order[i - 1] = np.log(vecerr[i - 1] / vecerr[i]) / np.log(2)
                 print(problem.space_steps, problem.time_steps)
         else:
-            u = self.run_weno(problem, trainable=trainable, vectorized=True, just_one_time_step=False)
-            u_last = u[:, -1]
+            u, nn = self.init_run_weno(problem, vectorized=True, just_one_time_step=False)
+            for k in range(nn):
+                u = self.run_weno(problem, u, mweno=True, mapped=False, vectorized=True, trainable=trainable, k=k)
+            u_last = u
             u_last = u_last.detach().numpy()
             fine_space_steps = initial_space_steps*2*2*2*2*2
             if initial_time_steps is None:

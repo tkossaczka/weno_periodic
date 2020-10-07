@@ -122,7 +122,7 @@ class transport_equation():
         #u_last = u_last.detach().numpy()
         u = u.detach().numpy()
         #error =np.zeros(t.shape[0])
-        error = np.max((uex - u)**2)
+        error = np.max(np.abs(uex - u))
         #xmaxerr = np.max(xerr)
         return error
 
