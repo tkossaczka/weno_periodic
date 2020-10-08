@@ -12,13 +12,13 @@ train_model = torch.load('model3')
 torch.set_default_dtype(torch.float64)
 
 params=None
-#params =  {'T': 0.4, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.25}
+params =  {'T': 0.4, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.25}
 #params = {'T': 0.4, 'e': 1e-13, 'L': 1, 'R': 1, 'C': 5.467189905555848}
 
-problem = transport_equation
-#problem = Buckley_Leverett
+#problem = transport_equation
+problem = Buckley_Leverett
 
-problem_main = problem(ic_numb=2,space_steps=50, time_steps=None, params = params)
+problem_main = problem(ic_numb=6,space_steps=100, time_steps=None, params = params)
 params = problem_main.get_params()
 #problem_ex = problem(space_steps=100*2*2, time_steps=40*4*4, params = params)
 #problem_ex = problem(space_steps=100*2*2*2*2*2*2*2, time_steps=40*4*4*4*4*4*4*4, params = params)
@@ -36,7 +36,7 @@ plt.plot(x,u[:,0],x,u[:,-1])
 # plt.plot(x,uu[:,0],x,uu[:,int(np.ceil(n/5))],x,uu[:,int(np.ceil(3*n/5))],x,u[:,-1])
 #params = problem_main.get_params()
 
-u_ex = problem_main.exact()
+#u_ex = problem_main.exact()
 
 
 # problem_ex = problem(ic_numb=6, space_steps=50*2*2, time_steps=None, params=params)

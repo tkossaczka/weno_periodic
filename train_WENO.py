@@ -55,7 +55,7 @@ def overflows_loss(u): #, problem_class, params, problem_main):
 #optimizer = optim.SGD(train_model.parameters(), lr=0.1)
 optimizer = optim.Adam(train_model.parameters())
 
-for j in range(500):
+for j in range(100):
     problem_main = problem_class(ic_numb=6, space_steps=60, time_steps=10, params=None)
     params = problem_main.get_params()
     problem_ex = problem_class(ic_numb=6, space_steps=60 * 2 * 2, time_steps=10 * 4 * 4, params=params)
@@ -95,4 +95,4 @@ for j in range(500):
 # g=train_model.parameters()
 # g.__next__()
 
-torch.save(train_model, "model5")
+torch.save(train_model, "model6")
