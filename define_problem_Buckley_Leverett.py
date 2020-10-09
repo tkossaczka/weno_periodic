@@ -28,7 +28,7 @@ class Buckley_Leverett():
         params["e"] = 10 ** (-13)
         params["L"] = 0
         params["R"] = 2
-        params["C"] = np.abs(2 * np.random.randn())
+        params["C"] = np.abs(1 * np.random.randn())+0.1
         self.params = params
 
     def get_params(self):
@@ -45,6 +45,7 @@ class Buckley_Leverett():
         # n = int(n)
         # n=50
         n = np.ceil(0.08*T/(h**2))
+        #n = np.ceil(0.25 * T / (h ** (5/3)))
         n = int(n)
         t = T / n
         x = np.linspace(L, R-h, m )

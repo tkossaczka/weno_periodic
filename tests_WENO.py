@@ -7,7 +7,7 @@ from define_problem_transport_eq import transport_equation
 from define_problem_Buckley_Leverett import Buckley_Leverett
 
 #train_model = WENONetwork()
-train_model = torch.load('model3')
+train_model = torch.load('model15')
 
 torch.set_default_dtype(torch.float64)
 
@@ -18,14 +18,14 @@ params =  {'T': 0.4, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.25}
 #problem = transport_equation
 problem = Buckley_Leverett
 
-problem_main = problem(ic_numb=6,space_steps=100, time_steps=None, params = params)
+problem_main = problem(ic_numb=6,space_steps=60, time_steps=None, params = params)
 params = problem_main.get_params()
 #problem_ex = problem(space_steps=100*2*2, time_steps=40*4*4, params = params)
 #problem_ex = problem(space_steps=100*2*2*2*2*2*2*2, time_steps=40*4*4*4*4*4*4*4, params = params)
 
 u, nn = train_model.init_run_weno(problem_main, vectorized=False, just_one_time_step=False)
 for k in range(nn):
-    uu = train_model.run_weno(problem_main, u, mweno=True,mapped=False,vectorized=False,trainable=False,k=k)
+    uu = train_model.run_weno(problem_main, u, mweno=True,mapped=False,vectorized=False,trainable=True,k=k)
     u[:,k+1]=uu
 
 

@@ -7,10 +7,11 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('model4')
+train_model = torch.load('model15')
 
 params = None
-params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.3235713669969233}
+#params = {'T': 1, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 3.6184183991789673}
+#params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.3235713669969233}
 #params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.05981614981451925}
 #params = {'T': 0.4, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.25}
 #params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.44885801631216066}
@@ -58,7 +59,7 @@ time_steps = tt_nt.shape[0]
 problem_ex = problem(ic_numb=6, space_steps=60*2, time_steps=None, params = params)
 _, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, time_steps, just_one_time_step = False, trainable= False)
 error_nt = np.max(np.abs(V_nt[:, -1]-u_exact_adjusted.detach().numpy()))
-error_t = np.max(np.abs(V_nt[:, -1]-u_exact_adjusted.detach().numpy()))
+error_t = np.max(np.abs(V_t[:, -1]-u_exact_adjusted.detach().numpy()))
 error_nt_mean = np.mean((V_nt[:, -1]-u_exact_adjusted.detach().numpy())**2)
 error_t_mean = np.mean((V_t[:, -1]-u_exact_adjusted.detach().numpy())**2)
 plt.plot(S_nt, V_nt[:, -1], color='blue', marker='o')
