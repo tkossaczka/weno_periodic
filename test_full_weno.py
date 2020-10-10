@@ -7,9 +7,10 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('model19')
+train_model = torch.load('model18')
 
 params = None
+#params
 #params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.42693827394864636} # model18!!!! so good
 #params = {'T': 1, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 3.6184183991789673}
 #params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.3235713669969233}
@@ -65,7 +66,7 @@ error_nt_mean = np.mean((V_nt[:, -1]-u_exact_adjusted.detach().numpy())**2)
 error_t_mean = np.mean((V_t[:, -1]-u_exact_adjusted.detach().numpy())**2)
 plt.plot(S_nt, V_nt[:, -1], color='blue', marker='o')
 plt.plot(S_t, V_t[:,-1], marker='o', color='green')
-plt.plot(S_nt, u_exact_adjusted)
+plt.plot(S_nt, u_exact_adjusted, color='red')
 
 # plt.figure(1)
 # plt.plot(V_nt)
