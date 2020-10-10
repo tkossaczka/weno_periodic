@@ -55,12 +55,12 @@ def overflows_loss(u): #, problem_class, params, problem_main):
 #optimizer = optim.SGD(train_model.parameters(), lr=0.1)
 optimizer = optim.Adam(train_model.parameters())
 
-for j in range(100):
-    problem_main = problem_class(ic_numb=6, space_steps=60, time_steps=None, params=None)
+for j in range(10):
+    problem_main = problem_class(ic_numb=6, space_steps=60, time_steps=10, params=None)
     params = problem_main.get_params()
-    ts = problem_main.time_steps
-    problem_ex = problem_class(ic_numb=6, space_steps=60 * 2 * 2, time_steps=None, params=params)
-    _, u_ex = train_model.compute_exact(Buckley_Leverett, problem_ex, 60, ts, just_one_time_step=False, trainable=False)
+    #ts = problem_main.time_steps
+    problem_ex = problem_class(ic_numb=6, space_steps=60 * 2 * 2, time_steps=10*4*4, params=params)
+    _, u_ex = train_model.compute_exact(Buckley_Leverett, problem_ex, 60, 10, just_one_time_step=False, trainable=False)
     V_init, nn = train_model.init_run_weno(problem_main, vectorized=True, just_one_time_step=False)
     V_train = V_init
     print(j)
@@ -96,4 +96,7 @@ for j in range(100):
 # g=train_model.parameters()
 # g.__next__()
 
-torch.save(train_model, "model15")
+torch.save(train_model, "model18")
+
+
+# model 16 trenovany na mean errore
