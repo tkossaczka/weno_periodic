@@ -7,9 +7,10 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('model16')
+train_model = torch.load('model18')
 
 params = None
+#params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.42693827394864636} # model18!!!! so good
 #params = {'T': 1, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 3.6184183991789673}
 #params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.3235713669969233}
 #params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.05981614981451925}
