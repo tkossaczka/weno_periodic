@@ -102,6 +102,7 @@ class WENONetwork(nn.Module):
             beta_multiplicators = self.inner_nn_weno5(dif[None, None, :])[0, 0, :] + self.weno5_mult_bias
             # beta_multiplicators_left = beta_multiplicators[:-1]
             # beta_multiplicators_right = beta_multiplicators[1:]
+            #print(beta_multiplicators)
 
             betap_corrected_list = []
             betan_corrected_list = []

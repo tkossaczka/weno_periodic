@@ -7,10 +7,9 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('model18')
+train_model = torch.load('model23')
 
 params = None
-#params
 #params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.42693827394864636} # model18!!!! so good
 #params = {'T': 1, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 3.6184183991789673}
 #params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.3235713669969233}
@@ -25,6 +24,8 @@ params = None
 problem = Buckley_Leverett
 my_problem = problem(ic_numb=6,space_steps=60, time_steps=None, params = params)
 params = my_problem.params
+#params["T"] = 0.2
+#my_problem = problem(ic_numb=6,space_steps=120, time_steps=None, params = params)
 V_t, S_t, tt_t = train_model.full_WENO(my_problem, trainable=True, plot=False, vectorized=False)
 V_nt, S_nt, tt_nt = train_model.full_WENO(my_problem, trainable=False, plot=False, vectorized=False)
 time_steps = tt_nt.shape[0]

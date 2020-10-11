@@ -56,15 +56,16 @@ def overflows_loss(u): #, problem_class, params, problem_main):
 optimizer = optim.Adam(train_model.parameters())
 
 for j in range(10):
-    problem_main = problem_class(ic_numb=6, space_steps=60, time_steps=None, params=None)
+    problem_main = problem_class(ic_numb=6, space_steps=100, time_steps=None, params=None)
     params = problem_main.get_params()
     ts = problem_main.time_steps
-    problem_ex = problem_class(ic_numb=6, space_steps=60 * 2 * 2, time_steps=None, params=params)
-    _, u_ex = train_model.compute_exact(Buckley_Leverett, problem_ex, 60, ts, just_one_time_step=False, trainable=False)
+    problem_ex = problem_class(ic_numb=6, space_steps=100 * 2 * 2, time_steps=None, params=params)
+    _, u_ex = train_model.compute_exact(Buckley_Leverett, problem_ex, 100, ts, just_one_time_step=False, trainable=False)
     V_init, nn = train_model.init_run_weno(problem_main, vectorized=True, just_one_time_step=False)
     V_train = V_init
     print(j)
     print(params)
+
     for k in range(nn):
         # Forward path
         #params = None
@@ -87,6 +88,7 @@ for j in range(10):
         #x = g.__next__()
         #print(x.detach().numpy().sum(axis=0))
         print(k, loss.data.numpy())
+
         V_train.detach_()
         #print(params)
 
@@ -96,7 +98,7 @@ for j in range(10):
 # g=train_model.parameters()
 # g.__next__()
 
-torch.save(train_model, "model22")
+torch.save(train_model, "model23")
 
 
 # model 16 trenovany na mean errore
