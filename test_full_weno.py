@@ -7,7 +7,7 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('model23')
+train_model = torch.load('model')
 
 params = None
 #params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.42693827394864636} # model18!!!! so good
@@ -30,10 +30,16 @@ V_t, S_t, tt_t = train_model.full_WENO(my_problem, trainable=True, plot=False, v
 V_nt, S_nt, tt_nt = train_model.full_WENO(my_problem, trainable=False, plot=False, vectorized=False)
 time_steps = tt_nt.shape[0]
 
-#plt.plot(S_nt,V_nt[:,-1], S_t, V_t[:,-1])
+problem_ex = problem(ic_numb=6, space_steps=60*2, time_steps=None, params = params)
+_, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, time_steps, just_one_time_step = False, trainable= False)
+error_nt = np.max(np.abs(V_nt[:, -1]-u_exact_adjusted.detach().numpy()))
+error_t = np.max(np.abs(V_t[:, -1]-u_exact_adjusted.detach().numpy()))
+error_nt_mean = np.mean((V_nt[:, -1]-u_exact_adjusted.detach().numpy())**2)
+error_t_mean = np.mean((V_t[:, -1]-u_exact_adjusted.detach().numpy())**2)
+plt.plot(S_nt, V_nt[:, -1], color='blue', marker='o')
+plt.plot(S_t, V_t[:,-1], marker='o', color='green')
+plt.plot(S_nt, u_exact_adjusted, color='red')
 
-# plt.figure(2)
-# plt.plot(S_nt,V_nt[:,-1])
 
 #u_exact = my_problem.exact()
 # plt.figure(3)
@@ -58,32 +64,3 @@ time_steps = tt_nt.shape[0]
 
 # plt.plot(S_nt,V_nt[:,-1])
 # plt.plot(S_t,V_t[:,-1])
-
-problem_ex = problem(ic_numb=6, space_steps=60*2, time_steps=None, params = params)
-_, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, time_steps, just_one_time_step = False, trainable= False)
-error_nt = np.max(np.abs(V_nt[:, -1]-u_exact_adjusted.detach().numpy()))
-error_t = np.max(np.abs(V_t[:, -1]-u_exact_adjusted.detach().numpy()))
-error_nt_mean = np.mean((V_nt[:, -1]-u_exact_adjusted.detach().numpy())**2)
-error_t_mean = np.mean((V_t[:, -1]-u_exact_adjusted.detach().numpy())**2)
-plt.plot(S_nt, V_nt[:, -1], color='blue', marker='o')
-plt.plot(S_t, V_t[:,-1], marker='o', color='green')
-plt.plot(S_nt, u_exact_adjusted, color='red')
-
-# plt.figure(1)
-# plt.plot(V_nt)
-# plt.figure(2)
-# plt.plot(V_t)
-# plt.figure(3)
-# plt.plot(u_exact_adjusted)
-
-
-# u_exact = my_problem.exact()
-# plt.plot(S_nt, V_nt[:, -1],  S_t, V_t[:,-1] ,S_nt, u_exact[:, -1])
-# error_t = np.max((u_exact[:,-1] - V_t[:,-1])**2)
-# error_nt = np.max((u_exact[:,-1] - V_nt[:,-1])**2)
-
-#
-# error_nt = train_model.compute_error(V_nt[:,-1], u_exact_adjusted[:,-1])
-# error_t = train_model.compute_error(V_t[:,-1], u_exact_adjusted[:,-1])
-# plt.figure(3)
-# plt.plot(S_nt, V_nt[:, -1], S_t, V_t[:,-1], S_t, u_exact_adjusted[:,-1])

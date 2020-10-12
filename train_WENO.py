@@ -3,6 +3,8 @@ import torch
 from torch import optim
 from define_problem_transport_eq import transport_equation
 from define_problem_Buckley_Leverett import Buckley_Leverett
+import numpy as np
+import matplotlib.pyplot as plt
 
 torch.set_default_dtype(torch.float64)
 
@@ -14,12 +16,12 @@ train_model = WENONetwork()
 problem_class = Buckley_Leverett
 #problem_class = transport_equation
 
-def monotonicity_loss(u): #, problem_class, params, problem_main):
+def monotonicity_loss(u):
     monotonicity = torch.sum(torch.max(u[:-1]-u[1:], torch.Tensor([0.0])))
     loss = monotonicity
     return loss
 
-def exact_overflows_loss(u, u_ex): #, problem_class, params, problem_main):  just_one_time_step=True, trainable=False)
+def exact_overflows_loss(u, u_ex):
     u_max = torch.max(u_ex)
     u_min = torch.min(u_ex)
     overflows = torch.sum(torch.abs(torch.min(u, u_min)-u_min) + torch.max(u, u_max)-u_max )
@@ -27,7 +29,7 @@ def exact_overflows_loss(u, u_ex): #, problem_class, params, problem_main):  jus
     loss = error + overflows
     return loss
 
-def exact2_overflows_loss(u, u_ex): #, problem_class, params, problem_main): just_one_time_step=True, trainable=False)
+def exact2_overflows_loss(u, u_ex):
     u_max = torch.Tensor([1.0])
     u_min = torch.Tensor([0.0])
     overflows = torch.sum(torch.abs(torch.min(u, u_min)-u_min) + torch.max(u, u_max)-u_max )
@@ -47,25 +49,21 @@ def overflows_loss(u): #, problem_class, params, problem_main):
     loss = overflows # peeks_left + peeks_right
     return loss
 
-
-# problem_ex = problem_class(ic_numb=6, space_steps=60*2*2, time_steps=10*4*4, params=params)
-#     _, u_ex = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, 10,
-#                                             just_one_time_step=False, trainable=False)
-
 #optimizer = optim.SGD(train_model.parameters(), lr=0.1)
 optimizer = optim.Adam(train_model.parameters())
 
-for j in range(10):
-    problem_main = problem_class(ic_numb=6, space_steps=100, time_steps=None, params=None)
+losses = []
+for j in range(15):
+    problem_main = problem_class(ic_numb=6, space_steps=60, time_steps=None, params=None)
     params = problem_main.get_params()
     ts = problem_main.time_steps
-    problem_ex = problem_class(ic_numb=6, space_steps=100 * 2 * 2, time_steps=None, params=params)
-    _, u_ex = train_model.compute_exact(Buckley_Leverett, problem_ex, 100, ts, just_one_time_step=False, trainable=False)
+    problem_ex = problem_class(ic_numb=6, space_steps=60 * 2 * 2, time_steps=None, params=params)
+    _, u_ex = train_model.compute_exact(Buckley_Leverett, problem_ex, 60, ts, just_one_time_step=False, trainable=False)
     V_init, nn = train_model.init_run_weno(problem_main, vectorized=True, just_one_time_step=False)
     V_train = V_init
     print(j)
     print(params)
-
+    single_problem_losses = []
     for k in range(nn):
         # Forward path
         #params = None
@@ -77,9 +75,6 @@ for j in range(10):
         optimizer.zero_grad()  # Clear gradients
         # Calculate loss
         # params = problem_main.get_params()
-        #loss = monotonicity_loss(V_train[:,1], problem_class, params, problem_main)  # Digital
-        #loss = monotonicity_loss(V_train, problem_class, params=params)  # Buckley
-        #loss = error_overflows_loss(V_train, u_exact[:,k])
         #loss = overflows_loss(V_train)
         loss = exact2_overflows_loss(V_train, u_ex[:,k+1])
         loss.backward()  # Backward pass
@@ -88,17 +83,20 @@ for j in range(10):
         #x = g.__next__()
         #print(x.detach().numpy().sum(axis=0))
         print(k, loss.data.numpy())
-
+        single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
         #print(params)
+    losses.append(single_problem_losses)
+losses = np.array(losses)
 
+for k in range(10):
+    plt.plot(losses[k, :])
+
+plt.plot(losses.sum(axis=1))
 
 #plt.plot(S, V_train.detach().numpy())
 #print("number of parameters:", sum(p.numel() for p in train_model.parameters()))
 # g=train_model.parameters()
 # g.__next__()
 
-torch.save(train_model, "model23")
-
-
-# model 16 trenovany na mean errore
+torch.save(train_model, "model24")

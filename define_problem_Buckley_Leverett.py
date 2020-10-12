@@ -138,19 +138,6 @@ class Buckley_Leverett():
         #u_der = 2*u
         return u_der
 
-
-
-    # def exact(self):
-    #
-    #     return
-    #
-    # def err(self, u_last):
-    #     u_ex = self.exact()
-    #     u_last = u_last.detach().numpy()
-    #     xerr = np.absolute(u_ex - u_last)
-    #     xmaxerr = np.max(xerr)
-    #     return xmaxerr
-
     def transformation(self, u):
         u = u
         t = self.time

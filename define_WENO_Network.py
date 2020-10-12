@@ -136,8 +136,8 @@ class WENONetwork(nn.Module):
 
         [omegap0, omegap1, omegap2] = normalize([omegap_0, omegap_1, omegap_2])
         [omegan0, omegan1, omegan2] = normalize([omegan_0, omegan_1, omegan_2])
-        #[omegap0, omegap1, omegap2] = [d0, d1, d2]
-        #[omegan0, omegan1, omegan2] = [d0, d1, d2]
+        # [omegap0, omegap1, omegap2] = [0, 1, 0]
+        # [omegan0, omegan1, omegan2] = [0, 1, 0]
 
         if mapped:
             def get_alpha(omega, d):
