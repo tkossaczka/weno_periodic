@@ -7,7 +7,7 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('model_10_60_36')
+train_model = torch.load('model_20_60_36')
 
 #problem = transport_equation
 problem = Buckley_Leverett
@@ -34,7 +34,7 @@ err_t_mean_vec = np.zeros(rng)
 #u_t_matr = np.zeros((101,rng))
 
 for j in range(rng):
-    print(rng)
+    print(j)
     params = validation_problems(j)
     my_problem = problem(ic_numb=6, space_steps=60, time_steps=None, params=params)
     #params=my_problem.params
@@ -73,7 +73,10 @@ err_mat[2,:] = err_nt_mean_vec
 err_mat[3,:] = err_t_mean_vec
 
 
-
+# params = validation_problems(6)
+# problem_ex_test = problem(ic_numb=6, space_steps=60 * 2 * 2, time_steps=None, params=params)
+# _, u_ex_test = train_model.compute_exact(Buckley_Leverett, problem_ex_test, 60, 36, just_one_time_step=False, trainable=False)
+# torch.save(u_ex_test, "u_ex_6")
 
 
 

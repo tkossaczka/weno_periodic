@@ -63,13 +63,19 @@ def validation_problems(j):
 #optimizer = optim.SGD(train_model.parameters(), lr=0.1)
 optimizer = optim.Adam(train_model.parameters())
 
-params = validation_problems(0)
-problem_ex_test = problem_class(ic_numb=6, space_steps=60 * 2 * 2, time_steps=None, params=params)
-_, u_ex_test = train_model.compute_exact(Buckley_Leverett, problem_ex_test, 60, 36, just_one_time_step=False, trainable=False)
+u_ex_0 = torch.load("u_ex_0")
+u_ex_1 = torch.load("u_ex_1")
+u_ex_2 = torch.load("u_ex_2")
+u_ex_3 = torch.load("u_ex_3")
+u_ex_4 = torch.load("u_ex_4")
+u_ex_5 = torch.load("u_ex_5")
+u_ex_6 = torch.load("u_ex_6")
+u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
 
 it = 10
 losses = []
-loss_test = []
+all_loss_test = []
+
 for j in range(it):
     problem_main = problem_class(ic_numb=6, space_steps=60, time_steps=None, params=None)
     params = problem_main.get_params()
@@ -81,7 +87,7 @@ for j in range(it):
     print(j)
     print(params)
     single_problem_losses = []
-    single_problem_loss_test = []
+    loss_test = []
     for k in range(nn):
         # Forward path
         V_train = train_model.forward(problem_main,V_train,k)
@@ -101,28 +107,38 @@ for j in range(it):
         #print(params)
     losses.append(single_problem_losses)
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
-    params = validation_problems(0)
-    problem_test = problem_class(ic_numb=6, space_steps=60, time_steps=None, params=params)
-    u_init, nn = train_model.init_run_weno(problem_test, vectorized=False, just_one_time_step=False)
-    u_test = u_init
-    for k in range(nn):
-        uu_test = train_model.run_weno(problem_test, u_test, mweno=True,mapped=False,vectorized=False,trainable=True,k=k)
-        u_test[:,k+1]=uu_test
-    for k in range(nn+1):
-        single_problem_loss_test.append(exact2_overflows_loss(u_test[:,k], u_ex_test[:, k]).detach().numpy().max())
-    loss_test.append(single_problem_loss_test)
-loss_test = np.array(loss_test)
+    for kk in range(7):
+        single_problem_loss_test = []
+        params = validation_problems(kk)
+        problem_test = problem_class(ic_numb=6, space_steps=60, time_steps=None, params=params)
+        u_init, nn = train_model.init_run_weno(problem_test, vectorized=False, just_one_time_step=False)
+        u_test = u_init
+        for k in range(nn):
+            uu_test = train_model.run_weno(problem_test, u_test, mweno=True,mapped=False,vectorized=False,trainable=True,k=k)
+            u_test[:,k+1]=uu_test
+        for k in range(nn+1):
+            single_problem_loss_test.append(exact2_overflows_loss(u_test[:,k], u_exs[kk][:, k]).detach().numpy().max())
+        loss_test.append(single_problem_loss_test)
+    all_loss_test.append(loss_test)
+
+#loss_test = np.array(loss_test)
 losses = np.array(losses)
+all_loss_test = np.array(all_loss_test) #shape (training_steps, num_valid_problems, time_steps)
+# get (training_steps, num_valid_problems):
+plt.plot(all_loss_test[:,:,-1])
+plt.plot(all_loss_test.sum(axis=2))
+plt.plot(all_loss_test.sum(axis=1).T)
 
 for k in range(it):
     plt.plot(losses[k, :])
 
 plt.plot(losses.sum(axis=1))
-plt.plot(loss_test.sum(axis=1))
+
+#plt.plot(loss_test.sum(axis=1))
 
 #plt.plot(S, V_train.detach().numpy())
 #print("number of parameters:", sum(p.numel() for p in train_model.parameters()))
 # g=train_model.parameters()
 # g.__next__()
 
-torch.save(train_model, "model_10_60_36")
+torch.save(train_model, "model_10_60_36_1")
