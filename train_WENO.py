@@ -49,11 +49,28 @@ def overflows_loss(u): #, problem_class, params, problem_main):
     loss = overflows # peeks_left + peeks_right
     return loss
 
+def validation_problems(j):
+    params_vld = []
+    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.25})
+    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.5})
+    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.7})
+    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.0})
+    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.3})
+    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.6})
+    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 2})
+    return params_vld[j]
+
 #optimizer = optim.SGD(train_model.parameters(), lr=0.1)
 optimizer = optim.Adam(train_model.parameters())
 
+params = validation_problems(0)
+problem_ex_test = problem_class(ic_numb=6, space_steps=60 * 2 * 2, time_steps=None, params=params)
+_, u_ex_test = train_model.compute_exact(Buckley_Leverett, problem_ex_test, 60, 36, just_one_time_step=False, trainable=False)
+
+it = 10
 losses = []
-for j in range(15):
+loss_test = []
+for j in range(it):
     problem_main = problem_class(ic_numb=6, space_steps=60, time_steps=None, params=None)
     params = problem_main.get_params()
     ts = problem_main.time_steps
@@ -64,17 +81,13 @@ for j in range(15):
     print(j)
     print(params)
     single_problem_losses = []
+    single_problem_loss_test = []
     for k in range(nn):
         # Forward path
-        #params = None
-        #params = {'T': 0.4, 'e': 1e-13, 'L': 1, 'R': 1, 'C': 0.5}
-        #my_problem = Buckley_Leverett(space_steps=200, time_steps=1,params=params)
-        #problem_main = problem_class(space_steps=160, time_steps=None, params=params)
         V_train = train_model.forward(problem_main,V_train,k)
         # Train model:
         optimizer.zero_grad()  # Clear gradients
         # Calculate loss
-        # params = problem_main.get_params()
         #loss = overflows_loss(V_train)
         loss = exact2_overflows_loss(V_train, u_ex[:,k+1])
         loss.backward()  # Backward pass
@@ -87,16 +100,29 @@ for j in range(15):
         V_train.detach_()
         #print(params)
     losses.append(single_problem_losses)
+    # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
+    params = validation_problems(0)
+    problem_test = problem_class(ic_numb=6, space_steps=60, time_steps=None, params=params)
+    u_init, nn = train_model.init_run_weno(problem_test, vectorized=False, just_one_time_step=False)
+    u_test = u_init
+    for k in range(nn):
+        uu_test = train_model.run_weno(problem_test, u_test, mweno=True,mapped=False,vectorized=False,trainable=True,k=k)
+        u_test[:,k+1]=uu_test
+    for k in range(nn+1):
+        single_problem_loss_test.append(exact2_overflows_loss(u_test[:,k], u_ex_test[:, k]).detach().numpy().max())
+    loss_test.append(single_problem_loss_test)
+loss_test = np.array(loss_test)
 losses = np.array(losses)
 
-for k in range(10):
+for k in range(it):
     plt.plot(losses[k, :])
 
 plt.plot(losses.sum(axis=1))
+plt.plot(loss_test.sum(axis=1))
 
 #plt.plot(S, V_train.detach().numpy())
 #print("number of parameters:", sum(p.numel() for p in train_model.parameters()))
 # g=train_model.parameters()
 # g.__next__()
 
-torch.save(train_model, "model24")
+torch.save(train_model, "model_10_60_36")
