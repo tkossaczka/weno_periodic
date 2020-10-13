@@ -7,7 +7,7 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('model_20_60_36')
+train_model = torch.load('model_3_60_36')
 
 #problem = transport_equation
 problem = Buckley_Leverett
@@ -24,6 +24,15 @@ def validation_problems(j):
     params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.6})
     params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 2})
     return params_vld[j]
+
+u_ex_0 = torch.load("u_ex_0")
+u_ex_1 = torch.load("u_ex_1")
+u_ex_2 = torch.load("u_ex_2")
+u_ex_3 = torch.load("u_ex_3")
+u_ex_4 = torch.load("u_ex_4")
+u_ex_5 = torch.load("u_ex_5")
+u_ex_6 = torch.load("u_ex_6")
+u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
 
 C_vec = np.zeros(rng)
 err_nt_max_vec = np.zeros(rng)
@@ -49,8 +58,8 @@ for j in range(rng):
     u_t = u_t.detach().numpy()
     _, x, t = my_problem.transformation(u_nt)
     time_steps = t.shape[0]
-    problem_ex = problem(ic_numb=6, space_steps=60 * 2 * 2, time_steps=None, params=params)
-    _, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, time_steps, just_one_time_step = False, trainable= False)
+    #problem_ex = problem(ic_numb=6, space_steps=60 * 2 * 2, time_steps=None, params=params)
+    u_exact_adjusted = u_exs[j][:,-1]
     error_nt_max = np.max(np.abs(u_nt-u_exact_adjusted.detach().numpy()))
     error_t_max = np.max(np.abs(u_t-u_exact_adjusted.detach().numpy()))
     error_nt_mean = np.mean((u_nt-u_exact_adjusted.detach().numpy())**2)

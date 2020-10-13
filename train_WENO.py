@@ -72,7 +72,7 @@ u_ex_5 = torch.load("u_ex_5")
 u_ex_6 = torch.load("u_ex_6")
 u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
 
-it = 10
+it = 5
 losses = []
 all_loss_test = []
 
@@ -126,13 +126,13 @@ losses = np.array(losses)
 all_loss_test = np.array(all_loss_test) #shape (training_steps, num_valid_problems, time_steps)
 # get (training_steps, num_valid_problems):
 plt.plot(all_loss_test[:,:,-1])
-plt.plot(all_loss_test.sum(axis=2))
-plt.plot(all_loss_test.sum(axis=1).T)
+# plt.plot(all_loss_test.sum(axis=2))
+# plt.plot(all_loss_test.sum(axis=1).T)
 
-for k in range(it):
-    plt.plot(losses[k, :])
-
-plt.plot(losses.sum(axis=1))
+# for k in range(it):
+#     plt.plot(losses[k, :])
+#
+# plt.plot(losses.sum(axis=1))
 
 #plt.plot(loss_test.sum(axis=1))
 
@@ -141,4 +141,4 @@ plt.plot(losses.sum(axis=1))
 # g=train_model.parameters()
 # g.__next__()
 
-torch.save(train_model, "model_10_60_36_1")
+torch.save(train_model, "model_5_60_36_2")
