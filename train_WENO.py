@@ -21,15 +21,12 @@ def monotonicity_loss(u):
     loss = monotonicity
     return loss
 
-def exact_overflows_loss(u, u_ex):
-    u_max = torch.max(u_ex)
-    u_min = torch.min(u_ex)
-    overflows = torch.sum(torch.abs(torch.min(u, u_min)-u_min) + torch.max(u, u_max)-u_max )
+def exact_loss(u, u_ex):
     error = train_model.compute_error(u, u_ex)
-    loss = error + overflows
+    loss = error
     return loss
 
-def exact2_overflows_loss(u, u_ex):
+def exact_overflows_loss(u, u_ex):
     u_max = torch.Tensor([1.0])
     u_min = torch.Tensor([0.0])
     overflows = torch.sum(torch.abs(torch.min(u, u_min)-u_min) + torch.max(u, u_max)-u_max )
@@ -72,7 +69,7 @@ u_ex_5 = torch.load("u_ex_5")
 u_ex_6 = torch.load("u_ex_6")
 u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
 
-it = 5
+it = 10
 losses = []
 all_loss_test = []
 
@@ -95,7 +92,7 @@ for j in range(it):
         optimizer.zero_grad()  # Clear gradients
         # Calculate loss
         #loss = overflows_loss(V_train)
-        loss = exact2_overflows_loss(V_train, u_ex[:,k+1])
+        loss = exact_overflows_loss(V_train, u_ex[:,k+1])
         loss.backward()  # Backward pass
         optimizer.step()  # Optimize weights
         #g = train_model.parameters()
@@ -117,7 +114,7 @@ for j in range(it):
             uu_test = train_model.run_weno(problem_test, u_test, mweno=True,mapped=False,vectorized=False,trainable=True,k=k)
             u_test[:,k+1]=uu_test
         for k in range(nn+1):
-            single_problem_loss_test.append(exact2_overflows_loss(u_test[:,k], u_exs[kk][:, k]).detach().numpy().max())
+            single_problem_loss_test.append(exact_overflows_loss(u_test[:,k], u_exs[kk][:, k]).detach().numpy().max())
         loss_test.append(single_problem_loss_test)
     all_loss_test.append(loss_test)
 
@@ -141,4 +138,4 @@ plt.plot(all_loss_test[:,:,-1])
 # g=train_model.parameters()
 # g.__next__()
 
-torch.save(train_model, "model_5_60_36_2")
+torch.save(train_model, "model_10_60_36_6")
