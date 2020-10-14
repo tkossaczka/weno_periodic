@@ -7,7 +7,7 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('model_10_60_36_6')
+train_model = torch.load('model_10_60_36_10/9')
 
 #problem = transport_equation
 problem = Buckley_Leverett

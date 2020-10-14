@@ -103,6 +103,9 @@ for j in range(it):
         V_train.detach_()
         #print(params)
     losses.append(single_problem_losses)
+    iteration = j
+    path = "model_10_60_36_10/{}".format(iteration)
+    torch.save(train_model, path)
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
     for kk in range(7):
         single_problem_loss_test = []
@@ -138,4 +141,4 @@ plt.plot(all_loss_test[:,:,-1])
 # g=train_model.parameters()
 # g.__next__()
 
-torch.save(train_model, "model_10_60_36_6")
+#torch.save(train_model, "model_10_60_36_8")
