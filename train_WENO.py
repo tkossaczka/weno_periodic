@@ -104,7 +104,7 @@ for j in range(it):
         #print(params)
     losses.append(single_problem_losses)
     iteration = j
-    path = "model_10_60_36_10/{}".format(iteration)
+    path = "model_10_60_36_14/{}".format(iteration)
     torch.save(train_model, path)
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
     for kk in range(7):

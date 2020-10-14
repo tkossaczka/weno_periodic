@@ -7,7 +7,7 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('model_10_60_36_10/9')
+train_model = torch.load('model_10_60_36_14/9')
 
 #problem = transport_equation
 problem = Buckley_Leverett
@@ -69,7 +69,7 @@ for j in range(rng):
     time_steps = t.shape[0]
     #problem_ex = problem(ic_numb=6, space_steps=60 * 2 * 2 * 2, time_steps=None, params=params)
     #_, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, time_steps, just_one_time_step=False, trainable=False)
-    u_exact_adjusted = u_exs_fine[j][:,-1]
+    u_exact_adjusted = u_exs[j][:,-1]
     error_nt_max = np.max(np.abs(u_nt-u_exact_adjusted.detach().numpy()))
     error_t_max = np.max(np.abs(u_t-u_exact_adjusted.detach().numpy()))
     error_nt_mean = np.mean((u_nt-u_exact_adjusted.detach().numpy())**2)
