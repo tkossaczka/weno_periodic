@@ -2,6 +2,7 @@ import numpy as np
 import torch
 from initial_condition_switch import init_cond
 from exact_solution_switch import exact_sol
+from initial_jump_generator import init_jump
 
 class Buckley_Leverett():
     def __init__(self, ic_numb, space_steps, time_steps=None, params=None, w5_minus='Lax-Friedrichs'):
@@ -18,7 +19,7 @@ class Buckley_Leverett():
         n, self.t, self.h, self.x, self.time = self.__compute_n_t_h_x_time()
         if time_steps is None:
             self.time_steps = n
-        self.initial_condition = self.__compute_initial_condition()
+        self.initial_condition, self.numb, self.xmid, self.height, self.width = self.__compute_initial_condition()
         #self.boundary_condition = self.__compute_boundary_condition()
         self.w5_minus = w5_minus
 
@@ -56,8 +57,12 @@ class Buckley_Leverett():
         #m = self.space_steps
         x = self.x
         ic_numb = self.ic_numb
-        u_init = init_cond(ic_numb, x)
-        u_init = torch.Tensor(u_init)
+        if ic_numb == 0:
+            u_init, numb, xmid, height, width = init_jump(x)
+            u_init = torch.Tensor(u_init)
+        else:
+            u_init, numb, xmid, height, width = init_cond(ic_numb, x)
+            u_init = torch.Tensor(u_init)
         # for k in range(0, m + 1):
         #     if x[k] > -0.5 and x[k]<0:
         #         u_init[k] = 1
@@ -75,7 +80,7 @@ class Buckley_Leverett():
         #         u_init[k] = 0
         #     else:
         #         u_init[k] = 1
-        return u_init
+        return u_init, numb, xmid, height, width
 
     # def __compute_boundary_condition(self):
     #     n = self.time_steps

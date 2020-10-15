@@ -7,7 +7,7 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('model_10_60_36_14/9')
+train_model = torch.load('Models_BL_on_ic_jump/model_30_60_36_0//29')
 
 #problem = transport_equation
 problem = Buckley_Leverett
@@ -25,22 +25,22 @@ def validation_problems(j):
     params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 2})
     return params_vld[j]
 
-u_ex_0 = torch.load("u_ex_0")
-u_ex_1 = torch.load("u_ex_1")
-u_ex_2 = torch.load("u_ex_2")
-u_ex_3 = torch.load("u_ex_3")
-u_ex_4 = torch.load("u_ex_4")
-u_ex_5 = torch.load("u_ex_5")
-u_ex_6 = torch.load("u_ex_6")
+u_ex_0 = torch.load("Models_BL_on_ic_jump/u_ex_0")
+u_ex_1 = torch.load("Models_BL_on_ic_jump/u_ex_1")
+u_ex_2 = torch.load("Models_BL_on_ic_jump/u_ex_2")
+u_ex_3 = torch.load("Models_BL_on_ic_jump/u_ex_3")
+u_ex_4 = torch.load("Models_BL_on_ic_jump/u_ex_4")
+u_ex_5 = torch.load("Models_BL_on_ic_jump/u_ex_5")
+u_ex_6 = torch.load("Models_BL_on_ic_jump/u_ex_6")
 u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
 
-u_ex_0_fine = torch.load("u_ex_0_fine")
-u_ex_1_fine = torch.load("u_ex_1_fine")
-u_ex_2_fine = torch.load("u_ex_2_fine")
-u_ex_3_fine = torch.load("u_ex_3_fine")
-u_ex_4_fine = torch.load("u_ex_4_fine")
-u_ex_5_fine = torch.load("u_ex_5_fine")
-u_ex_6_fine = torch.load("u_ex_6_fine")
+u_ex_0_fine = torch.load("Models_BL_on_ic_jump/u_ex_0_fine")
+u_ex_1_fine = torch.load("Models_BL_on_ic_jump/u_ex_1_fine")
+u_ex_2_fine = torch.load("Models_BL_on_ic_jump/u_ex_2_fine")
+u_ex_3_fine = torch.load("Models_BL_on_ic_jump/u_ex_3_fine")
+u_ex_4_fine = torch.load("Models_BL_on_ic_jump/u_ex_4_fine")
+u_ex_5_fine = torch.load("Models_BL_on_ic_jump/u_ex_5_fine")
+u_ex_6_fine = torch.load("Models_BL_on_ic_jump/u_ex_6_fine")
 u_exs_fine = [u_ex_0_fine, u_ex_1_fine, u_ex_2_fine, u_ex_3_fine, u_ex_4_fine, u_ex_5_fine, u_ex_6_fine]
 
 C_vec = np.zeros(rng)
