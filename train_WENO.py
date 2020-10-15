@@ -5,6 +5,7 @@ from define_problem_transport_eq import transport_equation
 from define_problem_Buckley_Leverett import Buckley_Leverett
 import numpy as np
 import matplotlib.pyplot as plt
+from initial_jump_generator import init_jump
 
 torch.set_default_dtype(torch.float64)
 
