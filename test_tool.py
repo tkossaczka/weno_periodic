@@ -4,13 +4,15 @@ import matplotlib.pyplot as plt
 from define_WENO_Network import WENONetwork
 from define_problem_transport_eq import transport_equation
 from define_problem_Buckley_Leverett import Buckley_Leverett
+from define_problem_Burgers_equation import Burgers_equation
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('Models_BL_on_ic_jump/model_30_60_36_0//29')
+train_model = torch.load('Models_BL_on_ic_jump/model_100_60_36_1/1')
 
 #problem = transport_equation
 problem = Buckley_Leverett
+#problem = Burgers_equation
 
 rng = 7
 
@@ -67,8 +69,8 @@ for j in range(rng):
     u_t = u_t.detach().numpy()
     _, x, t = my_problem.transformation(u_nt)
     time_steps = t.shape[0]
-    #problem_ex = problem(ic_numb=6, space_steps=60 * 2 * 2 * 2, time_steps=None, params=params)
-    #_, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, time_steps, just_one_time_step=False, trainable=False)
+    # problem_ex = problem(ic_numb=2, space_steps=60 * 2 * 2 * 2, time_steps=None, params=params)
+    # _, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, time_steps, just_one_time_step=False, trainable=False)
     u_exact_adjusted = u_exs[j][:,-1]
     error_nt_max = np.max(np.abs(u_nt-u_exact_adjusted.detach().numpy()))
     error_t_max = np.max(np.abs(u_t-u_exact_adjusted.detach().numpy()))

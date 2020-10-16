@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 
 def init_jump(x, numb=None, xmid=None, height=None, width=None):
     if numb == None:
-        numb = random.choice(range(1, 3))
+        #numb = random.choice(range(1, 3))
+        numb = 1
     if numb==1:
         if xmid == None:
             xmid1 = 1
-            height = np.abs(0.7 * np.random.randn()) + 0.1
+            height = np.minimum(np.abs(0.7 * np.random.randn()) + 0.1,1.5)
             width = random.choice(np.linspace(0.1, 0.4, 11))
             height = [height]
             xmid = [xmid1]
