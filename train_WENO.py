@@ -1,6 +1,7 @@
 from define_WENO_Network import WENONetwork
 import torch
 from torch import optim
+import pandas as pd
 from define_problem_transport_eq import transport_equation
 from define_problem_Buckley_Leverett import Buckley_Leverett
 from define_problem_Burgers_equation import Burgers_equation
@@ -43,6 +44,10 @@ def overflows_loss(u):
     loss = overflows # peeks_left + peeks_right
     return loss
 
+
+#optimizer = optim.SGD(train_model.parameters(), lr=0.1)
+optimizer = optim.Adam(train_model.parameters())
+
 def validation_problems(j):
     params_vld = []
     params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.25})
@@ -54,9 +59,6 @@ def validation_problems(j):
     params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 2})
     return params_vld[j]
 
-#optimizer = optim.SGD(train_model.parameters(), lr=0.1)
-optimizer = optim.Adam(train_model.parameters())
-
 u_ex_0 = torch.load("Models_BL_on_ic_jump/u_ex_0")
 u_ex_1 = torch.load("Models_BL_on_ic_jump/u_ex_1")
 u_ex_2 = torch.load("Models_BL_on_ic_jump/u_ex_2")
@@ -66,28 +68,30 @@ u_ex_5 = torch.load("Models_BL_on_ic_jump/u_ex_5")
 u_ex_6 = torch.load("Models_BL_on_ic_jump/u_ex_6")
 u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
 
-it = 100
+it = 20
 losses = []
 all_loss_test = []
+df=pd.read_csv("Exact_Solutions/parameters.csv")
 
 for j in range(it):
+    u_ex = np.load("Exact_Solutions/u_exact_60_{}.npy".format(j))
+    u_ex = torch.Tensor(u_ex)
+    width = float(df.loc[j,"width"])
+    #width = float(width.strip("[]"))
+    height = float(df.loc[j,"height"])
+    #height = float(height.strip("[]"))
+    C = float(df.loc[j,"C"])
     problem_main = problem_class(ic_numb=0, space_steps=60, time_steps=None, params=None)
+    problem_main.params["C"] = C
     params = problem_main.get_params()
     ts = problem_main.time_steps
-    ic = problem_main.initial_condition
-    numb = problem_main.numb
-    width = problem_main.width
-    height = problem_main.height
-    xmid = problem_main.xmid
-    problem_ex = problem_class(ic_numb=0, space_steps=60 * 2 * 2, time_steps=None, params=params)
-    problem_ex.initial_condition, _, _, _, _ = init_jump(problem_ex.x, numb=numb, xmid=xmid, height=height, width=width )
-    problem_ex.initial_condition = torch.Tensor(problem_ex.initial_condition)
-    _, u_ex = train_model.compute_exact(Buckley_Leverett, problem_ex, 60, ts, just_one_time_step=False, trainable=False)
+    problem_main.initial_condition, _, _, _, _ = init_jump(problem_main.x, numb=1, xmid=[1], height=[height], width=[width] )
+    problem_main.initial_condition = torch.Tensor(problem_main.initial_condition)
     V_init, nn = train_model.init_run_weno(problem_main, vectorized=True, just_one_time_step=False)
     V_train = V_init
     print(j)
     print(params)
-    print(numb, width, height, xmid)
+    print(width, height)
     single_problem_losses = []
     loss_test = []
     for k in range(nn):
@@ -109,7 +113,7 @@ for j in range(it):
         #print(params)
     losses.append(single_problem_losses)
     iteration = j
-    path = "Models_BL_on_ic_jump/model_100_60_36_1/{}".format(iteration)
+    path = "Models_on_generated_ex_sol/Model_100_60_36_0/{}".format(iteration)
     torch.save(train_model, path)
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
     for kk in range(7):
