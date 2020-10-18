@@ -6,6 +6,7 @@ from define_problem_transport_eq import transport_equation
 from define_problem_Buckley_Leverett import Buckley_Leverett
 from define_problem_Burgers_equation import Burgers_equation
 import random
+import os, sys, argparse
 
 torch.set_default_dtype(torch.float64)
 
@@ -14,11 +15,10 @@ problem = Buckley_Leverett
 #problem = Burgers_equation
 
 train_model = WENONetwork()
-
 parameters = []
 
-for k in range(5):
-    print(k)
+def save_problem_and_solution(save_path, sample_id):
+    print("{},".format(sample_id))
     problem_ex = problem(ic_numb=0, space_steps=60 * 2  , time_steps=None, params=None)
     numb = problem_ex.numb
     width = problem_ex.width
@@ -28,23 +28,26 @@ for k in range(5):
     u_exact, u_exact_60 = train_model.compute_exact(Buckley_Leverett, problem_ex, 60, 36, just_one_time_step=False, trainable=False)
     u_exact = u_exact.detach().numpy()
     u_exact_60 = u_exact_60.detach().numpy()
-    np.save("Exact_Solutions_1/u_exact_{}_{}".format(k, str(random.random())),u_exact)
-    np.save("Exact_Solutions_1/u_exact_60_{}_{}".format(k, str(random.random())), u_exact_60)
-    parameters.append([width, height, C])
 
-#pd.DataFrame(parameters)
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
 
-df=pd.DataFrame(parameters, columns=["width", "height", "C"])
+    np.save(os.path.join(save_path, "u_exact_{}".format(sample_id)), u_exact)
+    np.save(os.path.join(save_path, "u_exact60_{}".format(sample_id)), u_exact_60)
 
-df.to_csv("Exact_Solutions_1/parameters.csv",index=False)
-# df2=pd.read_csv("Exact_Solutions/parameters.csv")
+    if not os.path.exists(os.path.join(save_path, "parameters.txt")):
+        with open(os.path.join(save_path, "parameters.txt"), "a") as f:
+            f.write("{},{},{},{}\n".format("sample_id","width","height","C"))
+    with open(os.path.join(save_path, "parameters.txt"), "a") as f:
+        f.write("{},{},{},{}\n".format(sample_id, width, height, C))
 
-# a=[[1,2],[3,4],[5,5]]
-# pd.DataFrame(a)
-# df=pd.DataFrame(a)
-# df=pd.DataFrame(a, columns=["height", "width"])
-# df.to_csv("lol.csv",index=False)
-# df2=pd.read_csv("lol.csv")
-# df2.loc[2]
-# df2.loc[2,"height"]
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Generate exact solutions with given sample number for filename')
+    parser.add_argument('save_path', default='', help='sample number for filename')
+    parser.add_argument('sample_number', default='0', help='sample number for filename')
+
+    args = parser.parse_args()
+    save_problem_and_solution(args.save_path, args.sample_number)
+
+    # usage example: seq 16 | xargs -i{} -P8 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Buckley_Leveret_Data {}
 
