@@ -20,21 +20,19 @@ parameters = []
 def save_problem_and_solution(save_path, sample_id):
     print("{},".format(sample_id))
     problem_ex = problem(ic_numb=0, space_steps=60 * 2 * 2 * 2 , time_steps=None, params=None)
-    numb = problem_ex.numb
     width = problem_ex.width
     height = problem_ex.height
-    xmid = problem_ex.xmid
     C = problem_ex.params["C"]
     #ts = problem_ex.time_steps
-    u_exact, u_exact_64 = train_model.compute_exact(Buckley_Leverett, problem_ex, 60, 36, just_one_time_step=False, trainable=False)
+    u_exact, u_exact_60 = train_model.compute_exact(Buckley_Leverett, problem_ex, 60, 36, just_one_time_step=False, trainable=False)
     u_exact = u_exact.detach().numpy()
-    u_exact_64 = u_exact_64.detach().numpy()
+    u_exact_60 = u_exact_60.detach().numpy()
 
     if not os.path.exists(save_path):
         os.mkdir(save_path)
 
     np.save(os.path.join(save_path, "u_exact_{}".format(sample_id)), u_exact)
-    np.save(os.path.join(save_path, "u_exact60_{}".format(sample_id)), u_exact_64)
+    np.save(os.path.join(save_path, "u_exact60_{}".format(sample_id)), u_exact_60)
 
     if not os.path.exists(os.path.join(save_path, "parameters.txt")):
         with open(os.path.join(save_path, "parameters.txt"), "a") as f:

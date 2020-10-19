@@ -28,8 +28,8 @@ def exact_loss(u, u_ex):
     loss = error
     return loss
 
-def exact_overflows_loss(u, u_ex):
-    u_max = torch.Tensor([1.0])
+def exact_overflows_loss(u, u_ex, height):
+    u_max = torch.Tensor([height])
     u_min = torch.Tensor([0.0])
     overflows = torch.sum(torch.abs(torch.min(u, u_min)-u_min) + torch.max(u, u_max)-u_max )
     error = train_model.compute_error(u, u_ex)
@@ -47,33 +47,13 @@ def overflows_loss(u):
 #optimizer = optim.SGD(train_model.parameters(), lr=0.1)
 optimizer = optim.Adam(train_model.parameters())
 
-def validation_problems(j):
-    params_vld = []
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.25})
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.5})
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.7})
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.0})
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.3})
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.6})
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 2})
-    return params_vld[j]
-
-u_ex_0 = torch.load("Models_BL_on_ic_jump/u_ex_0")
-u_ex_1 = torch.load("Models_BL_on_ic_jump/u_ex_1")
-u_ex_2 = torch.load("Models_BL_on_ic_jump/u_ex_2")
-u_ex_3 = torch.load("Models_BL_on_ic_jump/u_ex_3")
-u_ex_4 = torch.load("Models_BL_on_ic_jump/u_ex_4")
-u_ex_5 = torch.load("Models_BL_on_ic_jump/u_ex_5")
-u_ex_6 = torch.load("Models_BL_on_ic_jump/u_ex_6")
-u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
-
-it = 10
-losses = []
-all_loss_test = []
-df=pd.read_csv("Buckley_Leverett_Data/parameters.txt")
+it = 100
+#losses = []
+#all_loss_test = []
+df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/parameters.txt")
 
 for j in range(it):
-    u_ex = np.load("Buckley_Leverett_Data/u_exact60_{}.npy".format(j))
+    u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/u_exact60_{}.npy".format(j))
     u_ex = torch.Tensor(u_ex)
     width = float(df[df.sample_id==j]["width"])
     height = float(df[df.sample_id==j]["height"])
@@ -89,8 +69,8 @@ for j in range(it):
     print(j)
     print(params)
     print(width, height)
-    single_problem_losses = []
-    loss_test = []
+    #single_problem_losses = []
+    #loss_test = []
     for k in range(nn):
         # Forward path
         V_train = train_model.forward(problem_main,V_train,k)
@@ -98,40 +78,37 @@ for j in range(it):
         optimizer.zero_grad()  # Clear gradients
         # Calculate loss
         #loss = overflows_loss(V_train)
-        loss = exact_overflows_loss(V_train, u_ex[:,k+1])
+        loss = exact_overflows_loss(V_train, u_ex[:,k+1], height)
         loss.backward()  # Backward pass
         optimizer.step()  # Optimize weights
         #g = train_model.parameters()
         #x = g.__next__()
         #print(x.detach().numpy().sum(axis=0))
         print(k, loss.data.numpy())
-        single_problem_losses.append(loss.detach().numpy().max())
+        #single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
-        #print(params)
-    losses.append(single_problem_losses)
-    iteration = j
-    path = "Models_on_generated_ex_sol/Model_10_60_36_0/{}".format(iteration)
+    #losses.append(single_problem_losses)
+    path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_00/{}".format(j)
     torch.save(train_model, path)
-    # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
-    for kk in range(7):
-        single_problem_loss_test = []
-        params = validation_problems(kk)
-        problem_test = problem_class(ic_numb=6, space_steps=60, time_steps=None, params=params)
-        u_init, nn = train_model.init_run_weno(problem_test, vectorized=False, just_one_time_step=False)
-        u_test = u_init
-        for k in range(nn):
-            uu_test = train_model.run_weno(problem_test, u_test, mweno=True,mapped=False,vectorized=False,trainable=True,k=k)
-            u_test[:,k+1]=uu_test
-        for k in range(nn+1):
-            single_problem_loss_test.append(exact_overflows_loss(u_test[:,k], u_exs[kk][:, k]).detach().numpy().max())
-        loss_test.append(single_problem_loss_test)
-    all_loss_test.append(loss_test)
+    # # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
+    # for kk in range(7):
+    #     single_problem_loss_test = []
+    #     params = validation_problems(kk)
+    #     problem_test = problem_class(ic_numb=6, space_steps=60, time_steps=None, params=params)
+    #     u_init, nn = train_model.init_run_weno(problem_test, vectorized=False, just_one_time_step=False)
+    #     u_test = u_init
+    #     for k in range(nn):
+    #         uu_test = train_model.run_weno(problem_test, u_test, mweno=True,mapped=False,vectorized=False,trainable=True,k=k)
+    #         u_test[:,k+1]=uu_test
+    #     for k in range(nn+1):
+    #         single_problem_loss_test.append(exact_overflows_loss(u_test[:,k], u_exs[kk][:, k]).detach().numpy().max())
+    #     loss_test.append(single_problem_loss_test)
+    # all_loss_test.append(loss_test)
 
-#loss_test = np.array(loss_test)
-losses = np.array(losses)
-all_loss_test = np.array(all_loss_test) #shape (training_steps, num_valid_problems, time_steps)
+#losses = np.array(losses)
+#all_loss_test = np.array(all_loss_test) #shape (training_steps, num_valid_problems, time_steps)
 # get (training_steps, num_valid_problems):
-plt.plot(all_loss_test[:,:,-1])
+#plt.plot(all_loss_test[:,:,-1])
 # plt.plot(all_loss_test.sum(axis=2))
 # plt.plot(all_loss_test.sum(axis=1).T)
 
