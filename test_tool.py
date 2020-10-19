@@ -8,7 +8,7 @@ from define_problem_Burgers_equation import Burgers_equation
 
 torch.set_default_dtype(torch.float64)
 
-train_model = torch.load('Models_on_generated_ex_sol/Model_100_60_36_0/4')
+train_model = torch.load('Models_on_generated_ex_sol/Model_10_60_36_0/0')
 
 #problem = transport_equation
 problem = Buckley_Leverett

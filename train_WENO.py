@@ -15,7 +15,6 @@ torch.set_default_dtype(torch.float64)
 train_model = WENONetwork()
 
 # DROP PROBLEM FOR TRAINING
-#params = None
 problem_class = Buckley_Leverett
 #problem_class = transport_equation
 
@@ -68,24 +67,22 @@ u_ex_5 = torch.load("Models_BL_on_ic_jump/u_ex_5")
 u_ex_6 = torch.load("Models_BL_on_ic_jump/u_ex_6")
 u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
 
-it = 20
+it = 10
 losses = []
 all_loss_test = []
-df=pd.read_csv("Exact_Solutions/parameters.csv")
+df=pd.read_csv("Buckley_Leverett_Data/parameters.txt")
 
 for j in range(it):
-    u_ex = np.load("Exact_Solutions/u_exact_60_{}.npy".format(j))
+    u_ex = np.load("Buckley_Leverett_Data/u_exact60_{}.npy".format(j))
     u_ex = torch.Tensor(u_ex)
-    width = float(df.loc[j,"width"])
-    #width = float(width.strip("[]"))
-    height = float(df.loc[j,"height"])
-    #height = float(height.strip("[]"))
-    C = float(df.loc[j,"C"])
+    width = float(df[df.sample_id==j]["width"])
+    height = float(df[df.sample_id==j]["height"])
+    C = float(df[df.sample_id==j]["C"])
     problem_main = problem_class(ic_numb=0, space_steps=60, time_steps=None, params=None)
     problem_main.params["C"] = C
     params = problem_main.get_params()
     ts = problem_main.time_steps
-    problem_main.initial_condition, _, _, _, _ = init_jump(problem_main.x, numb=1, xmid=[1], height=[height], width=[width] )
+    problem_main.initial_condition, _, _, _, _ = init_jump(problem_main.x, numb=1, xmid=1, height=height, width=width)
     problem_main.initial_condition = torch.Tensor(problem_main.initial_condition)
     V_init, nn = train_model.init_run_weno(problem_main, vectorized=True, just_one_time_step=False)
     V_train = V_init
@@ -113,7 +110,7 @@ for j in range(it):
         #print(params)
     losses.append(single_problem_losses)
     iteration = j
-    path = "Models_on_generated_ex_sol/Model_100_60_36_0/{}".format(iteration)
+    path = "Models_on_generated_ex_sol/Model_10_60_36_0/{}".format(iteration)
     torch.save(train_model, path)
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
     for kk in range(7):
