@@ -11,34 +11,41 @@ import os, sys, argparse
 torch.set_default_dtype(torch.float64)
 
 #problem = transport_equation
-problem = Buckley_Leverett
-#problem = Burgers_equation
+#problem = Buckley_Leverett
+problem = Burgers_equation
 
 train_model = WENONetwork()
 parameters = []
 
 def save_problem_and_solution(save_path, sample_id):
     print("{},".format(sample_id))
-    problem_ex = problem(ic_numb=0, space_steps=60 * 2 * 2 * 2 , time_steps=None, params=None)
+    ic_id = random.randint(1,3)
+    problem_ex = problem(ic_numb=ic_id, space_steps=64 * 2 , time_steps=None, params=None)
     width = problem_ex.width
     height = problem_ex.height
-    C = problem_ex.params["C"]
-    #ts = problem_ex.time_steps
-    u_exact, u_exact_60 = train_model.compute_exact(Buckley_Leverett, problem_ex, 60, 36, just_one_time_step=False, trainable=False)
+    k = problem_ex.k
+    #C = problem_ex.params["C"]
+    u_exact, u_exact_64 = train_model.compute_exact(Burgers_equation, problem_ex, 64, 27, just_one_time_step=False, trainable=False)
     u_exact = u_exact.detach().numpy()
-    u_exact_60 = u_exact_60.detach().numpy()
+    u_exact_64 = u_exact_64.detach().numpy()
 
     if not os.path.exists(save_path):
         os.mkdir(save_path)
 
     np.save(os.path.join(save_path, "u_exact_{}".format(sample_id)), u_exact)
-    np.save(os.path.join(save_path, "u_exact60_{}".format(sample_id)), u_exact_60)
+    np.save(os.path.join(save_path, "u_exact64_{}".format(sample_id)), u_exact_64)
+
+    # if not os.path.exists(os.path.join(save_path, "parameters.txt")):
+    #     with open(os.path.join(save_path, "parameters.txt"), "a") as f:
+    #         f.write("{},{},{},{}\n".format("sample_id","width","height","C"))
+    # with open(os.path.join(save_path, "parameters.txt"), "a") as f:
+    #     f.write("{},{},{},{}\n".format(sample_id, width, height, C))
 
     if not os.path.exists(os.path.join(save_path, "parameters.txt")):
         with open(os.path.join(save_path, "parameters.txt"), "a") as f:
-            f.write("{},{},{},{}\n".format("sample_id","width","height","C"))
+            f.write("{},{},{}\n".format("sample_id","ic_id","k"))
     with open(os.path.join(save_path, "parameters.txt"), "a") as f:
-        f.write("{},{},{},{}\n".format(sample_id, width, height, C))
+        f.write("{},{},{}\n".format(sample_id, ic_id, k))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate exact solutions with given sample number for filename')
@@ -49,4 +56,4 @@ if __name__ == "__main__":
     save_problem_and_solution(args.save_path, args.sample_number)
 
     # usage example: seq 0 15 | xargs -i{} -P8 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_WENO\WENO_general_periodic\Buckley_Leverett_Data {}
-
+    # seq 0 15 | xargs -i{} -P8 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_W ENO\Burgers_Equation_Test\Burgers_Equation_Data {}

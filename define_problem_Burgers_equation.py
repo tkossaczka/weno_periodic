@@ -3,6 +3,7 @@ import torch
 from initial_condition_switch import init_cond
 from exact_solution_switch import exact_sol
 from initial_jump_generator import init_jump
+from initial_condition_Burgers import init_cond_B
 
 class Burgers_equation():
     def __init__(self, ic_numb, space_steps, time_steps=None, params=None, w5_minus='Lax-Friedrichs'):
@@ -19,7 +20,7 @@ class Burgers_equation():
         n, self.t, self.h, self.x, self.time = self.__compute_n_t_h_x_time()
         if time_steps is None:
             self.time_steps = n
-        self.initial_condition, self.numb, self.xmid, self.height, self.width = self.__compute_initial_condition()
+        self.initial_condition, self.numb, self.xmid, self.height, self.width, self.k = self.__compute_initial_condition()
         self.w5_minus = w5_minus
 
     def init_params(self):
@@ -58,9 +59,9 @@ class Burgers_equation():
             u_init, numb, xmid, height, width = init_jump(x)
             u_init = torch.Tensor(u_init)
         else:
-            u_init, numb, xmid, height, width = init_cond(ic_numb, x)
+            u_init, numb, xmid, height, width, k = init_cond_B(ic_numb, x)
             u_init = torch.Tensor(u_init)
-        return u_init, numb, xmid, height, width
+        return u_init, numb, xmid, height, width, k
 
     def der_2(self):
         term_2 = 0

@@ -5,39 +5,52 @@ from mpl_toolkits.mplot3d import Axes3D
 from define_WENO_Network import WENONetwork
 from define_problem_transport_eq import transport_equation
 from define_problem_Buckley_Leverett import Buckley_Leverett
+from define_problem_Burgers_equation import Burgers_equation
 
-#train_model = WENONetwork()
-train_model = torch.load('model3')
+train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_00/14")
+#train_model = torch.load('model3')
 
 torch.set_default_dtype(torch.float64)
 
 params=None
 #params =  {'T': 0.4, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.25}
 
-problem = transport_equation
+#problem = transport_equation
 #problem = Buckley_Leverett
+problem = Burgers_equation
 
-problem_main = problem(ic_numb=2,space_steps=80, time_steps=None, params = params)
-params = problem_main.get_params()
+my_problem = problem(ic_numb=3,space_steps=64, time_steps=None, params = params)
+params = my_problem.get_params()
 #problem_ex = problem(space_steps=100*2*2, time_steps=40*4*4, params = params)
 
-# WHOLE SOLUTION
+# #WHOLE SOLUTION
 # u, nn = train_model.init_run_weno(problem_main, vectorized=False, just_one_time_step=False)
 # for k in range(nn):
-#     uu = train_model.run_weno(problem_main, u, mweno=True,mapped=False,vectorized=False,trainable=True,k=k)
+#     uu = train_model.run_weno(problem_main, u, mweno=True,mapped=False,vectorized=False,trainable=False,k=k)
 #     u[:,k+1]=uu
 # u=u.detach().numpy()
 # _,x,t = problem_main.transformation(u)
 # n=u.shape[1]
 # plt.plot(x,u[:,0],x,u[:,-1])
+# X, Y = np.meshgrid(x, t, indexing="ij")
+# fig = plt.figure()
+# ax = fig.gca(projection='3d')
+# ax.plot_surface(X, Y, u)
+
 
 # JUST LAST TIME STEP
-u, nn = train_model.init_run_weno(problem_main, vectorized=True, just_one_time_step=False)
+u_nt, nn = train_model.init_run_weno(my_problem, vectorized=True, just_one_time_step=False)
 for k in range(nn):
-    u = train_model.run_weno(problem_main, u, mweno=True,mapped=False,vectorized=True,trainable=False,k=k)
-u=u.detach().numpy()
-_,x,t = problem_main.transformation(u)
-plt.plot(x,u)
+    u_nt = train_model.run_weno(my_problem, u_nt, mweno=True, mapped=False, vectorized=True, trainable=False, k=k)
+u_nt=u_nt.detach().numpy()
+u_t, nn = train_model.init_run_weno(my_problem, vectorized=True, just_one_time_step=False)
+for k in range(nn):
+    u_t = train_model.run_weno(my_problem, u_t, mweno=True, mapped=False, vectorized=True, trainable=True, k=k)
+u_t = u_t.detach().numpy()
+_, x, t = my_problem.transformation(u_nt)
+plt.plot(x, u_nt, color='blue', marker='o')
+plt.plot(x, u_t, marker='o', color='green')
+
 
 # problem_ex = problem(ic_numb=6, space_steps=50*2*2, time_steps=None, params=params)
 # _, u_ex = train_model.compute_exact(Buckley_Leverett, problem_ex, 50, 25, just_one_time_step=False, trainable=False)
