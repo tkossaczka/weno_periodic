@@ -6,7 +6,7 @@ def init_jump(x, numb=None, xmid=None, height=None, width=None):
     if xmid == None:
         xmid = 1
         height = 1 #np.minimum(np.abs(0.7 * np.random.randn()) + 0.1,1.5)
-        width = random.choice(np.linspace(0.1, 0.4, 110))
+        width = random.choice(np.linspace(0.2, 0.4, 110))
     u0 = np.zeros(x.shape[0])
     for k in range(0, x.shape[0]):
         if x[k] >= xmid - width and x[k] <= xmid + width:

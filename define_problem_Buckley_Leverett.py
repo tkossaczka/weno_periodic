@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+import random
 from initial_condition_switch import init_cond
 from exact_solution_switch import exact_sol
 from initial_jump_generator import init_jump
@@ -29,7 +30,7 @@ class Buckley_Leverett():
         params["e"] = 10 ** (-13)
         params["L"] = 0
         params["R"] = 2
-        params["C"] = np.abs(1 * np.random.randn())+0.1
+        params["C"] = random.uniform(0.1, 0.95)
         self.params = params
 
     def get_params(self):

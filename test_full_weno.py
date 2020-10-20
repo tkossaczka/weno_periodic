@@ -26,10 +26,10 @@ params = None
 #problem = transport_equation
 problem = Buckley_Leverett
 
-params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.2}
+params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.5}
 my_problem = problem(ic_numb=0,space_steps=120, time_steps=None, params = params)
 params = my_problem.params
-my_problem.initial_condition, _, _, _, _ = init_jump(my_problem.x, numb=1, xmid=1, height=1, width=0.1)
+my_problem.initial_condition, _, _, _, _ = init_jump(my_problem.x, numb=1, xmid=1, height=0.3, width=0.1)
 my_problem.initial_condition = torch.Tensor(my_problem.initial_condition)
 #V_t, S_t, tt_t = train_model.full_WENO(my_problem, trainable=True, plot=False, vectorized=False)
 V_nt, S_nt, tt_nt = train_model.full_WENO(my_problem, trainable=False, plot=True, vectorized=False)
