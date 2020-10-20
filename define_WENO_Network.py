@@ -19,6 +19,8 @@ class WENONetwork(nn.Module):
         net = nn.Sequential(
             nn.Conv1d(1, 20, kernel_size=5, stride=1, padding=2),
             nn.ELU(),
+            # nn.Conv1d(20, 20, kernel_size=3, stride=1, padding=1),
+            # nn.ELU(),
             nn.Conv1d(20, 40, kernel_size=5, stride=1, padding=2),
             nn.ELU(),
             # nn.Conv1d(40, 80, kernel_size=1, stride=1, padding=0),
@@ -98,7 +100,10 @@ class WENONetwork(nn.Module):
         betan0, betan1, betan2 = get_betas(uu_left)
 
         if trainable:
+            #uu_normalized = uu / (torch.max(uu)-torch.min(uu))
             dif = self.__get_average_diff(uu)
+
+
             beta_multiplicators = self.inner_nn_weno5(dif[None, None, :])[0, 0, :] + self.weno5_mult_bias
             # beta_multiplicators_left = beta_multiplicators[:-1]
             # beta_multiplicators_right = beta_multiplicators[1:]
