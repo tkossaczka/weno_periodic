@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
+from initial_condition_Burgers import init_cond_B
 from define_WENO_Network import WENONetwork
 from define_problem_transport_eq import transport_equation
 from define_problem_Buckley_Leverett import Buckley_Leverett
@@ -8,11 +9,13 @@ from define_problem_Burgers_equation import Burgers_equation
 
 torch.set_default_dtype(torch.float64)
 
+train_model = WENONetwork()
+
 train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_07/16')
 
 #problem = transport_equation
-problem = Buckley_Leverett
-#problem = Burgers_equation
+#problem = Buckley_Leverett
+problem = Burgers_equation
 
 rng = 7
 
@@ -95,3 +98,23 @@ err_mat[3,:] = err_t_mean_vec
 # problem_ex_test = problem(ic_numb=6, space_steps=60 * 2 * 2 * 2, time_steps=None, params=params)
 # _, u_ex_test = train_model.compute_exact(Buckley_Leverett, problem_ex_test, 60, 36, just_one_time_step=False, trainable=False)
 # torch.save(u_ex_test, "u_ex_0_fine")
+
+# def validation_problems(j):
+#     params_vld = []
+#     params_vld.append({'ic_id': 1, 'k': 30})
+#     params_vld.append({'ic_id': 1, 'k': 15})
+#     params_vld.append({'ic_id': 2, 'k': 0.5})
+#     params_vld.append({'ic_id': 2, 'k': 1})
+#     params_vld.append({'ic_id': 2, 'k': 1.5})
+#     params_vld.append({'ic_id': 3, 'k': 0.5})
+#     params_vld.append({'ic_id': 3, 'k': 1})
+#     params_vld.append({'ic_id': 3, 'k': 1.5})
+#     return params_vld[j]
+#
+# params = None
+# problem_ex_test = problem(ic_numb=2, space_steps=64 * 2 * 2 * 2 , time_steps=None, params=params)
+# problem_ex_test.initial_condition, _, _, _, _, _ = init_cond_B(3, problem_ex_test.x, 1.5)
+# problem_ex_test.initial_condition = torch.Tensor(problem_ex_test.initial_condition)
+# u_ex, u_ex64 = train_model.compute_exact(Buckley_Leverett, problem_ex_test, 64, 41, just_one_time_step=False, trainable=False)
+# torch.save(u_ex64, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Basic_test_set/u_ex64_7")
+# torch.save(u_ex, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Basic_test_set/u_ex_7")

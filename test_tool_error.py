@@ -2,6 +2,7 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from initial_condition_Burgers import init_cond_B
 from initial_jump_generator import init_jump
 from define_WENO_Network import WENONetwork
 from define_problem_transport_eq import transport_equation
@@ -11,33 +12,41 @@ from define_problem_Burgers_equation import Burgers_equation
 torch.set_default_dtype(torch.float64)
 
 #problem = transport_equation
-problem = Buckley_Leverett
-#problem = Burgers_equation
+#problem = Buckley_Leverett
+problem = Burgers_equation
 
-rng = 40
+rng = 3
 
 err_nt_max_vec = np.zeros(rng)
 err_nt_mean_vec = np.zeros(rng)
 err_t_max_vec = np.zeros(rng)
 err_t_mean_vec = np.zeros(rng)
 
-df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1/Test_set/parameters.txt")
+# df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1/Test_set/parameters.txt")
+df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data/parameters.txt")
 
-train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_07/16')
+# train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_07/16')
 #train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Old_models/Models_BL_on_ic_numb_6/model3')
+train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_00/14")
 
-kk = 160
-for j in range(10):
-    sample_id = kk
-    u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1/Test_set/u_exact60_{}.npy".format(sample_id))
+
+ll = 13
+for j in range(3):
+    sample_id = ll
+    #u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1/Test_set/u_exact60_{}.npy".format(sample_id))
+    u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data/u_exact64_{}.npy".format(sample_id))
     u_ex = torch.Tensor(u_ex)
     print(j)
-    width = float(df[df.sample_id == sample_id]["width"])
-    height = float(df[df.sample_id == sample_id]["height"])
-    C = float(df[df.sample_id == sample_id]["C"])
-    params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': C}
-    my_problem = problem(ic_numb=0, space_steps=60, time_steps=None, params=params)
-    my_problem.initial_condition, _, _, _, _ = init_jump(my_problem.x, numb=1, xmid=1, height=height, width=width)
+    # width = float(df[df.sample_id == sample_id]["width"])
+    # height = float(df[df.sample_id == sample_id]["height"])
+    # C = float(df[df.sample_id == sample_id]["C"])
+    # params = {'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': C}
+    ic_id = float(df[df.sample_id == sample_id]["ic_id"])
+    kk = float(df[df.sample_id == sample_id]["k"])
+    params = None
+    my_problem = problem(ic_numb=ic_id, space_steps=64, time_steps=None, params=params)
+    my_problem.initial_condition, _, _, _, _, _ = init_cond_B(ic_id, my_problem.x, kk)
+    #my_problem.initial_condition, _, _, _, _ = init_jump(my_problem.x, numb=1, xmid=1, height=height, width=width)
     my_problem.initial_condition = torch.Tensor(my_problem.initial_condition)
     u_t, nn = train_model.init_run_weno(my_problem, vectorized=True, just_one_time_step=False)
     u_nt = u_t
@@ -60,7 +69,7 @@ for j in range(10):
     plt.plot(x, u_nt, color='blue', marker='o')
     plt.plot(x, u_t, marker='o', color='green')
     plt.plot(x, u_ex[:,-1])
-    kk = kk + 1
+    ll = ll + 1
 
 err_mat = np.zeros((4,rng))
 err_mat[0,:] = err_nt_max_vec

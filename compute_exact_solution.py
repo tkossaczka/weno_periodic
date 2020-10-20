@@ -20,12 +20,12 @@ parameters = []
 def save_problem_and_solution(save_path, sample_id):
     print("{},".format(sample_id))
     ic_id = random.randint(1,3)
-    problem_ex = problem(ic_numb=ic_id, space_steps=64 * 2 , time_steps=None, params=None)
-    width = problem_ex.width
-    height = problem_ex.height
+    problem_ex = problem(ic_numb=ic_id, space_steps=64 * 2 * 2 * 2, time_steps=None, params=None)
+    #width = problem_ex.width
+    #height = problem_ex.height
     k = problem_ex.k
     #C = problem_ex.params["C"]
-    u_exact, u_exact_64 = train_model.compute_exact(Burgers_equation, problem_ex, 64, 27, just_one_time_step=False, trainable=False)
+    u_exact, u_exact_64 = train_model.compute_exact(Burgers_equation, problem_ex, 64, 41, just_one_time_step=False, trainable=False)
     u_exact = u_exact.detach().numpy()
     u_exact_64 = u_exact_64.detach().numpy()
 
