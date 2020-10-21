@@ -56,4 +56,4 @@ if __name__ == "__main__":
     save_problem_and_solution(args.save_path, args.sample_number)
 
     # usage example: seq 0 15 | xargs -i{} -P8 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_WENO\WENO_general_periodic\Buckley_Leverett_Data {}
-    # seq 0 15 | xargs -i{} -P8 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_W ENO\Burgers_Equation_Test\Burgers_Equation_Data {}
+    # seq 0 15 | xargs -i{} -P8 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_WENO\Burgers_Equation_Test\Burgers_Equation_Data {}

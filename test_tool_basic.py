@@ -11,44 +11,56 @@ torch.set_default_dtype(torch.float64)
 
 train_model = WENONetwork()
 
-train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_07/16')
+#train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_07/16')
+train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_00/40")
 
 #problem = transport_equation
 #problem = Buckley_Leverett
 problem = Burgers_equation
 
-rng = 7
+# rng = 7
+# def validation_problems(j):
+#     params_vld = []
+#     params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.25})
+#     params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.5})
+#     params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.7})
+#     params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.0})
+#     params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.3})
+#     params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.6})
+#     params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 2})
+#     return params_vld[j]
+# u_ex_0_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_0_fine")
+# u_ex_1_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_1_fine")
+# u_ex_2_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_2_fine")
+# u_ex_3_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_3_fine")
+# u_ex_4_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_4_fine")
+# u_ex_5_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_5_fine")
+# u_ex_6_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_6_fine")
+# u_exs = [u_ex_0_fine, u_ex_1_fine, u_ex_2_fine, u_ex_3_fine, u_ex_4_fine, u_ex_5_fine, u_ex_6_fine]
 
+rng = 8
 def validation_problems(j):
     params_vld = []
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.25})
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.5})
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 0.7})
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.0})
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.3})
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 1.6})
-    params_vld.append({'T': 0.5, 'e': 1e-13, 'L': 0, 'R': 2, 'C': 2})
+    params_vld.append({'ic_id': 1, 'k': 30})
+    params_vld.append({'ic_id': 1, 'k': 15})
+    params_vld.append({'ic_id': 2, 'k': 0.5})
+    params_vld.append({'ic_id': 2, 'k': 1})
+    params_vld.append({'ic_id': 2, 'k': 1.5})
+    params_vld.append({'ic_id': 3, 'k': 0.5})
+    params_vld.append({'ic_id': 3, 'k': 1})
+    params_vld.append({'ic_id': 3, 'k': 1.5})
     return params_vld[j]
+u_ex_0 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data/Basic_test_set/u_ex64_0")
+u_ex_1 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data/Basic_test_set/u_ex64_1")
+u_ex_2 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data/Basic_test_set/u_ex64_2")
+u_ex_3 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data/Basic_test_set/u_ex64_3")
+u_ex_4 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data/Basic_test_set/u_ex64_4")
+u_ex_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data/Basic_test_set/u_ex64_5")
+u_ex_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data/Basic_test_set/u_ex64_6")
+u_ex_7 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data/Basic_test_set/u_ex64_7")
+u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6, u_ex_7]
 
-# u_ex_0 = torch.load("Models_BL_on_ic_jump/u_ex_0")
-# u_ex_1 = torch.load("Models_BL_on_ic_jump/u_ex_1")
-# u_ex_2 = torch.load("Models_BL_on_ic_jump/u_ex_2")
-# u_ex_3 = torch.load("Models_BL_on_ic_jump/u_ex_3")
-# u_ex_4 = torch.load("Models_BL_on_ic_jump/u_ex_4")
-# u_ex_5 = torch.load("Models_BL_on_ic_jump/u_ex_5")
-# u_ex_6 = torch.load("Models_BL_on_ic_jump/u_ex_6")
-# u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
 
-u_ex_0_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_0_fine")
-u_ex_1_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_1_fine")
-u_ex_2_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_2_fine")
-u_ex_3_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_3_fine")
-u_ex_4_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_4_fine")
-u_ex_5_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_5_fine")
-u_ex_6_fine = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data/Basic_test_set/u_ex_6_fine")
-u_exs = [u_ex_0_fine, u_ex_1_fine, u_ex_2_fine, u_ex_3_fine, u_ex_4_fine, u_ex_5_fine, u_ex_6_fine]
-
-C_vec = np.zeros(rng)
 err_nt_max_vec = np.zeros(rng)
 err_nt_mean_vec = np.zeros(rng)
 err_t_max_vec = np.zeros(rng)
@@ -57,10 +69,17 @@ err_t_mean_vec = np.zeros(rng)
 
 for j in range(rng):
     print(j)
-    params = validation_problems(j)
-    my_problem = problem(ic_numb=6, space_steps=60, time_steps=None, params=params)
-    #params=my_problem.params
-    C_vec[j] = my_problem.params["C"]
+    # Burger
+    params_vld = validation_problems(j)
+    ic_id_test = params_vld['ic_id']
+    kkkk = params_vld['k']
+    params = None
+    my_problem = problem(ic_numb=1, space_steps=64, time_steps=None, params=params)
+    my_problem.initial_condition, _, _, _, _, _ = init_cond_B(ic_id_test, my_problem.x, kkkk)
+    my_problem.initial_condition = torch.Tensor(my_problem.initial_condition)
+    # Buckley
+    #params = validation_problems(j)
+    #my_problem = problem(ic_numb=6, space_steps=64, time_steps=None, params=params)
     u_nt, nn = train_model.init_run_weno(my_problem, vectorized=True, just_one_time_step=False)
     for k in range(nn):
         u_nt = train_model.run_weno(my_problem, u_nt, mweno=True, mapped=False, vectorized=True, trainable=False, k=k)
@@ -87,7 +106,7 @@ for j in range(rng):
     plt.plot(x, u_t, marker='o', color='green')
     plt.plot(x, u_exact_adjusted)
 
-err_mat = np.zeros((4,7))
+err_mat = np.zeros((4,8))
 err_mat[0,:] = err_nt_max_vec
 err_mat[1,:] = err_t_max_vec
 err_mat[2,:] = err_nt_mean_vec
