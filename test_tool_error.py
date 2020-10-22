@@ -15,7 +15,7 @@ torch.set_default_dtype(torch.float64)
 #problem = Buckley_Leverett
 problem = Burgers_equation
 
-rng = 5
+rng = 15
 
 err_nt_max_vec = np.zeros(rng)
 err_nt_mean_vec = np.zeros(rng)
@@ -23,18 +23,18 @@ err_t_max_vec = np.zeros(rng)
 err_t_mean_vec = np.zeros(rng)
 
 # df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1/Test_set/parameters.txt")
-df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data/parameters.txt")
+df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1/parameters.txt")
 
 # train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_07/16')
 #train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Old_models/Models_BL_on_ic_numb_6/model3')
-train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_00/8")
+train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_02/49")
 
 
 ll = 160
 for j in range(rng):
     sample_id = ll
     #u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1/Test_set/u_exact60_{}.npy".format(sample_id))
-    u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data/Test_set/u_exact64_{}.npy".format(sample_id))
+    u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1/Test_set/u_exact64_{}.npy".format(sample_id))
     u_ex = torch.Tensor(u_ex)
     print(j)
     # width = float(df[df.sample_id == sample_id]["width"])

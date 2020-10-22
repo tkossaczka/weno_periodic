@@ -26,10 +26,10 @@ class Buckley_Leverett():
 
     def init_params(self):
         params = dict()
-        params["T"] = 0.5
+        params["T"] = 0.4
         params["e"] = 10 ** (-13)
-        params["L"] = 0
-        params["R"] = 2
+        params["L"] = -1
+        params["R"] = 1
         params["C"] = random.uniform(0.1, 0.95)
         self.params = params
 
@@ -44,9 +44,8 @@ class Buckley_Leverett():
         h = (np.abs(L) + np.abs(R)) / m
         # n = np.ceil(0.5*T/(h**2))
         # n = np.ceil(T / ((2/3) * h**(5/3)))
-        # n = int(n)
-        # n=50
-        n = np.ceil(0.08*T/(h**2))
+        n=2240
+        #n = np.ceil(0.08*T/(h**2))
         #n = np.ceil(0.25 * T / (h ** (5/3)))
         n = int(n)
         t = T / n

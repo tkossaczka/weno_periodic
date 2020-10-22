@@ -25,7 +25,7 @@ class Burgers_equation():
 
     def init_params(self):
         params = dict()
-        params["T"] = 0.5
+        params["T"] = 0.3
         params["e"] = 10 ** (-13)
         params["L"] = 0
         params["R"] = 2
