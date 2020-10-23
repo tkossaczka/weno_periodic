@@ -20,7 +20,7 @@ parameters = []
 def save_problem_and_solution(save_path, sample_id):
     print("{},".format(sample_id))
     #ic_id = random.randint(1,3)
-    problem_ex = problem(ic_numb=6, space_steps=513, time_steps=None, params=None)
+    problem_ex = problem(ic_numb=6, space_steps=512, time_steps=None, params=None)
     #width = problem_ex.width
     #height = problem_ex.height
     #k = problem_ex.k
@@ -55,5 +55,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
     save_problem_and_solution(args.save_path, args.sample_number)
 
-    # usage example: seq 0 11 | xargs -i{} -P6 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_WENO\Buckley_Leverett_Test\Buckley_Leverett_Data_2 {}
+    # usage example: seq 12 119 | xargs -i{} -P6 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_WENO\Buckley_Leverett_Test\Buckley_Leverett_Data_2 {}
     # seq 0 15 | xargs -i{} -P8 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_WENO\Burgers_Equation_Test\Burgers_Equation_Data {}

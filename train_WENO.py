@@ -67,21 +67,21 @@ u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4]
 # optimizer = optim.SGD(train_model.parameters(), lr=0.1)
 optimizer = optim.Adam(train_model.parameters(), lr=1e-3)
 
-it = 12
+it = 20
 losses = []
 all_loss_test = []
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/parameters.txt")
 
 for j in range(it):
-    sample_id=j
-    #sample_id = random.randint(0,100)
+    #sample_id=j
+    sample_id = random.randint(0,99)
     u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/u_exact64_{}.npy".format(sample_id))
     u_ex = torch.Tensor(u_ex)
     #width = float(df[df.sample_id==sample_id]["width"])
     #height = float(df[df.sample_id==sample_id]["height"])
     C = float(df[df.sample_id==sample_id]["C"])
     params = {'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': C}
-    problem_main = problem_class(ic_numb=6, space_steps=64, time_steps=None, params=None)
+    problem_main = problem_class(ic_numb=6, space_steps=64, time_steps=None, params=params)
     #problem_main.params["C"] = C
     params = problem_main.get_params()
     ts = problem_main.time_steps
@@ -90,7 +90,7 @@ for j in range(it):
     V_init, nn = train_model.init_run_weno(problem_main, vectorized=True, just_one_time_step=False)
     V_train = V_init
     print(j)
-    print(params)
+    print(sample_id, params)
     #print(width, height)
     single_problem_losses = []
     loss_test = []
@@ -111,7 +111,7 @@ for j in range(it):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_09/{}".format(j)
+    path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_10/{}".format(j)
     torch.save(train_model, path)
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
     for kk in range(5):

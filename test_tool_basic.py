@@ -11,7 +11,7 @@ torch.set_default_dtype(torch.float64)
 
 train_model = WENONetwork()
 
-train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_07/16')
+train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_10/16')
 #train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_04/0")
 
 #problem = transport_equation
@@ -130,11 +130,14 @@ err_mat[3,:] = err_t_mean_vec
 #     params_vld.append({'ic_id': 3, 'k': 1.5})
 #     return params_vld[j]
 #
-#params = None
-params = {'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.7}
-problem_ex_test = problem(ic_numb=6, space_steps=513 , time_steps=None, params=params)
-#problem_ex_test.initial_condition, _, _, _, _, _ = init_cond_B(3, problem_ex_test.x, 1.5)
-#problem_ex_test.initial_condition = torch.Tensor(problem_ex_test.initial_condition)
-u_ex, u_ex64 = train_model.compute_exact(Buckley_Leverett, problem_ex_test, 64, 35, just_one_time_step=False, trainable=False)
-torch.save(u_ex64, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_4")
-torch.save(u_ex, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_4")
+# #params = None
+# params = {'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.9}
+# problem_ex_test = problem(ic_numb=6, space_steps=512 , time_steps=None, params=params)
+# #problem_ex_test.initial_condition, _, _, _, _, _ = init_cond_B(3, problem_ex_test.x, 1.5)
+# #problem_ex_test.initial_condition = torch.Tensor(problem_ex_test.initial_condition)
+# u_ex, u_ex64 = train_model.compute_exact(Buckley_Leverett, problem_ex_test, 64, 35, just_one_time_step=False, trainable=False)
+# torch.save(u_ex64, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_6")
+# torch.save(u_ex, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_6")
+
+
+
