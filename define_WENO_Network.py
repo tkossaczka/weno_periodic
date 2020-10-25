@@ -103,7 +103,6 @@ class WENONetwork(nn.Module):
             #uu_normalized = uu / (torch.max(uu)-torch.min(uu))
             dif = self.__get_average_diff(uu)
 
-
             beta_multiplicators = self.inner_nn_weno5(dif[None, None, :])[0, 0, :] + self.weno5_mult_bias
             # beta_multiplicators_left = beta_multiplicators[:-1]
             # beta_multiplicators_right = beta_multiplicators[1:]

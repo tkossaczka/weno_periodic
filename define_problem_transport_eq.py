@@ -50,7 +50,7 @@ class transport_equation():
         #m = self.space_steps
         x = self.x
         ic_numb = self.ic_numb
-        u_init = init_cond(ic_numb,x)
+        u_init,_,_,_,_ = init_cond(ic_numb,x)
         u_init = torch.Tensor(u_init)
 
         # u_init = torch.zeros(m)

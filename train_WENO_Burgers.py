@@ -58,41 +58,42 @@ def validation_problems(j):
     params_vld.append({'ic_id': 3, 'k': 1.5})
     return params_vld[j]
 
-u_ex_0 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_0")
-u_ex_1 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_1")
-u_ex_2 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_2")
-u_ex_3 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_3")
-u_ex_4 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_4")
-u_ex_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_5")
-u_ex_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_6")
-u_ex_7 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_7")
+u_ex_0 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_0")
+u_ex_1 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_1")
+u_ex_2 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_2")
+u_ex_3 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_3")
+u_ex_4 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_4")
+u_ex_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_5")
+u_ex_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_6")
+u_ex_7 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_7")
 u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6, u_ex_7]
 
 # optimizer = optim.SGD(train_model.parameters(), lr=0.1)
 optimizer = optim.Adam(train_model.parameters(), lr=0.001)
 
-it = 20
+it = 50
 losses = []
 all_loss_test = []
-df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/parameters.txt")
-df1 = df[df['ic_id'] == 2]
+df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/parameters.txt")
+df1 = df[df['ic_id'] == 3]
 list_df = [df1['sample_id']]
+index = 0
 
 for j in range(it):
-    #sample_id=j
-    sample_id = random.randint(1,300)
-    u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/u_exact64_{}.npy".format(sample_id))
-    u_ex = torch.Tensor(u_ex)
-    ic_id = float(df[df.sample_id==sample_id]["ic_id"])
-    kkk = float(df[df.sample_id==sample_id]["k"])
-    # if j not in df1["sample_id"]:
-    #     j = j+1
-    #     continue
-    # sample_id = int(df1.loc[j,:]["sample_id"])
-    # kkk = float(df1.loc[j,:]["k"])
-    # ic_id = float(df1.loc[j,:]["ic_id"])
-    # u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/u_exact64_{}.npy".format(sample_id))
+    # sample_id=j
+    # sample_id = random.randint(1,100)
+    # u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/u_exact64_{}.npy".format(sample_id))
     # u_ex = torch.Tensor(u_ex)
+    # ic_id = float(df[df.sample_id==sample_id]["ic_id"])
+    # kkk = float(df[df.sample_id==sample_id]["k"])
+    if j not in df1["sample_id"]:
+        j = j+1
+        continue
+    sample_id = int(df1.loc[j,:]["sample_id"])
+    kkk = float(df1.loc[j,:]["k"])
+    ic_id = float(df1.loc[j,:]["ic_id"])
+    u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/u_exact64_{}.npy".format(sample_id))
+    u_ex = torch.Tensor(u_ex)
     problem_main = problem_class(ic_numb=ic_id, space_steps=64, time_steps=None, params=None)
     params = problem_main.get_params()
     ts = problem_main.time_steps
@@ -123,8 +124,9 @@ for j in range(it):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_04/{}".format(j)
+    path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_08/{}".format(index)
     torch.save(train_model, path)
+    index = index + 1
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
     for kk in range(8):
         single_problem_loss_test = []

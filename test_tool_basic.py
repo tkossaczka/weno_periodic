@@ -11,54 +11,54 @@ torch.set_default_dtype(torch.float64)
 
 train_model = WENONetwork()
 
-train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_10/16')
-#train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_04/0")
+#train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_10/16')
+train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_08/19")
 
 #problem = transport_equation
-problem = Buckley_Leverett
-#problem = Burgers_equation
+#problem = Buckley_Leverett
+problem = Burgers_equation
 
-rng = 7
-def validation_problems(j):
-    params_vld = []
-    params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.25})
-    params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.4})
-    params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.5})
-    params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.6})
-    params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.7})
-    params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.8})
-    params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.9})
-    return params_vld[j]
-u_ex_0 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_0")
-u_ex_1 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_1")
-u_ex_2 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_2")
-u_ex_3 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_3")
-u_ex_4 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_4")
-u_ex_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_5")
-u_ex_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_6")
-u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
-
-# rng = 8
+# rng = 7
 # def validation_problems(j):
 #     params_vld = []
-#     params_vld.append({'ic_id': 1, 'k': 30})
-#     params_vld.append({'ic_id': 1, 'k': 15})
-#     params_vld.append({'ic_id': 2, 'k': 0.5})
-#     params_vld.append({'ic_id': 2, 'k': 1})
-#     params_vld.append({'ic_id': 2, 'k': 1.5})
-#     params_vld.append({'ic_id': 3, 'k': 0.5})
-#     params_vld.append({'ic_id': 3, 'k': 1})
-#     params_vld.append({'ic_id': 3, 'k': 1.5})
+#     params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.25})
+#     params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.4})
+#     params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.5})
+#     params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.6})
+#     params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.7})
+#     params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.8})
+#     params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.9})
 #     return params_vld[j]
-# u_ex_0 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_0")
-# u_ex_1 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_1")
-# u_ex_2 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_2")
-# u_ex_3 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_3")
-# u_ex_4 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_4")
-# u_ex_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_5")
-# u_ex_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_6")
-# u_ex_7 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_2/Basic_test_set/u_ex64_7")
-# u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6, u_ex_7]
+# u_ex_0 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_0")
+# u_ex_1 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_1")
+# u_ex_2 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_2")
+# u_ex_3 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_3")
+# u_ex_4 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_4")
+# u_ex_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_5")
+# u_ex_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_6")
+# u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
+
+rng = 8
+def validation_problems(j):
+    params_vld = []
+    params_vld.append({'ic_id': 1, 'k': 30})
+    params_vld.append({'ic_id': 1, 'k': 15})
+    params_vld.append({'ic_id': 2, 'k': 0.5})
+    params_vld.append({'ic_id': 2, 'k': 1})
+    params_vld.append({'ic_id': 2, 'k': 1.5})
+    params_vld.append({'ic_id': 3, 'k': 0.5})
+    params_vld.append({'ic_id': 3, 'k': 1})
+    params_vld.append({'ic_id': 3, 'k': 1.5})
+    return params_vld[j]
+u_ex_0 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_0")
+u_ex_1 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_1")
+u_ex_2 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_2")
+u_ex_3 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_3")
+u_ex_4 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_4")
+u_ex_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_5")
+u_ex_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_6")
+u_ex_7 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_7")
+u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6, u_ex_7]
 
 
 err_nt_max_vec = np.zeros(rng)
@@ -70,16 +70,16 @@ err_t_mean_vec = np.zeros(rng)
 for j in range(rng):
     print(j)
     # Burger
-    # params_vld = validation_problems(j)
-    # ic_id_test = params_vld['ic_id']
-    # kkkk = params_vld['k']
-    # params = None
-    # my_problem = problem(ic_numb=1, space_steps=64, time_steps=None, params=params)
-    # my_problem.initial_condition, _, _, _, _, _ = init_cond_B(ic_id_test, my_problem.x, kkkk)
-    # my_problem.initial_condition = torch.Tensor(my_problem.initial_condition)
+    params_vld = validation_problems(j)
+    ic_id_test = params_vld['ic_id']
+    kkkk = params_vld['k']
+    params = None
+    my_problem = problem(ic_numb=1, space_steps=64, time_steps=None, params=params)
+    my_problem.initial_condition, _, _, _, _, _ = init_cond_B(ic_id_test, my_problem.x, kkkk)
+    my_problem.initial_condition = torch.Tensor(my_problem.initial_condition)
     # Buckley
-    params = validation_problems(j)
-    my_problem = problem(ic_numb=6, space_steps=64, time_steps=None, params=params)
+    # params = validation_problems(j)
+    # my_problem = problem(ic_numb=6, space_steps=64, time_steps=None, params=params)
     u_nt, nn = train_model.init_run_weno(my_problem, vectorized=True, just_one_time_step=False)
     for k in range(nn):
         u_nt = train_model.run_weno(my_problem, u_nt, mweno=True, mapped=False, vectorized=True, trainable=False, k=k)
@@ -130,14 +130,14 @@ err_mat[3,:] = err_t_mean_vec
 #     params_vld.append({'ic_id': 3, 'k': 1.5})
 #     return params_vld[j]
 #
-# #params = None
-# params = {'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.9}
-# problem_ex_test = problem(ic_numb=6, space_steps=512 , time_steps=None, params=params)
-# #problem_ex_test.initial_condition, _, _, _, _, _ = init_cond_B(3, problem_ex_test.x, 1.5)
-# #problem_ex_test.initial_condition = torch.Tensor(problem_ex_test.initial_condition)
-# u_ex, u_ex64 = train_model.compute_exact(Buckley_Leverett, problem_ex_test, 64, 35, just_one_time_step=False, trainable=False)
-# torch.save(u_ex64, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_6")
-# torch.save(u_ex, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_6")
+# params = None
+# #params = {'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.9}
+# problem_ex_test = problem(ic_numb=1, space_steps=512 , time_steps=None, params=params)
+# problem_ex_test.initial_condition, _, _, _, _, _ = init_cond_B(3, problem_ex_test.x, 1.5)
+# problem_ex_test.initial_condition = torch.Tensor(problem_ex_test.initial_condition)
+# u_ex, u_ex64 = train_model.compute_exact(Buckley_Leverett, problem_ex_test, 64, 25, just_one_time_step=False, trainable=False)
+# torch.save(u_ex64, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_7")
+# torch.save(u_ex, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_7")
 
 
-
+# Burgers: 64,25 Buckley: 64,35
