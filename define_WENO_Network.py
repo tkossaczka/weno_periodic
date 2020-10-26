@@ -53,7 +53,7 @@ class WENONetwork(nn.Module):
         # first for weno 5, second for weno 6
         return 0.1, 0.1
 
-    def WENO5(self, uu, e, w5_minus, mweno=True, mapped=False, trainable=True):
+    def WENO5(self, uu, e, h, w5_minus, mweno=True, mapped=False, trainable=True):
         uu_left = uu
         uu_right = torch.roll(uu, -1)
 
@@ -99,6 +99,9 @@ class WENONetwork(nn.Module):
         betap0, betap1, betap2 = get_betas(uu_right)
         betan0, betan1, betan2 = get_betas(uu_left)
 
+        old_betas_p = [betap0, betap1, betap2]
+        old_betas_n = [betan0, betan1, betan2]
+
         if trainable:
             #uu_normalized = uu / (torch.max(uu)-torch.min(uu))
             dif = self.__get_average_diff(uu)
@@ -123,16 +126,17 @@ class WENONetwork(nn.Module):
         d1 = 6 / 10;
         d2 = 3 / 10;
 
-        def get_omegas_mweno(betas, ds):
-            beta_range_square = (betas[2] - betas[0]) ** 2
+        def get_omegas_mweno(betas, ds, old_betas):
+            #beta_range_square = h**6
+            beta_range_square = (old_betas[2] - old_betas[0]) ** 2
             return [d / (e + beta) ** 2 * (beta_range_square + (e + beta) ** 2) for beta, d in zip(betas, ds)]
 
-        def get_omegas_weno(betas, ds):
+        def get_omegas_weno(betas, ds, old_betas):
             return [d / (e + beta) ** 2 for beta, d in zip(betas, ds)]
 
         omegas_func_dict = {0: get_omegas_weno, 1: get_omegas_mweno}
-        [omegap_0, omegap_1, omegap_2] = omegas_func_dict[int(mweno)]([betap0, betap1, betap2], [d0, d1, d2])
-        [omegan_0, omegan_1, omegan_2] = omegas_func_dict[int(mweno)]([betan0, betan1, betan2], [d0, d1, d2])
+        [omegap_0, omegap_1, omegap_2] = omegas_func_dict[int(mweno)]([betap0, betap1, betap2], [d0, d1, d2], old_betas_p)
+        [omegan_0, omegan_1, omegan_2] = omegas_func_dict[int(mweno)]([betan0, betan1, betan2], [d0, d1, d2], old_betas_n)
 
         def normalize(tensor_list):
             sum_ = sum(tensor_list)  # note, that inbuilt sum applies __add__ iteratively therefore its overloaded-
@@ -325,8 +329,8 @@ class WENONetwork(nn.Module):
         #uu_diff = problem.funct_diffusion(u[:, ll - 1])
         #RHSd = self.WENO6(uu_diff, e, mweno=mweno, mapped=mapped, trainable=trainable)
         max_der = torch.max(torch.abs(problem.funct_derivative(uu)))
-        RHSc_p = self.WENO5(0.5*(uu_conv+max_der*uu), e, w5_minus=False, mweno=mweno, mapped=mapped, trainable=trainable)
-        RHSc_n = self.WENO5(0.5*(uu_conv-max_der*uu), e, w5_minus=True, mweno=mweno, mapped=mapped, trainable=trainable)
+        RHSc_p = self.WENO5(0.5*(uu_conv+max_der*uu), e, h, w5_minus=False, mweno=mweno, mapped=mapped, trainable=trainable)
+        RHSc_n = self.WENO5(0.5*(uu_conv-max_der*uu), e, h, w5_minus=True, mweno=mweno, mapped=mapped, trainable=trainable)
         RHSc = RHSc_p + RHSc_n
         # u1 = u[:, ll - 1] + t * ((term_2 / h ** 2) * RHSd - (term_1 / h) * RHSc + term_0 * u[:, ll - 1])
         u1 = uu + t * ( - (term_1 / h) * RHSc )
@@ -335,8 +339,8 @@ class WENONetwork(nn.Module):
         #uu1_diff = problem.funct_diffusion(u1)
         #RHS1d = self.WENO6(uu1_diff, e, mweno=mweno, mapped=mapped, trainable=trainable)
         max_der = torch.max(torch.abs(problem.funct_derivative(u1)))
-        RHS1c_p = self.WENO5(0.5*(uu1_conv+max_der*u1), e, w5_minus=False, mweno=mweno, mapped=mapped, trainable=trainable)
-        RHS1c_n = self.WENO5(0.5*(uu1_conv-max_der*u1), e, w5_minus=True, mweno=mweno, mapped=mapped, trainable=trainable)
+        RHS1c_p = self.WENO5(0.5*(uu1_conv+max_der*u1), e, h, w5_minus=False, mweno=mweno, mapped=mapped, trainable=trainable)
+        RHS1c_n = self.WENO5(0.5*(uu1_conv-max_der*u1), e, h, w5_minus=True, mweno=mweno, mapped=mapped, trainable=trainable)
         RHS1c = RHS1c_p + RHS1c_n
         # u2 = 0.75*u[:,ll-1]+0.25*u1+0.25*t*((term_2/h ** 2)*RHS1d-(term_1/h)*RHS1c+term_0*u1)
         u2 = 0.75*uu+0.25*u1+0.25*t*(-(term_1/h)*RHS1c)
@@ -345,9 +349,9 @@ class WENONetwork(nn.Module):
         #uu2_diff = problem.funct_diffusion(u2)
         #RHS2d = self.WENO6(uu2_diff, e, mweno=mweno, mapped=mapped, trainable=trainable)
         max_der = torch.max(torch.abs(problem.funct_derivative(u2)))
-        RHS2c_p = self.WENO5(0.5 * (uu2_conv + max_der * u2), e, w5_minus=False, mweno=mweno, mapped=mapped,
+        RHS2c_p = self.WENO5(0.5 * (uu2_conv + max_der * u2), e, h, w5_minus=False, mweno=mweno, mapped=mapped,
                              trainable=trainable)
-        RHS2c_n = self.WENO5(0.5 * (uu2_conv - max_der * u2), e, w5_minus=True, mweno=mweno, mapped=mapped,
+        RHS2c_n = self.WENO5(0.5 * (uu2_conv - max_der * u2), e, h, w5_minus=True, mweno=mweno, mapped=mapped,
                              trainable=trainable)
         RHS2c = RHS2c_p + RHS2c_n
         # if vectorized:
@@ -433,10 +437,9 @@ class WENONetwork(nn.Module):
     def compute_error(self, u, u_ex):
         u_last = u
         u_ex_last = u_ex
-        #xerr = (u_ex_last - u_last)**2
-        xerr =torch.abs(u_ex_last - u_last)
-        #err = torch.max(xerr)
-        err = torch.mean(xerr)
+        #err = torch.max(torch.abs(u_ex_last - u_last))
+        err = torch.mean((u_ex_last - u_last)**2)
+        #err = torch.mean(torch.abs(u_ex_last - u_last))
         #print(xerr)
         return err
 
