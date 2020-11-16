@@ -281,14 +281,16 @@ class WENONetwork(nn.Module):
         return RHS
 
     def __get_average_diff(self, uu):
-        dif = uu[1:] - uu[:-1]
-        dif_left = torch.zeros_like(uu)
-        dif_right = torch.zeros_like(uu)
-        dif_left[:-1] = dif
-        dif_left[-1] = dif[-1]
-        dif_right[1:] = dif
-        dif_right[0] = dif[0]
-        dif_final = 0.5 * dif_left + 0.5 * dif_right
+        #dif = uu[1:] - uu[:-1]
+        dif = torch.roll(uu, -1) - uu
+        #dif_left = torch.zeros_like(uu)
+        #dif_right = torch.zeros_like(uu)
+        #dif_left[:-1] = dif
+        #dif_left[-1] = dif[-1]
+        #dif_right[1:] = dif
+        #dif_right[0] = dif[0]
+        #dif_final = 0.5 * dif_left + 0.5 * dif_right
+        dif_final = 0.5 * dif + 0.5 * torch.roll(dif,1)
         return dif_final
 
     def init_run_weno(self, problem, vectorized, just_one_time_step):
