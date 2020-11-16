@@ -75,23 +75,23 @@ it = 100
 losses = []
 all_loss_test = []
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/parameters.txt")
-df1 = df[df['ic_id'] == 3]
+df1 = df[df['ic_id'] == 2]
 list_df = [df1['sample_id']]
 index = 0
 
 for j in range(it):
     # sample_id=j
-    sample_id = random.randint(1,100)
-    u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/u_exact64_{}.npy".format(sample_id))
-    u_ex = torch.Tensor(u_ex)
-    ic_id = float(df[df.sample_id==sample_id]["ic_id"])
-    kkk = float(df[df.sample_id==sample_id]["k"])
-    # if j not in df1["sample_id"]:
-    #     j = j+1
-    #     continue
-    # sample_id = int(df1.loc[j,:]["sample_id"])
-    # kkk = float(df1.loc[j,:]["k"])
-    # ic_id = float(df1.loc[j,:]["ic_id"])
+    # sample_id = random.randint(1,100)
+    # u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/u_exact64_{}.npy".format(sample_id))
+    # u_ex = torch.Tensor(u_ex)
+    # ic_id = float(df[df.sample_id==sample_id]["ic_id"])
+    # kkk = float(df[df.sample_id==sample_id]["k"])
+    if j not in df1["sample_id"]:
+        j = j+1
+        continue
+    sample_id = int(df1.loc[j,:]["sample_id"])
+    kkk = float(df1.loc[j,:]["k"])
+    ic_id = float(df1.loc[j,:]["ic_id"])
     u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/u_exact64_{}.npy".format(sample_id))
     u_ex = torch.Tensor(u_ex)
     problem_main = problem_class(ic_numb=ic_id, space_steps=64, time_steps=None, params=None)
@@ -124,7 +124,7 @@ for j in range(it):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_14/{}".format(index)
+    path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_18/{}".format(index)
     torch.save(train_model, path)
     index = index + 1
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING

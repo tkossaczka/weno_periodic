@@ -8,8 +8,8 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 from define_problem_Burgers_equation import Burgers_equation
 
 train_model = WENONetwork()
-#train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_10/16")
-train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_06/16")
+train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_18/46")
+#train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_18/46")
 
 torch.set_default_dtype(torch.float64)
 
@@ -17,10 +17,10 @@ params=None
 #params =  {'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.25}
 
 #problem = transport_equation
-#problem = Buckley_Leverett
-problem = Burgers_equation
+problem = Buckley_Leverett
+#problem = Burgers_equation
 
-my_problem = problem(ic_numb=3,space_steps=64*2, time_steps=None, params = params)
+my_problem = problem(ic_numb=6,space_steps=64, time_steps=None, params = params)
 params = my_problem.get_params()
 #problem_ex = problem(space_steps=100*2*2, time_steps=40*4*4, params = params)
 
