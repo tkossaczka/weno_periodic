@@ -9,6 +9,7 @@ from define_problem_Burgers_equation import Burgers_equation
 import numpy as np
 import matplotlib.pyplot as plt
 from initial_jump_generator import init_jump
+import os, sys
 
 torch.set_default_dtype(torch.float64)
 
@@ -74,7 +75,7 @@ u_exs = [u_ex_whole_0[0:512 + 1:4, 0:2240 + 1:16], u_ex_whole_1[0:512 + 1:4, 0:2
 # optimizer = optim.SGD(train_model.parameters(), lr=0.1)
 optimizer = optim.Adam(train_model.parameters(), lr=1e-3)
 
-it = 500
+it = 30
 losses = []
 all_loss_test = []
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/parameters.txt")
@@ -95,11 +96,11 @@ for j in range(it):
     ts = problem_main.time_steps
     #problem_main.initial_condition, _, _, _, _ = init_jump(problem_main.x, numb=1, xmid=1, height=height, width=width)
     #problem_main.initial_condition = torch.Tensor(problem_main.initial_condition)
-    V_init, nn = train_model.init_run_weno(problem_main, vectorized=True, just_one_time_step=True)
-    init_id = random.randint(0,ts-2)
-    print(init_id)
-    V_train = u_ex[:,init_id]
-    #V_train = V_init
+    V_init, nn = train_model.init_run_weno(problem_main, vectorized=True, just_one_time_step=False)
+    #init_id = random.randint(0,ts-2)
+    #print(init_id)
+    #V_train = u_ex[:,init_id]
+    V_train = V_init
     print(j)
     print(sample_id, params)
     #print(width, height)
@@ -112,8 +113,8 @@ for j in range(it):
         optimizer.zero_grad()  # Clear gradients
         # Calculate loss
         #loss = overflows_loss(V_train)
-        #loss = exact_overflows_loss(V_train, u_ex[:,k+1])
-        loss = exact_overflows_loss(V_train, u_ex[:, init_id+1])
+        loss = exact_overflows_loss(V_train, u_ex[:,k+1])
+        #loss = exact_overflows_loss(V_train, u_ex[:, init_id+1])
         loss.backward()  # Backward pass
         optimizer.step()  # Optimize weights
         #g = train_model.parameters()
@@ -123,10 +124,13 @@ for j in range(it):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_21/{}".format(j)
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_25/"
+    if not os.path.exists(base_path):
+        os.mkdir(base_path)
+    path = os.path.join(base_path, "{}.pt".format(j))
     torch.save(train_model, path)
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
-    for kk in range(1):
+    for kk in range(3):
         single_problem_loss_test = []
         params = validation_problems(kk)
         problem_test = problem_class(ic_numb=6, space_steps=128, time_steps=None, params=params)

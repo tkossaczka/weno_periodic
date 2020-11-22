@@ -16,7 +16,7 @@ problem = Buckley_Leverett
 #problem = Burgers_equation
 
 if problem == Buckley_Leverett:
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_21/50')
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_25/1.pt')
     rng = 7
     def validation_problems(j):
         params_vld = []
@@ -43,10 +43,12 @@ if problem == Buckley_Leverett:
     u_ex_whole_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_5")
     u_ex_whole_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_6")
     u_exs_whole = [u_ex_whole_0, u_ex_whole_1, u_ex_whole_2, u_ex_whole_3, u_ex_whole_4, u_ex_whole_5, u_ex_whole_6]
-    u_exs = [u_ex_whole_0[0:512 + 1:4, 0:2240 + 1:16], u_ex_whole_1[0:512 + 1:4, 0:2240 + 1:16],
-             u_ex_whole_2[0:512 + 1:4, 0:2240 + 1:16], u_ex_whole_3[0:512 + 1:4, 0:2240 + 1:16],
-             u_ex_whole_4[0:512 + 1:4, 0:2240 + 1:16], u_ex_whole_5[0:512 + 1:4, 0:2240 + 1:16],
-             u_ex_whole_6[0:512 + 1:4, 0:2240 + 1:16]]
+    divider_space = 4
+    divider_time = 16
+    u_exs = [u_ex_whole_0[0:512 + 1:divider_space, 0:2240 + 1:divider_time], u_ex_whole_1[0:512 + 1:divider_space, 0:2240 + 1:divider_time],
+             u_ex_whole_2[0:512 + 1:divider_space, 0:2240 + 1:divider_time], u_ex_whole_3[0:512 + 1:divider_space, 0:2240 + 1:divider_time],
+             u_ex_whole_4[0:512 + 1:divider_space, 0:2240 + 1:divider_time], u_ex_whole_5[0:512 + 1:divider_space, 0:2240 + 1:divider_time],
+             u_ex_whole_6[0:512 + 1:divider_space, 0:2240 + 1:divider_time]]
 elif problem == Burgers_equation:
     train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_18/10")
     rng = 8
