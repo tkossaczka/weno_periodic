@@ -16,7 +16,7 @@ problem = Buckley_Leverett
 #problem = Burgers_equation
 
 if problem == Buckley_Leverett:
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_18/46')
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_21/50')
     rng = 7
     def validation_problems(j):
         params_vld = []
@@ -35,7 +35,18 @@ if problem == Buckley_Leverett:
     u_ex_4 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_4")
     u_ex_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_5")
     u_ex_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex64_6")
-    u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
+    u_ex_whole_0 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_0")
+    u_ex_whole_1 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_1")
+    u_ex_whole_2 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_2")
+    u_ex_whole_3 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_3")
+    u_ex_whole_4 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_4")
+    u_ex_whole_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_5")
+    u_ex_whole_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_6")
+    u_exs_whole = [u_ex_whole_0, u_ex_whole_1, u_ex_whole_2, u_ex_whole_3, u_ex_whole_4, u_ex_whole_5, u_ex_whole_6]
+    u_exs = [u_ex_whole_0[0:512 + 1:4, 0:2240 + 1:16], u_ex_whole_1[0:512 + 1:4, 0:2240 + 1:16],
+             u_ex_whole_2[0:512 + 1:4, 0:2240 + 1:16], u_ex_whole_3[0:512 + 1:4, 0:2240 + 1:16],
+             u_ex_whole_4[0:512 + 1:4, 0:2240 + 1:16], u_ex_whole_5[0:512 + 1:4, 0:2240 + 1:16],
+             u_ex_whole_6[0:512 + 1:4, 0:2240 + 1:16]]
 elif problem == Burgers_equation:
     train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_18/10")
     rng = 8
@@ -69,7 +80,7 @@ for j in range(rng):
     print(j)
     if problem == Buckley_Leverett:
         params = validation_problems(j)
-        my_problem = problem(ic_numb=6, space_steps=64, time_steps=None, params=params)
+        my_problem = problem(ic_numb=6, space_steps=64*2, time_steps=None, params=params)
     elif problem == Burgers_equation:
         params_vld = validation_problems(j)
         ic_id_test = params_vld['ic_id']
@@ -88,9 +99,12 @@ for j in range(rng):
     u_t = u_t.detach().numpy()
     _, x, t = my_problem.transformation(u_nt)
     time_steps = t.shape[0]
+    h = my_problem.h
+    x_ex = np.linspace(-1, 1 - h, 512)
     # problem_ex = problem(ic_numb=2, space_steps=60 * 2 * 2 * 2, time_steps=None, params=params)
     # _, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, time_steps, just_one_time_step=False, trainable=False)
     u_exact_adjusted = u_exs[j][:,-1]
+    u_exact = u_exs_whole[j][:,-1]
     error_nt_max = np.max(np.abs(u_nt-u_exact_adjusted.detach().numpy()))
     error_t_max = np.max(np.abs(u_t-u_exact_adjusted.detach().numpy()))
     error_nt_mean = np.mean((u_nt-u_exact_adjusted.detach().numpy())**2)
@@ -102,7 +116,7 @@ for j in range(rng):
     plt.figure(j+1)
     plt.plot(x, u_nt, color='blue', marker='o')
     plt.plot(x, u_t, marker='o', color='green')
-    plt.plot(x, u_exact_adjusted)
+    plt.plot(x_ex, u_exact)
 
 err_mat = np.zeros((4,rng))
 err_mat[0,:] = err_nt_max_vec
