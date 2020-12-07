@@ -43,8 +43,8 @@ if problem == Buckley_Leverett:
     u_ex_whole_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_5")
     u_ex_whole_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_6")
     u_exs_whole = [u_ex_whole_0, u_ex_whole_1, u_ex_whole_2, u_ex_whole_3, u_ex_whole_4, u_ex_whole_5, u_ex_whole_6]
-    divider_space = 4
-    divider_time = 16
+    divider_space = 4*2
+    divider_time = 16*4
     u_exs = [u_ex_whole_0[0:512 + 1:divider_space, 0:2240 + 1:divider_time], u_ex_whole_1[0:512 + 1:divider_space, 0:2240 + 1:divider_time],
              u_ex_whole_2[0:512 + 1:divider_space, 0:2240 + 1:divider_time], u_ex_whole_3[0:512 + 1:divider_space, 0:2240 + 1:divider_time],
              u_ex_whole_4[0:512 + 1:divider_space, 0:2240 + 1:divider_time], u_ex_whole_5[0:512 + 1:divider_space, 0:2240 + 1:divider_time],
@@ -84,7 +84,8 @@ for j in range(rng):
     print(j)
     if problem == Buckley_Leverett:
         params = validation_problems(j)
-        my_problem = problem(ic_numb=6, space_steps=64*2, time_steps=None, params=params)
+        #params['T'] = 0.2
+        my_problem = problem(ic_numb=6, space_steps=64, time_steps=None, params=params)
     elif problem == Burgers_equation:
         params_vld = validation_problems(j)
         ic_id_test = params_vld['ic_id']
@@ -141,10 +142,10 @@ err_mat[5,:] = err_t_mean_vec
 
 # err_mat = np.zeros((rng,6))
 # err_mat[:,0] = err_nt_JS_max_vec
-# err_mat[:,1] = err_nt_JS_mean_vec
-# err_mat[:,2] = err_nt_max_vec
-# err_mat[:,3] = err_nt_mean_vec
-# err_mat[:,4] = err_t_max_vec
+# err_mat[:,3] = err_nt_JS_mean_vec
+# err_mat[:,1] = err_nt_max_vec
+# err_mat[:,4] = err_nt_mean_vec
+# err_mat[:,2] = err_t_max_vec
 # err_mat[:,5] = err_t_mean_vec
 # err_mat=err_mat.T
 #
