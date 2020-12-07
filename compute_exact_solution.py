@@ -27,7 +27,7 @@ def save_problem_and_solution(save_path, sample_id):
     C = problem_ex.params["C"]
     u_exact, u_exact_128 = train_model.compute_exact(problem, problem_ex, 64*2, 140, just_one_time_step=False, trainable=False)
     u_exact = u_exact.detach().numpy()
-    u_exact_64 = u_exact_128.detach().numpy()
+    u_exact_128 = u_exact_128.detach().numpy()
 
     if not os.path.exists(save_path):
         os.mkdir(save_path)

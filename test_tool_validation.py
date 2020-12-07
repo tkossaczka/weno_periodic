@@ -23,17 +23,17 @@ def exact_overflows_loss(u, u_ex):
     loss = error + overflows
     return loss
 
-df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/parameters.txt")
+df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/parameters.txt")
 
 all_loss_test = []
 for i in range(30):
     print(i)
     sample_id = 100
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_30/{}.pt'.format(i))
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_31/{}.pt'.format(i))
     loss_test = []
     for j in range(8):
-        u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Validation_set/u_exact_{}.npy".format(sample_id))
-        u_ex = u_ex[0:512 + 1:4, 0:2240 + 1:16]
+        u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Validation_set/u_exact128_{}.npy".format(sample_id))
+        #u_ex = u_ex[0:512 + 1:4, 0:2240 + 1:16]
         u_ex = torch.Tensor(u_ex)
         C = float(df[df.sample_id == sample_id]["C"])
         print(C)
