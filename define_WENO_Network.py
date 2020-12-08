@@ -21,14 +21,14 @@ class WENONetwork(nn.Module):
             nn.ELU(),
             # nn.Conv1d(20, 20, kernel_size=3, stride=1, padding=1),
             # nn.ReLU(),
-            nn.Conv1d(20, 40, kernel_size=5, stride=1, padding=2),
+            nn.Conv1d(20, 20, kernel_size=5, stride=1, padding=2),
             nn.ELU(),
             # nn.Conv1d(40, 80, kernel_size=1, stride=1, padding=0),
             # nn.ReLU(),
             # nn.Conv1d(80, 40, kernel_size=1, stride=1, padding=0),
             # nn.ReLU(),
-            nn.Conv1d(40, 20, kernel_size=3, stride=1, padding=1),
-            nn.ELU(),
+            # nn.Conv1d(40, 20, kernel_size=3, stride=1, padding=1),
+            # nn.ELU(),
             nn.Conv1d(20, 1, kernel_size=1, stride=1, padding=0),
             nn.Sigmoid())
         return net
