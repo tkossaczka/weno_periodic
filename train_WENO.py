@@ -88,16 +88,16 @@ u_exs = [u_ex_0_w[0:1024 + 1:8, 0:8960 + 1:64], u_ex_1_w[0:1024 + 1:8, 0:8960 + 
 #u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
 
 # optimizer = optim.SGD(train_model.parameters(), lr=0.1)
-optimizer = optim.Adam(train_model.parameters(), lr=1e-3)
+optimizer = optim.Adam(train_model.parameters(), lr=1e-4)
 
-it = 60
+it = 10
 losses = []
 all_loss_test = []
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/parameters.txt")
 
 for j in range(it):
-    sample_id=60
-    #sample_id = random.randint(0,99)
+    #sample_id=j
+    sample_id = random.randint(0,59)
     u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/u_exact_{}.npy".format(sample_id))
     u_ex = u_ex[0:1024 + 1:8, 0:8960 + 1:64]
     u_ex = torch.Tensor(u_ex)
@@ -139,7 +139,7 @@ for j in range(it):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_32/"
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_37/"
     if not os.path.exists(base_path):
         os.mkdir(base_path)
     path = os.path.join(base_path, "{}.pt".format(j))
@@ -158,7 +158,6 @@ for j in range(it):
             single_problem_loss_test.append(exact_overflows_loss(u_test[:,k], u_exs[kk][:, k]).detach().numpy().max())
         loss_test.append(single_problem_loss_test)
     all_loss_test.append(loss_test)
-    sample_id = sample_id-1
 
 losses = np.array(losses)
 all_loss_test = np.array(all_loss_test) #shape (training_steps, num_valid_problems, time_steps)

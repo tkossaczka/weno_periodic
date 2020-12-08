@@ -16,7 +16,7 @@ problem = Buckley_Leverett
 #problem = Burgers_equation
 
 if problem == Buckley_Leverett:
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_31/50.pt')
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_37/4.pt')
     rng = 7
     def validation_problems(j):
         params_vld = []
