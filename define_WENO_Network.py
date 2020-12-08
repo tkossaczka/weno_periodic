@@ -105,6 +105,7 @@ class WENONetwork(nn.Module):
         if trainable:
             #uu_normalized = uu / (torch.max(uu)-torch.min(uu))
             dif = self.__get_average_diff(uu)
+            dif2 = self.__get_average_diff2(uu)
 
             beta_multiplicators = self.inner_nn_weno5(dif[None, None, :])[0, 0, :] + self.weno5_mult_bias
             # beta_multiplicators_left = beta_multiplicators[:-1]
@@ -281,17 +282,12 @@ class WENONetwork(nn.Module):
         return RHS
 
     def __get_average_diff(self, uu):
-        #dif = uu[1:] - uu[:-1]
-        dif = torch.roll(uu, -1) - uu
-        #dif_left = torch.zeros_like(uu)
-        #dif_right = torch.zeros_like(uu)
-        #dif_left[:-1] = dif
-        #dif_left[-1] = dif[-1]
-        #dif_right[1:] = dif
-        #dif_right[0] = dif[0]
-        #dif_final = 0.5 * dif_left + 0.5 * dif_right
-        dif_final = 0.5 * dif + 0.5 * torch.roll(dif,1)
-        return dif_final
+        dif = 0.5*torch.roll(uu,-1)-0.5*torch.roll(uu,1)
+        return dif
+
+    def __get_average_diff2(self, uu):
+        dif2 = torch.roll(uu, -1) - 2 * uu + torch.roll(uu, 1)
+        return dif2
 
     def init_run_weno(self, problem, vectorized, just_one_time_step):
         m = problem.space_steps

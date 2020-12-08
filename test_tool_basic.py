@@ -16,7 +16,7 @@ problem = Buckley_Leverett
 #problem = Burgers_equation
 
 if problem == Buckley_Leverett:
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_30/10.pt')
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_31/50.pt')
     rng = 7
     def validation_problems(j):
         params_vld = []
@@ -96,7 +96,7 @@ err_t_mean_vec = np.zeros(rng)
 err_nt_JS_max_vec = np.zeros(rng)
 err_nt_JS_mean_vec = np.zeros(rng)
 
-for j in range(0,4):
+for j in range(rng):
     print(j)
     if problem == Buckley_Leverett:
         params = validation_problems(j)
@@ -205,7 +205,7 @@ err_mat[5,:] = err_t_mean_vec
 # u_ex, u_ex128 = train_model.compute_exact(Buckley_Leverett, problem_ex_test, 64*2, 35*4, just_one_time_step=False, trainable=False)
 # torch.save(u_ex, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Basic_test_set/u_ex_4")
 # torch.save(u_ex128, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Basic_test_set/u_ex128_4")
-# torch.save(u_ex, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_7")
+# # # torch.save(u_ex, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_7")
 
 # Burgers: 64,25 Buckley: 64,35
 
