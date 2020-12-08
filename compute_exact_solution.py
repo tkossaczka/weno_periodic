@@ -55,5 +55,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
     save_problem_and_solution(args.save_path, args.sample_number)
 
-    # usage example: seq 7 18 | xargs -i{} -P6 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_WENO\Buckley_Leverett_Test\Buckley_Leverett_Data_1028 {}
+    # usage example: seq 19 67 | xargs -i{} -P6 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_WENO\Buckley_Leverett_Test\Buckley_Leverett_Data_1024 {}
     # seq 0 119 | xargs -i{} -P6 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_WENO\Burgers_Equation_Test\Burgers_Equation_Data_3 {}
