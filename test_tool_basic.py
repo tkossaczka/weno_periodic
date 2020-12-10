@@ -66,7 +66,7 @@ if problem == Buckley_Leverett:
     u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
     u_exs_whole = [u_ex_0_w, u_ex_1_w, u_ex_2_w, u_ex_3_w, u_ex_4_w, u_ex_5_w, u_ex_6_w]
 elif problem == Burgers_equation:
-    train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_19/34.pt")
+    train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_22/4.pt")
     rng = 8
     def validation_problems(j):
         params_vld = []
@@ -95,7 +95,11 @@ elif problem == Burgers_equation:
     u_ex_whole_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_5")
     u_ex_whole_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_6")
     u_ex_whole_7 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_7")
-    u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6, u_ex_7]
+    u_exs = [u_ex_whole_0[0:512 + 1:4, 0:1600 + 1:16], u_ex_whole_1[0:512 + 1:4, 0:1600 + 1:16],
+             u_ex_whole_2[0:512 + 1:4, 0:1600 + 1:16], u_ex_whole_3[0:512 + 1:4, 0:1600 + 1:16],
+             u_ex_whole_4[0:512 + 1:4, 0:1600 + 1:16], u_ex_whole_5[0:512 + 1:4, 0:1600 + 1:16],
+             u_ex_whole_6[0:512 + 1:4, 0:1600 + 1:16], u_ex_whole_7[0:512 + 1:4, 0:1600 + 1:16]]
+    # u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6, u_ex_7]
     u_exs_whole = [u_ex_whole_0, u_ex_whole_1, u_ex_whole_2, u_ex_whole_3, u_ex_whole_4, u_ex_whole_5, u_ex_whole_6, u_ex_whole_7]
 
 err_nt_max_vec = np.zeros(rng)
@@ -116,7 +120,7 @@ for j in range(rng):
         ic_id_test = params_vld['ic_id']
         kkkk = params_vld['k']
         params = None
-        my_problem = problem(ic_numb=1, space_steps=64, time_steps=None, params=params)
+        my_problem = problem(ic_numb=1, space_steps=64*2, time_steps=None, params=params)
         my_problem.initial_condition, _, _, _, _, _ = init_cond_B(ic_id_test, my_problem.x, kkkk)
         my_problem.initial_condition = torch.Tensor(my_problem.initial_condition)
     u_nt, nn = train_model.init_run_weno(my_problem, vectorized=True, just_one_time_step=False)
