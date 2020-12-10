@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from initial_jump_generator import init_jump
 from initial_condition_Burgers import init_cond_B
+import os, sys
 
 torch.set_default_dtype(torch.float64)
 
@@ -75,7 +76,7 @@ it = 100
 losses = []
 all_loss_test = []
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/parameters.txt")
-df1 = df[df['ic_id'] == 2]
+df1 = df[df['ic_id'] == 3]
 list_df = [df1['sample_id']]
 index = 0
 
@@ -124,7 +125,10 @@ for j in range(it):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_18/{}".format(index)
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_19/"
+    if not os.path.exists(base_path):
+        os.mkdir(base_path)
+    path = os.path.join(base_path, "{}.pt".format(index))
     torch.save(train_model, path)
     index = index + 1
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING

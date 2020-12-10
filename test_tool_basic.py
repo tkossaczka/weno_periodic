@@ -12,11 +12,11 @@ torch.set_default_dtype(torch.float64)
 
 
 #problem = transport_equation
-problem = Buckley_Leverett
-#problem = Burgers_equation
+# problem = Buckley_Leverett
+problem = Burgers_equation
 
 if problem == Buckley_Leverett:
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_38/10.pt')
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_44/32.pt') #30/10 good
     rng = 7
     def validation_problems(j):
         params_vld = []
@@ -66,7 +66,7 @@ if problem == Buckley_Leverett:
     u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
     u_exs_whole = [u_ex_0_w, u_ex_1_w, u_ex_2_w, u_ex_3_w, u_ex_4_w, u_ex_5_w, u_ex_6_w]
 elif problem == Burgers_equation:
-    train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_18/10")
+    train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_19/34.pt")
     rng = 8
     def validation_problems(j):
         params_vld = []
@@ -87,7 +87,16 @@ elif problem == Burgers_equation:
     u_ex_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_5")
     u_ex_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_6")
     u_ex_7 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex64_7")
+    u_ex_whole_0 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_0")
+    u_ex_whole_1 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_1")
+    u_ex_whole_2 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_2")
+    u_ex_whole_3 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_3")
+    u_ex_whole_4 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_4")
+    u_ex_whole_5 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_5")
+    u_ex_whole_6 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_6")
+    u_ex_whole_7 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_7")
     u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6, u_ex_7]
+    u_exs_whole = [u_ex_whole_0, u_ex_whole_1, u_ex_whole_2, u_ex_whole_3, u_ex_whole_4, u_ex_whole_5, u_ex_whole_6, u_ex_whole_7]
 
 err_nt_max_vec = np.zeros(rng)
 err_nt_mean_vec = np.zeros(rng)
@@ -125,7 +134,8 @@ for j in range(rng):
     _, x, t = my_problem.transformation(u_nt)
     time_steps = t.shape[0]
     h = my_problem.h
-    x_ex = np.linspace(-1, 1 - h, 1024)
+    x_ex = np.linspace(0, 2 - h, 512)
+    # x_ex = np.linspace(-1, 1 - h, 1024)
     # problem_ex = problem(ic_numb=2, space_steps=60 * 2 * 2 * 2, time_steps=None, params=params)
     # _, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, time_steps, just_one_time_step=False, trainable=False)
     u_exact_adjusted = u_exs[j][:,-1]

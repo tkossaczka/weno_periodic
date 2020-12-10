@@ -8,7 +8,7 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 from define_problem_Burgers_equation import Burgers_equation
 
 train_model = WENONetwork()
-train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_18/46")
+train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_42/12.pt")
 #train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_18/46")
 
 torch.set_default_dtype(torch.float64)
@@ -20,7 +20,7 @@ params=None
 problem = Buckley_Leverett
 #problem = Burgers_equation
 
-my_problem = problem(ic_numb=6,space_steps=64, time_steps=None, params = params)
+my_problem = problem(ic_numb=6,space_steps=64*2, time_steps=None, params = params)
 params = my_problem.get_params()
 #problem_ex = problem(space_steps=100*2*2, time_steps=40*4*4, params = params)
 
@@ -48,7 +48,7 @@ u_t, nn = train_model.init_run_weno(my_problem, vectorized=True, just_one_time_s
 for k in range(nn):
     u_t = train_model.run_weno(my_problem, u_t, mweno=True, mapped=False, vectorized=True, trainable=True, k=k)
 u_t = u_t.detach().numpy()
-_, x, t = my_problem.transformation(u_nt)
+_, x, t = my_problem.transformation(u_t)
 plt.plot(x, u_nt, color='blue', marker='o')
 plt.plot(x, u_t, marker='o', color='green')
 
