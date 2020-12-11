@@ -211,16 +211,16 @@ err_mat[5,:] = err_t_mean_vec
 #     params_vld.append({'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.9})
 #     return params_vld[j]
 
-# #params = None
+params = None
 # params = {'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': 0.7}
-# problem_ex_test = problem(ic_numb=6, space_steps=1024 , time_steps=None, params=params)
-# # # problem_ex_test.initial_condition, _, _, _, _, _ = init_cond_B(3, problem_ex_test.x, 1.5)
-# # # problem_ex_test.initial_condition = torch.Tensor(problem_ex_test.initial_condition)
-# u_ex, u_ex128 = train_model.compute_exact(Buckley_Leverett, problem_ex_test, 64*2, 35*4, just_one_time_step=False, trainable=False)
+problem_ex_test = problem(ic_numb=2, space_steps=64 * 2 * 2 * 2 * 2 , time_steps=None, params=params)
+problem_ex_test.initial_condition, _, _, _, _, _ = init_cond_B(3, problem_ex_test.x, 1.5)
+problem_ex_test.initial_condition = torch.Tensor(problem_ex_test.initial_condition)
+u_ex, u_ex128 = train_model.compute_exact(Burgers_equation, problem_ex_test, 64*2, 35*4, just_one_time_step=False, trainable=False)
 # torch.save(u_ex, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Basic_test_set/u_ex_4")
 # torch.save(u_ex128, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Basic_test_set/u_ex128_4")
-# # # torch.save(u_ex, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_2/Basic_test_set/u_ex_7")
-
+torch.save(u_ex, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Basic_test_set/u_ex_0")
+torch.save(u_ex128, "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Basic_test_set/u_ex128_0")
 # Burgers: 64,25 Buckley: 64,35
 
 # from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
