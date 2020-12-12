@@ -10,15 +10,15 @@ def init_cond_B(ic_numb, x, k = None):
 
     if ic_numb == 1: # Gaussian wave for
         if k == None:
-            k = random.randint(10, 30)
+            k = random.uniform(10, 30)
         u0 = np.exp(-k * (x - xmid)**2)
     elif ic_numb == 2: # Sinusoidal wave
         if k == None:
-            k = random.uniform(1, 2)
+            k = random.uniform(0.1, 2)
         u0 = k*np.sin(np.pi*x)
     elif ic_numb == 3:  # Riemann problem
         if k == None:
-            k = random.uniform(1, 2)
+            k = random.uniform(0.5, 4)
         u0 = np.zeros(x.shape[0])
         u0[x >= xmid] = k*1
 

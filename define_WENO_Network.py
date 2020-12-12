@@ -31,6 +31,7 @@ class WENONetwork(nn.Module):
             # nn.ReLU(),
             nn.Conv1d(20, 1, kernel_size=1, stride=1, padding=0),
             nn.Sigmoid())
+            # TOTO JE DOBRA SIET NA BUCKLEY_LEVERETT
             # nn.Conv1d(5, 5, kernel_size=5, stride=1, padding=2),
             # nn.ELU(),
             # # nn.Conv1d(20, 20, kernel_size=3, stride=1, padding=1),

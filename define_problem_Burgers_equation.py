@@ -45,7 +45,7 @@ class Burgers_equation():
         # n = int(n)
         # n=50
         #n = np.ceil(0.08*T/(h**2))
-        n=25*4*4*4*4
+        n=25*4 #*4*4*4
         #n = np.ceil(0.25 * T / (h ** (5/3)))
         n = int(n)
         t = T / n
