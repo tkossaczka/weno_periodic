@@ -23,6 +23,10 @@ class WENONetwork(nn.Module):
             # nn.ReLU(),
             nn.Conv1d(20, 20, kernel_size=5, stride=1, padding=2),
             nn.ELU(),
+            # nn.Conv1d(20, 40, kernel_size=5, stride=1, padding=2),
+            # nn.ELU(),
+            # nn.Conv1d(40, 20, kernel_size=5, stride=1, padding=2),
+            # nn.ELU(),
             # nn.Conv1d(40, 80, kernel_size=1, stride=1, padding=0),
             # nn.ReLU(),
             # nn.Conv1d(80, 40, kernel_size=1, stride=1, padding=0),
@@ -31,7 +35,7 @@ class WENONetwork(nn.Module):
             # nn.ReLU(),
             nn.Conv1d(20, 1, kernel_size=1, stride=1, padding=0),
             nn.Sigmoid())
-            # TOTO JE DOBRA SIET NA BUCKLEY_LEVERETT
+            # # TOTO JE DOBRA SIET NA BUCKLEY_LEVERETT
             # nn.Conv1d(5, 5, kernel_size=5, stride=1, padding=2),
             # nn.ELU(),
             # # nn.Conv1d(20, 20, kernel_size=3, stride=1, padding=1),
@@ -119,8 +123,8 @@ class WENONetwork(nn.Module):
 
         if trainable:
             #uu_normalized = uu / (torch.max(uu)-torch.min(uu))
-            dif = self.__get_average_diff((uu**2)/2) # TODO toto je flux pre Burgersa!
-            dif2 = self.__get_average_diff2((uu**2)/2)
+            dif = self.__get_average_diff(uu)
+            dif2 = self.__get_average_diff2(uu)
             dif12 = torch.stack([dif,dif2,dif**2,dif2**2,dif*dif2]) #,dif**3,dif2**3,dif**2*dif2,dif2**2*dif])
 
             beta_multiplicators = self.inner_nn_weno5(dif12[None, :, :])[0, 0, :] + self.weno5_mult_bias
@@ -139,9 +143,9 @@ class WENONetwork(nn.Module):
             [betap0, betap1, betap2] = betap_corrected_list
             [betan0, betan1, betan2] = betan_corrected_list
 
-        d0 = 1 / 10;
-        d1 = 6 / 10;
-        d2 = 3 / 10;
+        d0 = 1 / 10
+        d1 = 6 / 10
+        d2 = 3 / 10
 
         def get_omegas_mweno(betas, ds, old_betas):
             #beta_range_square = h**6

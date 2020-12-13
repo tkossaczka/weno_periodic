@@ -123,7 +123,7 @@ for j in range(it):
     loss_test = []
     for k in range(nn):
         # Forward path
-        V_train = train_model.forward(problem_main,V_train,k)
+        V_train = train_model.forward(problem_main,V_train,k, C)
         # Train model:
         optimizer.zero_grad()  # Clear gradients
         # Calculate loss
@@ -139,7 +139,7 @@ for j in range(it):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_44/"
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_45/"
     if not os.path.exists(base_path):
         os.mkdir(base_path)
     path = os.path.join(base_path, "{}.pt".format(j))
@@ -152,7 +152,7 @@ for j in range(it):
         u_init, nn = train_model.init_run_weno(problem_test, vectorized=False, just_one_time_step=False)
         u_test = u_init
         for k in range(nn):
-            uu_test = train_model.run_weno(problem_test, u_test, mweno=True,mapped=False,vectorized=False,trainable=True,k=k)
+            uu_test = train_model.run_weno(problem_test, u_test, mweno=True,mapped=False,vectorized=False,trainable=True,k=k, C=C)
             u_test[:,k+1]=uu_test
         for k in range(nn+1):
             single_problem_loss_test.append(exact_overflows_loss(u_test[:,k], u_exs[kk][:, k]).detach().numpy().max())

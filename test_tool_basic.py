@@ -16,7 +16,7 @@ train_model = WENONetwork()
 problem = Burgers_equation
 
 if problem == Buckley_Leverett:
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_44/32.pt') #30/10 good
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_45/19.pt') #30/10 good
     rng = 7
     def validation_problems(j):
         params_vld = []
@@ -66,7 +66,7 @@ if problem == Buckley_Leverett:
     u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
     u_exs_whole = [u_ex_0_w, u_ex_1_w, u_ex_2_w, u_ex_3_w, u_ex_4_w, u_ex_5_w, u_ex_6_w]
 elif problem == Burgers_equation:
-    train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_27/13.pt")
+    train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_28/23.pt")
     rng = 11
     def validation_problems(j):
         params_vld = []
@@ -119,12 +119,13 @@ err_t_mean_vec = np.zeros(rng)
 err_nt_JS_max_vec = np.zeros(rng)
 err_nt_JS_mean_vec = np.zeros(rng)
 
-for j in range(rng):
+for j in range(0,5):
     print(j)
     if problem == Buckley_Leverett:
         params = validation_problems(j)
         #params['T'] = 0.2
         my_problem = problem(ic_numb=6, space_steps=64*2, time_steps=None, params=params)
+        C = params['C']
     elif problem == Burgers_equation:
         params_vld = validation_problems(j)
         ic_id_test = params_vld['ic_id']

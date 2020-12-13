@@ -19,8 +19,8 @@ parameters = []
 
 def save_problem_and_solution(save_path, sample_id):
     print("{},".format(sample_id))
-    ic_id = random.randint(1,3) # Burgers
-    # ic_id = 3
+    # ic_id = random.randint(1,3) # Burgers
+    ic_id = 3
     problem_ex = problem(ic_numb=ic_id, space_steps=64 * 2 * 2 * 2*2, time_steps=None, params=None)  # Burgers
     # problem_ex = problem(ic_numb=6, space_steps=512*2, time_steps=None, params=None)  # Buckley
     #width = problem_ex.width
@@ -59,4 +59,4 @@ if __name__ == "__main__":
     save_problem_and_solution(args.save_path, args.sample_number)
 
     # usage example: seq 19 67 | xargs -i{} -P6 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_WENO\Buckley_Leverett_Test\Buckley_Leverett_Data_1024 {}
-    # seq 81 160 | xargs -i{} -P6 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_WENO\Burgers_Equation_Test\Burgers_Equation_Data_1024 {}
+    # seq 0 60 | xargs -i{} -P6 python compute_exact_solution.py C:\Users\Tatiana\Desktop\Research\Research_ML_WENO\Burgers_Equation_Test\Burgers_Equation_Data_1024_IC3 {}
