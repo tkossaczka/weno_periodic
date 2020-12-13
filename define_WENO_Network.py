@@ -119,8 +119,8 @@ class WENONetwork(nn.Module):
 
         if trainable:
             #uu_normalized = uu / (torch.max(uu)-torch.min(uu))
-            dif = self.__get_average_diff(uu)
-            dif2 = self.__get_average_diff2(uu)
+            dif = self.__get_average_diff((uu**2)/2) # TODO toto je flux pre Burgersa!
+            dif2 = self.__get_average_diff2((uu**2)/2)
             dif12 = torch.stack([dif,dif2,dif**2,dif2**2,dif*dif2]) #,dif**3,dif2**3,dif**2*dif2,dif2**2*dif])
 
             beta_multiplicators = self.inner_nn_weno5(dif12[None, :, :])[0, 0, :] + self.weno5_mult_bias

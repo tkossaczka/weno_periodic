@@ -89,7 +89,7 @@ df1 = df[df['ic_id'] == 3]
 list_df = [df1['sample_id']]
 index = 0
 
-for j in range(80,80+it):
+for j in range(80,160):
     # sample_id=j
     # # sample_id = random.randint(1,80)
     # u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/u_exact128_{}.npy".format(sample_id))
@@ -134,7 +134,7 @@ for j in range(80,80+it):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_26/"
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_27/"
     if not os.path.exists(base_path):
         os.mkdir(base_path)
     path = os.path.join(base_path, "{}.pt".format(index))
