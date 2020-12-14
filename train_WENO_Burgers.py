@@ -97,9 +97,9 @@ list_df = [df1['sample_id']]
 index = 0
 
 # for i in range(6):
-for j in range(60):
-    # sample_id=j
-    sample_id = random.randint(1,60)
+for j in range(40):
+    sample_id=j
+    # sample_id = random.randint(1,60)
     u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024_IC3/u_exact128_{}.npy".format(sample_id))
     u_ex = torch.Tensor(u_ex)
     ic_id = float(df[df.sample_id==sample_id]["ic_id"])
@@ -148,7 +148,7 @@ for j in range(60):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_39/"
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_40/"
     if not os.path.exists(base_path):
         os.mkdir(base_path)
     path = os.path.join(base_path, "{}.pt".format(index))
