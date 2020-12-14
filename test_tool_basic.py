@@ -66,7 +66,7 @@ if problem == Buckley_Leverett:
     u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
     u_exs_whole = [u_ex_0_w, u_ex_1_w, u_ex_2_w, u_ex_3_w, u_ex_4_w, u_ex_5_w, u_ex_6_w]
 elif problem == Burgers_equation:
-    train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_28/23.pt")
+    train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_30/41.pt")
     rng = 11
     def validation_problems(j):
         params_vld = []
@@ -119,7 +119,7 @@ err_t_mean_vec = np.zeros(rng)
 err_nt_JS_max_vec = np.zeros(rng)
 err_nt_JS_mean_vec = np.zeros(rng)
 
-for j in range(0,5):
+for j in range(5,11):
     print(j)
     if problem == Buckley_Leverett:
         params = validation_problems(j)

@@ -90,12 +90,12 @@ optimizer = optim.Adam(train_model.parameters(), lr=0.001)
 it = 40
 losses = []
 all_loss_test = []
-df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/parameters.txt")
+df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024_IC3/parameters.txt")
 df1 = df[df['ic_id'] == 3]
 list_df = [df1['sample_id']]
 index = 0
 
-for j in range(80,160):
+for j in range(60):
     # sample_id=j
     # # sample_id = random.randint(1,80)
     # u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/u_exact128_{}.npy".format(sample_id))
@@ -108,7 +108,9 @@ for j in range(80,160):
     sample_id = int(df1.loc[j,:]["sample_id"])
     kkk = float(df1.loc[j,:]["k"])
     ic_id = float(df1.loc[j,:]["ic_id"])
-    u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/u_exact128_{}.npy".format(sample_id))
+    if kkk > 4:
+        continue
+    u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024_IC3/u_exact128_{}.npy".format(sample_id))
     u_ex = torch.Tensor(u_ex)
     problem_main = problem_class(ic_numb=ic_id, space_steps=64*2, time_steps=None, params=None)
     params = problem_main.get_params()
@@ -140,7 +142,7 @@ for j in range(80,160):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_28/"
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_30/"
     if not os.path.exists(base_path):
         os.mkdir(base_path)
     path = os.path.join(base_path, "{}.pt".format(index))
