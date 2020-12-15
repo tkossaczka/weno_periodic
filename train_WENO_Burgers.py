@@ -85,7 +85,7 @@ u_ex_10 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers
 u_exs = [u_ex_0,u_ex_1,u_ex_2,u_ex_3,u_ex_4,u_ex_5,u_ex_6,u_ex_7,u_ex_8,u_ex_9,u_ex_10]
 
 #optimizer = optim.SGD(train_model.parameters(), lr=0.1)
-optimizer = optim.Adam(train_model.parameters(), lr=0.001)
+optimizer = optim.Adam(train_model.parameters(), lr=0.0001)
 
 it = 40
 losses = []
@@ -97,7 +97,7 @@ list_df = [df1['sample_id']]
 index = 0
 
 # for i in range(6):
-for j in range(40):
+for j in range(100,120):
     sample_id=j
     # sample_id = random.randint(1,60)
     u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024_IC3/u_exact128_{}.npy".format(sample_id))
@@ -144,11 +144,11 @@ for j in range(40):
         #g = train_model.parameters()
         #x = g.__next__()
         #print(x.detach().numpy().sum(axis=0))
-        #print(k, loss.data.numpy())
+        print(k, loss.data.numpy())
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_40/"
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_43/"
     if not os.path.exists(base_path):
         os.mkdir(base_path)
     path = os.path.join(base_path, "{}.pt".format(index))
