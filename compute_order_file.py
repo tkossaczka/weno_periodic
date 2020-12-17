@@ -7,7 +7,7 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 nb=6
 with torch.no_grad():
     #train_model = WENONetwork()
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_30/10.pt')
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_46/28.pt')
     #train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_16/8")
     problem = transport_equation
     #problem = Buckley_Leverett
@@ -28,3 +28,6 @@ order_mat[1:,1] = order_not_trained[:,0]
 order_mat[:,2] = err_trained[:,0]
 order_mat[1:,3] = order_trained[:,0]
 
+import pandas as pd
+# pd.DataFrame(order_mat).to_csv("err_mat.csv")
+pd.DataFrame(order_mat).to_latex()

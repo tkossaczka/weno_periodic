@@ -24,6 +24,8 @@ def exact_overflows_loss(u, u_ex):
     return loss
 
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/parameters.txt")
+df1=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Validation_set/parameters.txt")
+
 # err_nt_max_vec = np.zeros(8)
 # err_nt_mean_vec = np.zeros(8)
 # err_t_max_vec = np.zeros(8)
@@ -34,11 +36,12 @@ df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Lever
 all_loss_test = []
 for i in range(60):
     print(i)
-    sample_id = 50
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_44/{}.pt'.format(i))
+    # sample_id = 50
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_46/{}.pt'.format(i))
     loss_test = []
-    for j in range(8):
-        u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/u_exact128_{}.npy".format(sample_id))
+    for j in [61,62,67,75,76,85,99]:
+        sample_id = j
+        u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Validation_set/u_exact128_{}.npy".format(sample_id))
         #u_ex = u_ex[0:512 + 1:4, 0:2240 + 1:16]
         u_ex = torch.Tensor(u_ex)
         C = float(df[df.sample_id == sample_id]["C"])
@@ -79,7 +82,13 @@ for i in range(60):
     all_loss_test.append(loss_test)
 
 all_loss_test = np.array(all_loss_test) #shape (training_steps, num_valid_problems, time_steps)
+
 plt.plot(all_loss_test[:,:,-1])
+a_labels = (df1["C"])
+plt.legend(['0.62','0.18','0.88', '0.77', '0.52', '0.3', '0.94'])
+plt.xlabel('number of simulations')
+plt.ylabel('LOSS')
+# plt.savefig("foo.pdf", bbox_inches='tight')
 
 # err_mat = np.zeros((4,8))
 # err_mat[0,:] = err_nt_max_vec

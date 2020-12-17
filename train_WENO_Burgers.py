@@ -85,22 +85,24 @@ u_ex_10 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers
 u_exs = [u_ex_0,u_ex_1,u_ex_2,u_ex_3,u_ex_4,u_ex_5,u_ex_6,u_ex_7,u_ex_8,u_ex_9,u_ex_10]
 
 #optimizer = optim.SGD(train_model.parameters(), lr=0.1)
-optimizer = optim.Adam(train_model.parameters(), lr=0.0001)
+optimizer = optim.Adam(train_model.parameters(), lr=0.001)
 
 it = 40
 losses = []
 all_loss_test = []
 sample_ids = []
-df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024_IC3/parameters.txt")
+# df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024_IC3/parameters.txt")
+df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/parameters.txt")
 df1 = df[df['ic_id'] == 3]
 list_df = [df1['sample_id']]
 index = 0
 
 # for i in range(6):
-for j in range(100,120):
+for j in range(60):
     sample_id=j
     # sample_id = random.randint(1,60)
-    u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024_IC3/u_exact128_{}.npy".format(sample_id))
+    # u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024_IC3/u_exact128_{}.npy".format(sample_id))
+    u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/u_exact128_{}.npy".format(sample_id))
     u_ex = torch.Tensor(u_ex)
     ic_id = float(df[df.sample_id==sample_id]["ic_id"])
     kkk = float(df[df.sample_id==sample_id]["k"])
@@ -111,8 +113,8 @@ for j in range(100,120):
     # sample_id = int(df1.loc[j,:]["sample_id"])
     # kkk = float(df1.loc[j,:]["k"])
     # ic_id = float(df1.loc[j,:]["ic_id"])
-    if kkk > 4:
-        continue
+    # if kkk > 4:
+    #     continue
     # if sample_id in sample_ids:
     #     continue
     # sample_ids.append(sample_id)
@@ -148,14 +150,14 @@ for j in range(100,120):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_43/"
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_47/"
     if not os.path.exists(base_path):
         os.mkdir(base_path)
     path = os.path.join(base_path, "{}.pt".format(index))
     torch.save(train_model, path)
     index = index + 1
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
-    for kk in [7,8,9,10]:
+    for kk in [0,4,7,8]: # [7,8,9,10]:
         single_problem_loss_test = []
         params = None
         params_vld = validation_problems(kk)

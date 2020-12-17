@@ -174,6 +174,7 @@ err_mat[:,4] = err_nt_mean_vec
 err_mat[:,2] = err_t_max_vec
 err_mat[:,5] = err_t_mean_vec
 err_mat=err_mat.T
+
 import pandas as pd
 pd.DataFrame(err_mat).to_csv("err_mat.csv")
 pd.DataFrame(err_mat).to_latex()
