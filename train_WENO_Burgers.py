@@ -60,6 +60,7 @@ def validation_problems(j):
     params_vld.append({'ic_id': 3, 'k': 3})
     params_vld.append({'ic_id': 3, 'k': 4})
     params_vld.append({'ic_id': 3, 'k': 5})
+    params_vld.append({'ic_id': 3, 'k': 2})
     return params_vld[j]
 
 u_ex_0 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Basic_test_set/u_ex128_0")
@@ -73,6 +74,7 @@ u_ex_7 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_
 u_ex_8 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Basic_test_set/u_ex128_8")
 u_ex_9 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Basic_test_set/u_ex128_9")
 u_ex_10 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Basic_test_set/u_ex128_10")
+u_ex_11 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Basic_test_set/u_ex128_11")
 # u_ex_0_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_0")
 # u_ex_1_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_1")
 # u_ex_2_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_2")
@@ -82,7 +84,7 @@ u_ex_10 = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers
 # u_ex_6_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_6")
 # u_ex_7_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_3/Basic_test_set/u_ex_7")
 # u_exs = [u_ex_0_w[0:512 + 1:4, 0:1600 + 1:16], u_ex_1_w[0:512 + 1:4, 0:1600 + 1:16], u_ex_2_w[0:512 + 1:4, 0:1600 + 1:16], u_ex_3_w[0:512 + 1:4, 0:1600 + 1:16], u_ex_4_w[0:512 + 1:4, 0:1600 + 1:16], u_ex_5_w[0:512 + 1:4, 0:1600 + 1:16], u_ex_5_w[0:512 + 1:4, 0:1600 + 1:16] ,u_ex_7_w[0:512 + 1:4, 0:1600 + 1:16]]
-u_exs = [u_ex_0,u_ex_1,u_ex_2,u_ex_3,u_ex_4,u_ex_5,u_ex_6,u_ex_7,u_ex_8,u_ex_9,u_ex_10]
+u_exs = [u_ex_0,u_ex_1,u_ex_2,u_ex_3,u_ex_4,u_ex_5,u_ex_6,u_ex_7,u_ex_8,u_ex_9,u_ex_10,u_ex_11]
 
 #optimizer = optim.SGD(train_model.parameters(), lr=0.1)
 optimizer = optim.Adam(train_model.parameters(), lr=0.001)
@@ -150,14 +152,14 @@ for j in range(60):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_47/"
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_61/"
     if not os.path.exists(base_path):
         os.mkdir(base_path)
     path = os.path.join(base_path, "{}.pt".format(index))
     torch.save(train_model, path)
     index = index + 1
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
-    for kk in [0,4,7,8]: # [7,8,9,10]:
+    for kk in [0,4,7,8,11]: # [7,8,9,10]:
         single_problem_loss_test = []
         params = None
         params_vld = validation_problems(kk)
