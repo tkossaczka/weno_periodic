@@ -31,7 +31,7 @@ def exact_loss(u, u_ex):
 
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Validation_set/parameters.txt")
 
-rng=20
+rng=9
 ii=0
 
 err_nt_max_vec = np.zeros(rng)
@@ -48,6 +48,8 @@ for i in range(40,41):
     train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_47/{}.pt'.format(i))
     loss_test = []
     for j in [150,106,113,16,61,105,140,122,34,32,65,64,101,118,39,107,42,100,89,155]:
+    # for j in [106,113,16,122,34,32,118,39,107]:
+    # for j in [61,62,140,65,64,101,42,100,89]:
         sample_id = j
         u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Validation_set/u_exact128_{}.npy".format(sample_id))
         #u_ex = u_ex[0:512 + 1:4, 0:2240 + 1:16]
@@ -71,18 +73,27 @@ for i in range(40,41):
         for k in range(nn):
             u_nt = train_model.run_weno(problem_main, u_nt, mweno=True, mapped=False, vectorized=True, trainable=False, k=k)
         u_nt = u_nt.detach().numpy()
+        u_nt_JS, nn = train_model.init_run_weno(problem_main, vectorized=True, just_one_time_step=False)
+        for k in range(nn):
+            u_nt_JS = train_model.run_weno(problem_main, u_nt_JS, mweno=False, mapped=False, vectorized=True,
+                                           trainable=False, k=k)
+        u_nt_JS = u_nt_JS.detach().numpy()
         for k in range(nn + 1):
             single_problem_loss_test.append(exact_loss(u_test[:, k], u_ex[:, k]).detach().numpy().max())
         loss_test.append(single_problem_loss_test)
         sample_id=sample_id+1
         u_t = u_test[:,-1].detach().numpy()
         error_nt_max = np.max(np.abs(u_nt - u_ex[:, -1].detach().numpy()))
+        error_nt_JS_max = np.max(np.abs(u_nt_JS - u_ex[:, -1].detach().numpy()))
         error_t_max = np.max(np.abs(u_t - u_ex[:, -1].detach().numpy()))
-        error_nt_mean = np.mean((u_nt - u_ex[:, -1].detach().numpy()) ** 2)
-        error_t_mean = np.mean((u_t - u_ex[:, -1].detach().numpy()) ** 2)
+        error_nt_mean = (1 / 128) * (np.sqrt(np.sum((u_nt - u_ex[:, -1].detach().numpy()) ** 2)))
+        error_nt_JS_mean = (1 / 128) * (np.sqrt(np.sum((u_nt_JS - u_ex[:, -1].detach().numpy()) ** 2)))
+        error_t_mean = (1 / 128) * (np.sqrt(np.sum((u_t - u_ex[:, -1].detach().numpy()) ** 2)))
         err_nt_max_vec[ii] = error_nt_max
+        err_nt_JS_max_vec[ii] = error_nt_JS_max
         err_t_max_vec[ii] = error_t_max
         err_nt_mean_vec[ii] = error_nt_mean
+        err_nt_JS_mean_vec[ii] = error_nt_JS_mean
         err_t_mean_vec[ii] = error_t_mean
         _, x, t = problem_main.transformation(u_t)
         plt.figure(j)
@@ -101,8 +112,23 @@ plt.plot(all_loss_test[:,:,-1])
 # plt.ylabel('LOSS')
 # plt.savefig("foo.pdf", bbox_inches='tight')
 
-err_mat = np.zeros((4,rng))
-err_mat[0,:] = err_nt_max_vec
-err_mat[1,:] = err_t_max_vec
-err_mat[2,:] = err_nt_mean_vec
-err_mat[3,:] = err_t_mean_vec
+err_mat = np.zeros((6,rng))
+err_mat[0,:] = err_nt_JS_max_vec
+err_mat[1,:] = err_nt_max_vec
+err_mat[2,:] = err_t_max_vec
+err_mat[3,:] = err_nt_JS_mean_vec
+err_mat[4,:] = err_nt_mean_vec
+err_mat[5,:] = err_t_mean_vec
+
+# err_mat = np.zeros((rng,6))
+# err_mat[:,0] = err_nt_JS_max_vec
+# err_mat[:,3] = err_nt_JS_mean_vec
+# err_mat[:,1] = err_nt_max_vec
+# err_mat[:,4] = err_nt_mean_vec
+# err_mat[:,2] = err_t_max_vec
+# err_mat[:,5] = err_t_mean_vec
+# err_mat=err_mat.T
+#
+# import pandas as pd
+# pd.DataFrame(err_mat).to_csv("err_mat.csv")
+# pd.DataFrame(err_mat).to_latex()
