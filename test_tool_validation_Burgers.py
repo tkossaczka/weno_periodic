@@ -31,7 +31,7 @@ def exact_loss(u, u_ex):
 
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Validation_set/parameters.txt")
 
-rng=9
+rng=20
 ii=0
 
 err_nt_max_vec = np.zeros(rng)
@@ -47,7 +47,7 @@ for i in range(40,41):
     # sample_id = 50
     train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_47/{}.pt'.format(i))
     loss_test = []
-    for j in [150,106,113,16,61,105,140,122,34,32,65,64,101,118,39,107,42,100,89,155]:
+    for j in [106,113,16,61,62,105,140,122,34,32,65,64,101,118,39,107,42,100,89,155]:
     # for j in [106,113,16,122,34,32,118,39,107]:
     # for j in [61,62,140,65,64,101,42,100,89]:
         sample_id = j
@@ -86,9 +86,9 @@ for i in range(40,41):
         error_nt_max = np.max(np.abs(u_nt - u_ex[:, -1].detach().numpy()))
         error_nt_JS_max = np.max(np.abs(u_nt_JS - u_ex[:, -1].detach().numpy()))
         error_t_max = np.max(np.abs(u_t - u_ex[:, -1].detach().numpy()))
-        error_nt_mean = (1 / 128) * (np.sqrt(np.sum((u_nt - u_ex[:, -1].detach().numpy()) ** 2)))
-        error_nt_JS_mean = (1 / 128) * (np.sqrt(np.sum((u_nt_JS - u_ex[:, -1].detach().numpy()) ** 2)))
-        error_t_mean = (1 / 128) * (np.sqrt(np.sum((u_t - u_ex[:, -1].detach().numpy()) ** 2)))
+        error_nt_mean = np.sqrt(1 / 128) * (np.sqrt(np.sum((u_nt - u_ex[:, -1].detach().numpy()) ** 2)))
+        error_nt_JS_mean = np.sqrt(1 / 128) * (np.sqrt(np.sum((u_nt_JS - u_ex[:, -1].detach().numpy()) ** 2)))
+        error_t_mean = np.sqrt(1 / 128) * (np.sqrt(np.sum((u_t - u_ex[:, -1].detach().numpy()) ** 2)))
         err_nt_max_vec[ii] = error_nt_max
         err_nt_JS_max_vec[ii] = error_nt_JS_max
         err_t_max_vec[ii] = error_t_max
