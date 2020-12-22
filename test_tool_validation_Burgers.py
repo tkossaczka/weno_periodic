@@ -86,9 +86,9 @@ for i in range(40,41):
         error_nt_max = np.max(np.abs(u_nt - u_ex[:, -1].detach().numpy()))
         error_nt_JS_max = np.max(np.abs(u_nt_JS - u_ex[:, -1].detach().numpy()))
         error_t_max = np.max(np.abs(u_t - u_ex[:, -1].detach().numpy()))
-        error_nt_mean = np.sqrt(1 / 128) * (np.sqrt(np.sum((u_nt - u_ex[:, -1].detach().numpy()) ** 2)))
-        error_nt_JS_mean = np.sqrt(1 / 128) * (np.sqrt(np.sum((u_nt_JS - u_ex[:, -1].detach().numpy()) ** 2)))
-        error_t_mean = np.sqrt(1 / 128) * (np.sqrt(np.sum((u_t - u_ex[:, -1].detach().numpy()) ** 2)))
+        error_nt_mean = np.sqrt(2 / 128) * (np.sqrt(np.sum((u_nt - u_ex[:, -1].detach().numpy()) ** 2)))
+        error_nt_JS_mean = np.sqrt(2 / 128) * (np.sqrt(np.sum((u_nt_JS - u_ex[:, -1].detach().numpy()) ** 2)))
+        error_t_mean = np.sqrt(2 / 128) * (np.sqrt(np.sum((u_t - u_ex[:, -1].detach().numpy()) ** 2)))
         err_nt_max_vec[ii] = error_nt_max
         err_nt_JS_max_vec[ii] = error_nt_JS_max
         err_t_max_vec[ii] = error_t_max
