@@ -15,6 +15,8 @@ class WENONetwork(nn.Module):
         # self.inner_nn_weno6 = self.get_inner_nn_weno6()
         self.weno5_mult_bias, self.weno6_mult_bias = self.get_multiplicator_biases()
 
+        self.multiplicator_recombiner = self.Conv1d(1, 12, kernel_size=7, stride=1, padding=0)
+
     def get_inner_nn_weno5(self):
         net = nn.Sequential(
             nn.Conv1d(2, 20, kernel_size=5, stride=1, padding=2),
@@ -121,33 +123,21 @@ class WENONetwork(nn.Module):
             dif2 = self.__get_average_diff2(uu)
             dif12 = torch.stack([dif, dif2 ]) #,dif**2,dif2**2,dif*dif2]) #,dif**3,dif2**3,dif**2*dif2,dif2**2*dif])
 
-            beta_multiplicators = self.inner_nn_weno5(dif12[None, :, :])[0, 0, :] + self.weno5_mult_bias
+            multiplicator_feature = self.inner_nn_weno5(dif12[None, :, :])
+            normalization_feature = torch.ones_like(multiplicator_feature)
+            multiplicators_recombined = self.multiplicator_recombiner(multiplicator_feature)
+            normalization_factors = self.multiplicator_recombiner(normalization_feature)
+            multiplicators_recombined_normalized = multiplicators_recombined / normalization_factors
+
+            beta_multiplicators = multiplicators_recombined_normalized[0, :, :] + self.weno5_mult_bias
             # beta_multiplicators_left = beta_multiplicators[:-1]
             # beta_multiplicators_right = beta_multiplicators[1:]
             #print(beta_multiplicators)
 
-            betap_corrected_list = []
-            betan_corrected_list = []
-            if w5_minus is True:
-                mult_shifts_p = [1, 0, -1] #[2, 1, 0]
-                for k, beta in enumerate([betap0, betap1, betap2]):
-                    shift = -mult_shifts_p[k] #k-1 #(3-k)-1
-                    betap_corrected_list.append(beta * torch.roll(beta_multiplicators, shifts=shift, dims=0))
-                mult_shifts_n = [1, 0, -1]
-                for k, beta in enumerate([betan0, betan1, betan2]):
-                    shift = -mult_shifts_n[k] #k #3-k
-                    betan_corrected_list.append(beta * torch.roll(beta_multiplicators, shifts=shift, dims=0))
-            else:
-                mult_shifts_p = [-1, 0, 1]
-                for k, beta in enumerate([betap0, betap1, betap2]):
-                    shift = -mult_shifts_p[k] #k-1 #(3-k)-1
-                    betap_corrected_list.append(beta * torch.roll(beta_multiplicators, shifts=shift, dims=0))
-                mult_shifts_n = [-1, 0, 1] #[-2, -1, 0]
-                for k, beta in enumerate([betan0, betan1, betan2]):
-                    shift = -mult_shifts_n[k] #k #3-k
-                    betan_corrected_list.append(beta * torch.roll(beta_multiplicators, shifts=shift, dims=0))
-            [betap0, betap1, betap2] = betap_corrected_list
-            [betan0, betan1, betan2] = betan_corrected_list
+            beta_corrected_list = []
+            for k, beta in enumerate([betap0, betap1, betap2, betan0, betan1, betan2]):
+                beta_corrected_list.append(beta * beta_multiplicators[k + 6 * w5_minus])
+            [betap0, betap1, betap2, betan0, betan1, betan2] = beta_corrected_list
 
         d0 = 1 / 10
         d1 = 6 / 10
