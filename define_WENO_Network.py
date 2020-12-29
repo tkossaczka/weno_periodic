@@ -15,37 +15,37 @@ class WENONetwork(nn.Module):
         # self.inner_nn_weno6 = self.get_inner_nn_weno6()
         self.weno5_mult_bias, self.weno6_mult_bias = self.get_multiplicator_biases()
 
-        self.multiplicator_recombiner = self.Conv1d(1, 12, kernel_size=7, stride=1, padding=0)
+        self.multiplicator_recombiner = nn.Conv1d(1, 12, kernel_size=9, stride=1, padding=4)
 
     def get_inner_nn_weno5(self):
         net = nn.Sequential(
-            nn.Conv1d(2, 20, kernel_size=5, stride=1, padding=2),
-            nn.ELU(),
-            # nn.Conv1d(20, 20, kernel_size=3, stride=1, padding=1),
-            # nn.ReLU(),
-            nn.Conv1d(20, 20, kernel_size=5, stride=1, padding=2),
-            nn.ELU(),
-            # nn.Conv1d(10, 5, kernel_size=3, stride=1, padding=1),
-            # nn.ELU(),
-            # nn.Conv1d(40, 20, kernel_size=3, stride=1, padding=1),
-            # nn.ReLU(),
-            nn.Conv1d(20, 1, kernel_size=1, stride=1, padding=0),
-            nn.Sigmoid())
-            # # TOTO JE DOBRA SIET NA BUCKLEY_LEVERETT
-            # nn.Conv1d(2, 5, kernel_size=5, stride=1, padding=2),
+            # nn.Conv1d(2, 20, kernel_size=5, stride=1, padding=2),
             # nn.ELU(),
             # # nn.Conv1d(20, 20, kernel_size=3, stride=1, padding=1),
             # # nn.ReLU(),
-            # nn.Conv1d(5,5, kernel_size=5, stride=1, padding=2),
+            # nn.Conv1d(20, 20, kernel_size=5, stride=1, padding=2),
             # nn.ELU(),
-            # # nn.Conv1d(40, 80, kernel_size=1, stride=1, padding=0),
-            # # nn.ReLU(),
-            # # nn.Conv1d(80, 40, kernel_size=1, stride=1, padding=0),
-            # # nn.ReLU(),
-            # # nn.Conv1d(40, 20, kernel_size=3, stride=1, padding=1),
+            # # nn.Conv1d(10, 5, kernel_size=3, stride=1, padding=1),
             # # nn.ELU(),
-            # nn.Conv1d(5, 1, kernel_size=1, stride=1, padding=0),
+            # # nn.Conv1d(40, 20, kernel_size=3, stride=1, padding=1),
+            # # nn.ReLU(),
+            # nn.Conv1d(20, 1, kernel_size=1, stride=1, padding=0),
             # nn.Sigmoid())
+            # # TOTO JE DOBRA SIET NA BUCKLEY_LEVERETT
+            nn.Conv1d(2, 5, kernel_size=5, stride=1, padding=2),
+            nn.ELU(),
+            # nn.Conv1d(20, 20, kernel_size=3, stride=1, padding=1),
+            # nn.ReLU(),
+            nn.Conv1d(5,5, kernel_size=5, stride=1, padding=2),
+            nn.ELU(),
+            # nn.Conv1d(40, 80, kernel_size=1, stride=1, padding=0),
+            # nn.ReLU(),
+            # nn.Conv1d(80, 40, kernel_size=1, stride=1, padding=0),
+            # nn.ReLU(),
+            # nn.Conv1d(40, 20, kernel_size=3, stride=1, padding=1),
+            # nn.ELU(),
+            nn.Conv1d(5, 1, kernel_size=1, stride=1, padding=0),
+            nn.Sigmoid())
         return net
 
     # def get_inner_nn_weno6(self):

@@ -12,8 +12,8 @@ train_model = WENONetwork()
 
 
 #problem = transport_equation
-# problem = Buckley_Leverett
-problem = Burgers_equation
+problem = Buckley_Leverett
+# problem = Burgers_equation
 
 if problem == Buckley_Leverett:
     train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_55/59.pt') #30/10 good
