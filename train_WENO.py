@@ -95,7 +95,7 @@ losses = []
 all_loss_test = []
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/parameters.txt")
 
-for j in range(60):
+for j in range(10):
     sample_id=j
     #sample_id = random.randint(0,59)
     u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/u_exact_{}.npy".format(sample_id))
@@ -131,6 +131,8 @@ for j in range(60):
         loss = exact_overflows_loss(V_train, u_ex[:,k+1])
         #loss = exact_overflows_loss(V_train, u_ex[:, init_id+1])
         loss.backward()  # Backward pass
+        maxgrad = np.array([np.abs(p.grad.numpy()).max() for p in optimizer.param_groups[0]['params']]).max()
+        print(maxgrad)
         optimizer.step()  # Optimize weights
         #g = train_model.parameters()
         #x = g.__next__()
@@ -139,7 +141,7 @@ for j in range(60):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_55/"
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_57/"
     if not os.path.exists(base_path):
         os.mkdir(base_path)
     path = os.path.join(base_path, "{}.pt".format(j))
