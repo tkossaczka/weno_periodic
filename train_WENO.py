@@ -88,14 +88,14 @@ u_exs = [u_ex_0_w[0:1024 + 1:8, 0:8960 + 1:64], u_ex_1_w[0:1024 + 1:8, 0:8960 + 
 #u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
 
 # optimizer = optim.SGD(train_model.parameters(), lr=0.1)
-optimizer = optim.Adam(train_model.parameters(), lr=1e-4)
+optimizer = optim.Adam(train_model.parameters(), lr=1e-2)
 
 it = 30
 losses = []
 all_loss_test = []
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/parameters.txt")
 
-for j in range(10):
+for j in range(5):
     sample_id=j
     #sample_id = random.randint(0,59)
     u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/u_exact_{}.npy".format(sample_id))
