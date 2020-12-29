@@ -15,7 +15,9 @@ class WENONetwork(nn.Module):
         # self.inner_nn_weno6 = self.get_inner_nn_weno6()
         self.weno5_mult_bias, self.weno6_mult_bias = self.get_multiplicator_biases()
 
-        self.multiplicator_recombiner = nn.Conv1d(1, 12, kernel_size=9, stride=1, padding=4)
+        self.multiplicator_recombiner = nn.Sequential(
+            nn.Conv1d(1, 12, kernel_size=9, stride=1, padding=4),
+            torch.nn.Softmax(dim=1))
 
     def get_inner_nn_weno5(self):
         net = nn.Sequential(
@@ -124,12 +126,11 @@ class WENONetwork(nn.Module):
             dif12 = torch.stack([dif, dif2 ]) #,dif**2,dif2**2,dif*dif2]) #,dif**3,dif2**3,dif**2*dif2,dif2**2*dif])
 
             multiplicator_feature = self.inner_nn_weno5(dif12[None, :, :])
-            normalization_feature = torch.ones_like(multiplicator_feature)
-            multiplicators_recombined = self.multiplicator_recombiner(multiplicator_feature)
-            normalization_factors = self.multiplicator_recombiner(normalization_feature)
-            multiplicators_recombined_normalized = multiplicators_recombined / normalization_factors
+            ones_ = torch.ones_like(multiplicator_feature)
+            recombining_weights = self.multiplicator_recombiner(ones_)
+            multiplicators_recombined = multiplicator_feature * recombining_weights
 
-            beta_multiplicators = multiplicators_recombined_normalized[0, :, :] + self.weno5_mult_bias
+            beta_multiplicators = multiplicators_recombined[0, :, :] + self.weno5_mult_bias
             # beta_multiplicators_left = beta_multiplicators[:-1]
             # beta_multiplicators_right = beta_multiplicators[1:]
             #print(beta_multiplicators)
