@@ -16,7 +16,7 @@ train_model = WENONetwork()
 # problem = Buckley_Leverett
 problem = Burgers_equation
 
-train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_47/40.pt")
+train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_78/29.pt")
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Validation_set/parameters.txt")
 
 rng = 13
@@ -29,7 +29,7 @@ err_nt_JS_mean_vec = np.zeros(rng)
 ii=0
 
 # for j in [150,106,113,16,105,140,122,32,101,118,122,107,100]:
-for j in [64]:
+for j in [65]:
     print(j)
     sample_id = j
     u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Validation_set/u_exact128_{}.npy".format(sample_id))
@@ -109,7 +109,7 @@ from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
-# # problem_32
+# # problem_65
 # fig, ax = plt.subplots()
 # ax.plot(x, u_nt, color='blue') #, marker='o')
 # ax.plot(x, u_nt_JS, color='green') #, marker='o')
@@ -124,8 +124,8 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 # axins.plot(x, u_nt_JS, color='green')
 # axins.plot(x, u_t, color='red')
 # axins.plot(x_ex, u_exact, color='black')
-# axins.set_xlim(0.95, 1)  # Limit the region for zoom
-# axins.set_ylim(1.75, 1.88)
+# axins.set_xlim(0.96, 1)  # Limit the region for zoom
+# axins.set_ylim(1.8, 2.05)
 # plt.xticks(visible=False)  # Not present ticks
 # plt.yticks(visible=False)
 # axins2 = inset_axes(ax, width=1, height=1, loc=3)
@@ -134,7 +134,7 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 # axins2.plot(x, u_t, color='red')
 # axins2.plot(x_ex, u_exact, color='black')
 # axins2.set_xlim(0.98,1.04)  # Limit the region for zoom
-# axins2.set_ylim(-1.9,-1.7)
+# axins2.set_ylim(-2.02,-1.88)
 # plt.xticks(visible=False)  # Not present ticks
 # plt.yticks(visible=False)
 # # draw a bbox of the region of the inset axes in the parent axes and
@@ -181,7 +181,7 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 # plt.show()
 # plt.savefig("foo.pdf", bbox_inches='tight')
 
-# # # problem_39
+# # # problem_42
 # fig, ax = plt.subplots()
 # ax.plot(x, u_nt, color='blue') #, marker='o')
 # ax.plot(x, u_nt_JS, color='green') #, marker='o')
@@ -196,8 +196,8 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 # axins.plot(x, u_nt_JS, color='green')
 # axins.plot(x, u_t, color='red')
 # axins.plot(x_ex, u_exact, color='black')
-# axins.set_xlim(0.15, 0.3)  # Limit the region for zoom
-# axins.set_ylim(1.45, 1.68)
+# axins.set_xlim(0.25, 0.37)  # Limit the region for zoom
+# axins.set_ylim(2.15, 2.44)
 # plt.xticks(visible=False)  # Not present ticks
 # plt.yticks(visible=False)
 # axins2 = inset_axes(ax, width=1, height=1, loc=10)
@@ -205,8 +205,8 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 # axins2.plot(x, u_nt_JS, color='green')
 # axins2.plot(x, u_t, color='red')
 # axins2.plot(x_ex, u_exact, color='black')
-# axins2.set_xlim(0.24,0.29)  # Limit the region for zoom
-# axins2.set_ylim(-0.01,0.06)
+# axins2.set_xlim(0.36, 0.4)  # Limit the region for zoom
+# axins2.set_ylim(-0.01,0.09)
 # plt.xticks(visible=False)  # Not present ticks
 # plt.yticks(visible=False)
 # #vdraw a bbox of the region of the inset axes in the parent axes and

@@ -37,7 +37,7 @@ all_loss_test = []
 for i in range(60):
     print(i)
     # sample_id = 50
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_46/{}.pt'.format(i))
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_59/{}.pt'.format(i))
     loss_test = []
     for j in [61,62,67,75,76,85,99]:
         sample_id = j
@@ -64,7 +64,7 @@ for i in range(60):
         for k in range(nn + 1):
             single_problem_loss_test.append(exact_overflows_loss(u_test[:, k], u_ex[:, k]).detach().numpy().max())
         loss_test.append(single_problem_loss_test)
-        sample_id=sample_id+1
+        #sample_id=sample_id+1
         # u_t = u_test[:,-1].detach().numpy()
         # error_nt_max = np.max(np.abs(u_nt - u_ex[:, -1].detach().numpy()))
         # error_t_max = np.max(np.abs(u_t - u_ex[:, -1].detach().numpy()))
@@ -85,10 +85,10 @@ all_loss_test = np.array(all_loss_test) #shape (training_steps, num_valid_proble
 
 plt.plot(all_loss_test[:,:,-1])
 a_labels = (df1["C"])
-plt.legend(['0.62','0.18','0.88', '0.77', '0.52', '0.3', '0.94'])
+#plt.legend(['0.62','0.18','0.88', '0.77', '0.52', '0.3', '0.94'])
 plt.xlabel('number of simulations')
 plt.ylabel('LOSS')
-# plt.savefig("foo.pdf", bbox_inches='tight')
+plt.savefig("foo.pdf", bbox_inches='tight')
 
 # err_mat = np.zeros((4,8))
 # err_mat[0,:] = err_nt_max_vec

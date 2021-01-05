@@ -31,7 +31,7 @@ def exact_loss(u, u_ex):
 
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Validation_set/parameters.txt")
 
-rng=20
+rng=9
 ii=0
 
 err_nt_max_vec = np.zeros(rng)
@@ -42,14 +42,14 @@ err_nt_JS_max_vec = np.zeros(rng)
 err_nt_JS_mean_vec = np.zeros(rng)
 
 all_loss_test = []
-for i in range(40,41):
+for i in range(29,30):
     print(i)
     # sample_id = 50
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_47/{}.pt'.format(i))
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_78/{}.pt'.format(i))
     loss_test = []
-    for j in [106,113,16,61,62,105,140,122,34,32,65,64,101,118,39,107,42,100,89,155]:
-    # for j in [106,113,16,122,34,32,118,39,107]:
-    # for j in [61,62,140,65,64,101,42,100,89]:
+    # for j in [106,113,16,61,62,105,140,122,34,32,65,64,101,118,9,107,42,100,89,155]:
+    # for j in [106,113,16,122,34,32,118,9,107]:
+    for j in [61,62,140,65,64,101,42,100,89]:
         sample_id = j
         u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Validation_set/u_exact128_{}.npy".format(sample_id))
         #u_ex = u_ex[0:512 + 1:4, 0:2240 + 1:16]

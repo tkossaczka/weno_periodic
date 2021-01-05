@@ -19,33 +19,33 @@ class WENONetwork(nn.Module):
 
     def get_inner_nn_weno5(self):
         net = nn.Sequential(
-            nn.Conv1d(2, 20, kernel_size=5, stride=1, padding=2),
-            nn.ELU(),
-            # nn.Conv1d(20, 20, kernel_size=3, stride=1, padding=1),
-            # nn.ReLU(),
-            nn.Conv1d(20, 20, kernel_size=5, stride=1, padding=2),
-            nn.ELU(),
-            # nn.Conv1d(10, 5, kernel_size=3, stride=1, padding=1),
-            # nn.ELU(),
-            # nn.Conv1d(40, 20, kernel_size=3, stride=1, padding=1),
-            # nn.ReLU(),
-            nn.Conv1d(20, 1, kernel_size=1, stride=1, padding=0),
-            nn.Sigmoid())
-            # # TOTO JE DOBRA SIET NA BUCKLEY_LEVERETT
-            # nn.Conv1d(2, 5, kernel_size=5, stride=1, padding=2),
+            # nn.Conv1d(2, 10, kernel_size=5, stride=1, padding=2),
             # nn.ELU(),
             # # nn.Conv1d(20, 20, kernel_size=3, stride=1, padding=1),
             # # nn.ReLU(),
-            # nn.Conv1d(5,5, kernel_size=5, stride=1, padding=2),
+            # nn.Conv1d(10, 10, kernel_size=5, stride=1, padding=2),
             # nn.ELU(),
-            # # nn.Conv1d(40, 80, kernel_size=1, stride=1, padding=0),
-            # # nn.ReLU(),
-            # # nn.Conv1d(80, 40, kernel_size=1, stride=1, padding=0),
-            # # nn.ReLU(),
-            # # nn.Conv1d(40, 20, kernel_size=3, stride=1, padding=1),
+            # # nn.Conv1d(10, 5, kernel_size=3, stride=1, padding=1),
             # # nn.ELU(),
-            # nn.Conv1d(5, 1, kernel_size=1, stride=1, padding=0),
+            # # nn.Conv1d(40, 20, kernel_size=3, stride=1, padding=1),
+            # # nn.ReLU(),
+            # nn.Conv1d(10, 1, kernel_size=1, stride=1, padding=0),
             # nn.Sigmoid())
+            # # TOTO JE DOBRA SIET NA BUCKLEY_LEVERETT
+            nn.Conv1d(2, 5, kernel_size=5, stride=1, padding=2),
+            nn.ELU(),
+            # nn.Conv1d(20, 20, kernel_size=3, stride=1, padding=1),
+            # nn.ReLU(),
+            nn.Conv1d(5,3, kernel_size=5, stride=1, padding=2),
+            nn.ELU(),
+            # nn.Conv1d(40, 80, kernel_size=1, stride=1, padding=0),
+            # nn.ReLU(),
+            # nn.Conv1d(80, 40, kernel_size=1, stride=1, padding=0),
+            # nn.ReLU(),
+            # nn.Conv1d(40, 20, kernel_size=3, stride=1, padding=1),
+            # nn.ELU(),
+            nn.Conv1d(3, 1, kernel_size=1, stride=1, padding=0),
+            nn.Sigmoid())
         return net
 
     # def get_inner_nn_weno6(self):
@@ -134,7 +134,7 @@ class WENONetwork(nn.Module):
             betan_corrected_list = []
             if w5_minus is True:
                 mult_shifts_p = [1, 0, -1] #[2, 1, 0]
-                mult_shifts_p = [2, 1, 0]
+                # mult_shifts_p = [2, 1, 0]
                 for k, beta in enumerate([betap0, betap1, betap2]):
                     shift = -mult_shifts_p[k] #k-1 #(3-k)-1
                     betap_corrected_list.append(beta * torch.roll(beta_multiplicators, shifts=shift, dims=0))
@@ -148,7 +148,7 @@ class WENONetwork(nn.Module):
                     shift = -mult_shifts_p[k] #k-1 #(3-k)-1
                     betap_corrected_list.append(beta * torch.roll(beta_multiplicators, shifts=shift, dims=0))
                 mult_shifts_n = [-1, 0, 1] #[-2, -1, 0]
-                mult_shifts_n = [-2, -1, 0]
+                # mult_shifts_n = [-2, -1, 0]
                 for k, beta in enumerate([betan0, betan1, betan2]):
                     shift = -mult_shifts_n[k] #k #3-k
                     betan_corrected_list.append(beta * torch.roll(beta_multiplicators, shifts=shift, dims=0))

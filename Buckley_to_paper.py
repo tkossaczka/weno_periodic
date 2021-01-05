@@ -16,7 +16,7 @@ problem = Buckley_Leverett
 # problem = Burgers_equation
 
 if problem == Buckley_Leverett:
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_46/28.pt') #30/10 good
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_59/40.pt') #30/10 good
     rng = 7
     def validation_problems(j):
         params_vld = []
@@ -104,7 +104,7 @@ err_t_mean_vec = np.zeros(rng)
 err_nt_JS_max_vec = np.zeros(rng)
 err_nt_JS_mean_vec = np.zeros(rng)
 
-for j in range(rng):
+for j in range(2,3):
     print(j)
     if problem == Buckley_Leverett:
         params = validation_problems(j)
@@ -213,14 +213,14 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 # axins2.set_ylim(0.1, 0.4)
 # plt.xticks(visible=False)  # Not present ticks
 # plt.yticks(visible=False)
-# #
-# ## draw a bbox of the region of the inset axes in the parent axes and
-# ## connecting lines between the bbox and the inset axes area
-# mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
-# mark_inset(ax, axins2, loc1=1, loc2=3, fc="none", ec="0.5")
-# plt.draw()
-# plt.show()
-# plt.savefig("foo.pdf", bbox_inches='tight')
+#
+## draw a bbox of the region of the inset axes in the parent axes and
+## connecting lines between the bbox and the inset axes area
+mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
+mark_inset(ax, axins2, loc1=1, loc2=3, fc="none", ec="0.5")
+plt.draw()
+plt.show()
+plt.savefig("foo.pdf", bbox_inches='tight')
 
 ## a = 0.25
 # fig, ax = plt.subplots()
@@ -258,4 +258,4 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 # plt.draw()
 # plt.show()
 # plt.savefig("foo.pdf", bbox_inches='tight')
-
+#

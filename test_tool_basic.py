@@ -12,11 +12,11 @@ train_model = WENONetwork()
 
 
 #problem = transport_equation
-# problem = Buckley_Leverett
-problem = Burgers_equation
+problem = Buckley_Leverett
+# problem = Burgers_equation
 
 if problem == Buckley_Leverett:
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_55/59.pt') #30/10 good
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_65/46.pt') #30/10 good
     rng = 7
     def validation_problems(j):
         params_vld = []
@@ -51,7 +51,7 @@ if problem == Buckley_Leverett:
     u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
     u_exs_whole = [u_ex_0_w, u_ex_1_w, u_ex_2_w, u_ex_3_w, u_ex_4_w, u_ex_5_w, u_ex_6_w]
 elif problem == Burgers_equation:
-    train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_66/7.pt")
+    train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_80/47.pt")
     rng = 14
     def validation_problems(j):
         params_vld = []
@@ -112,6 +112,9 @@ err_t_max_vec = np.zeros(rng)
 err_t_mean_vec = np.zeros(rng)
 err_nt_JS_max_vec = np.zeros(rng)
 err_nt_JS_mean_vec = np.zeros(rng)
+err_nt_mean_vec_2 = np.zeros(rng) # zly error
+err_nt_JS_mean_vec_2 = np.zeros(rng) # zly error
+err_t_mean_vec_2 = np.zeros(rng) # zly error
 
 for j in range(rng):
     print(j)
@@ -152,6 +155,9 @@ for j in range(rng):
     error_nt_max = np.max(np.abs(u_nt-u_exact_adjusted.detach().numpy()))
     error_nt_JS_max = np.max(np.abs(u_nt_JS-u_exact_adjusted.detach().numpy()))
     error_t_max = np.max(np.abs(u_t-u_exact_adjusted.detach().numpy()))
+    error_nt_mean_2 = np.mean((u_nt - u_exact_adjusted.detach().numpy()) ** 2)   # zly error
+    error_nt_JS_mean_2 = np.mean((u_nt_JS - u_exact_adjusted.detach().numpy()) ** 2)  # zly error
+    error_t_mean_2 = np.mean((u_t - u_exact_adjusted.detach().numpy()) ** 2)  # zly error
     error_nt_mean = np.sqrt(2 / 128) * (np.sqrt(np.sum((u_nt - u_exact_adjusted.detach().numpy()) ** 2)))
     error_nt_JS_mean = np.sqrt(2 / 128) * (np.sqrt(np.sum((u_nt_JS - u_exact_adjusted.detach().numpy()) ** 2)))
     error_t_mean = np.sqrt(2 / 128) * (np.sqrt(np.sum((u_t - u_exact_adjusted.detach().numpy()) ** 2)))
@@ -161,19 +167,25 @@ for j in range(rng):
     err_nt_mean_vec[j] = error_nt_mean
     err_nt_JS_mean_vec[j] = error_nt_JS_mean
     err_t_mean_vec[j] = error_t_mean
+    err_nt_mean_vec_2[j] = error_nt_mean_2 # zly error
+    err_nt_JS_mean_vec_2[j] = error_nt_JS_mean_2 # zly error
+    err_t_mean_vec_2[j] = error_t_mean_2 # zly error
     plt.figure(j+1)
     plt.plot(x, u_nt, color='blue', marker='o')
     plt.plot(x, u_nt_JS, color='green', marker='o')
     plt.plot(x, u_t, marker='o', color='red')
     plt.plot(x_ex, u_exact, color='black')
 
-err_mat = np.zeros((6,rng))
+err_mat = np.zeros((9,rng))
 err_mat[0,:] = err_nt_JS_max_vec
 err_mat[1,:] = err_nt_max_vec
 err_mat[2,:] = err_t_max_vec
 err_mat[3,:] = err_nt_JS_mean_vec
 err_mat[4,:] = err_nt_mean_vec
 err_mat[5,:] = err_t_mean_vec
+err_mat[6,:] = err_nt_JS_mean_vec_2 # zly error
+err_mat[7,:] = err_nt_mean_vec_2 # zly error
+err_mat[8,:] = err_t_mean_vec_2 # zly error
 
 # err_mat = np.zeros((rng,6))
 # err_mat[:,0] = err_nt_JS_max_vec
@@ -185,7 +197,7 @@ err_mat[5,:] = err_t_mean_vec
 # err_mat=err_mat.T
 #
 # import pandas as pd
-# pd.DataFrame(err_mat).to_csv("err_mat.csv")
+# # pd.DataFrame(err_mat).to_csv("err_mat.csv")
 # pd.DataFrame(err_mat).to_latex()
 
 # params = validation_problems(0)

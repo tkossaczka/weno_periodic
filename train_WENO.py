@@ -88,14 +88,14 @@ u_exs = [u_ex_0_w[0:1024 + 1:8, 0:8960 + 1:64], u_ex_1_w[0:1024 + 1:8, 0:8960 + 
 #u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
 
 # optimizer = optim.SGD(train_model.parameters(), lr=0.1)
-optimizer = optim.Adam(train_model.parameters(), lr=1e-2)
+optimizer = optim.Adam(train_model.parameters(), lr=1e-4)
 
 it = 30
 losses = []
 all_loss_test = []
 df=pd.read_csv("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/parameters.txt")
 
-for j in range(5):
+for j in range(60):
     sample_id=j
     #sample_id = random.randint(0,59)
     u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/u_exact_{}.npy".format(sample_id))
@@ -131,8 +131,8 @@ for j in range(5):
         loss = exact_overflows_loss(V_train, u_ex[:,k+1])
         #loss = exact_overflows_loss(V_train, u_ex[:, init_id+1])
         loss.backward()  # Backward pass
-        maxgrad = np.array([np.abs(p.grad.numpy()).max() for p in optimizer.param_groups[0]['params']]).max()
-        print(maxgrad)
+        # maxgrad = np.array([np.abs(p.grad.numpy()).max() for p in optimizer.param_groups[0]['params']]).max()
+        # print(maxgrad)
         optimizer.step()  # Optimize weights
         #g = train_model.parameters()
         #x = g.__next__()
@@ -141,7 +141,7 @@ for j in range(5):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_57/"
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_65/"
     if not os.path.exists(base_path):
         os.mkdir(base_path)
     path = os.path.join(base_path, "{}.pt".format(j))
