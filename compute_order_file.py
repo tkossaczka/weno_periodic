@@ -7,7 +7,7 @@ from define_problem_Buckley_Leverett import Buckley_Leverett
 nb=6
 with torch.no_grad():
     #train_model = WENONetwork()
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_65/46.pt')
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_65/45.pt')
     #train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_16/8")
     problem = transport_equation
     #problem = Buckley_Leverett

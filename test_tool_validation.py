@@ -37,7 +37,7 @@ all_loss_test = []
 for i in range(60):
     print(i)
     # sample_id = 50
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_59/{}.pt'.format(i))
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_65/{}.pt'.format(i))
     loss_test = []
     for j in [61,62,67,75,76,85,99]:
         sample_id = j
@@ -86,9 +86,11 @@ all_loss_test = np.array(all_loss_test) #shape (training_steps, num_valid_proble
 plt.plot(all_loss_test[:,:,-1])
 a_labels = (df1["C"])
 #plt.legend(['0.62','0.18','0.88', '0.77', '0.52', '0.3', '0.94'])
-plt.xlabel('number of simulations')
+plt.xlabel('number of training cycles')
 plt.ylabel('LOSS')
 plt.savefig("foo.pdf", bbox_inches='tight')
+
+# np.save("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_65/all_loss_test.npy", all_loss_test)
 
 # err_mat = np.zeros((4,8))
 # err_mat[0,:] = err_nt_max_vec

@@ -16,7 +16,7 @@ problem = Buckley_Leverett
 # problem = Burgers_equation
 
 if problem == Buckley_Leverett:
-    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_59/40.pt') #30/10 good
+    train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_65/46.pt') #30/10 good
     rng = 7
     def validation_problems(j):
         params_vld = []
@@ -104,7 +104,7 @@ err_t_mean_vec = np.zeros(rng)
 err_nt_JS_max_vec = np.zeros(rng)
 err_nt_JS_mean_vec = np.zeros(rng)
 
-for j in range(2,3):
+for j in range(rng):
     print(j)
     if problem == Buckley_Leverett:
         params = validation_problems(j)
@@ -173,10 +173,27 @@ err_mat[:,1] = err_nt_max_vec
 err_mat[:,4] = err_nt_mean_vec
 err_mat[:,2] = err_t_max_vec
 err_mat[:,5] = err_t_mean_vec
-err_mat=err_mat.T
+# err_mat=err_mat.T
+
+ratio_inf = np.zeros((rng))
+for i in range(rng):
+    ratio_inf[i] = min(err_mat[i,0],err_mat[i,1])/err_mat[i,2]
+ratio_l2 = np.zeros((rng))
+for i in range(rng):
+    ratio_l2[i] = min(err_mat[i,3],err_mat[i,4])/err_mat[i,5]
+
+err_mat_ratios = np.zeros((rng,8))
+err_mat_ratios[:,0] = err_nt_JS_max_vec
+err_mat_ratios[:,4] = err_nt_JS_mean_vec
+err_mat_ratios[:,1] = err_nt_max_vec
+err_mat_ratios[:,5] = err_nt_mean_vec
+err_mat_ratios[:,2] = err_t_max_vec
+err_mat_ratios[:,6] = err_t_mean_vec
+err_mat_ratios[:,3] = ratio_inf
+err_mat_ratios[:,7] = ratio_l2
 
 import pandas as pd
-pd.DataFrame(err_mat).to_csv("err_mat.csv")
+# pd.DataFrame(err_mat).to_csv("err_mat.csv")
 pd.DataFrame(err_mat).to_latex()
 
 # # #Burgers: 64,25 Buckley: 64,35
@@ -187,65 +204,65 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 ## a = 0.5
 # fig, ax = plt.subplots()
-# ax.plot(x, u_nt, color='blue') #, marker='o')
-# ax.plot(x, u_nt_JS, color='green') #, marker='o')
+# ax.plot(x, u_nt_JS, color='blue') #, marker='o')
+# ax.plot(x, u_nt, color='green') #, marker='o')
 # ax.plot(x, u_t, color='red')
-# ax.plot(x_ex, u_exact, color='black')
+# ax.plot(x, u_exact_adjusted, color='black')
 # ax.legend(('WENO-JS', 'WENO-Z', 'WENO-DS', 'ref. sol.'), loc=(0.6,0.74))
 # ax.set_xlabel('x')
 # ax.set_ylabel('u')
 # #axins = zoomed_inset_axes(ax, 1.5, loc=1)  # zoom = 6
 # axins = inset_axes(ax, width=0.5, height=2.5, loc=1)
-# axins.plot(x, u_nt, color='blue')
-# axins.plot(x, u_nt_JS, color='green')
+# axins.plot(x, u_nt_JS, color='blue')
+# axins.plot(x, u_nt, color='green')
 # axins.plot(x, u_t, color='red')
-# axins.plot(x_ex, u_exact, color='black')
+# axins.plot(x, u_exact_adjusted, color='black')
 # axins.set_xlim(0.52, 0.6)  # Limit the region for zoom
-# axins.set_ylim(0, 0.55)
+# axins.set_ylim(0, 0.4)
 # plt.xticks(visible=False)  # Not present ticks
 # plt.yticks(visible=False)
 # axins2 = inset_axes(ax, width=0.75, height=2, loc=2)
-# axins2.plot(x, u_nt, color='blue')
-# axins2.plot(x, u_nt_JS, color='green')
+# axins2.plot(x, u_nt_JS, color='blue')
+# axins2.plot(x, u_nt, color='green')
 # axins2.plot(x, u_t, color='red')
-# axins2.plot(x_ex, u_exact, color='black')
+# axins2.plot(x, u_exact_adjusted, color='black')
 # axins2.set_xlim(-0.15, 0)  # Limit the region for zoom
 # axins2.set_ylim(0.1, 0.4)
 # plt.xticks(visible=False)  # Not present ticks
 # plt.yticks(visible=False)
-#
-## draw a bbox of the region of the inset axes in the parent axes and
-## connecting lines between the bbox and the inset axes area
-mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
-mark_inset(ax, axins2, loc1=1, loc2=3, fc="none", ec="0.5")
-plt.draw()
-plt.show()
-plt.savefig("foo.pdf", bbox_inches='tight')
+
+# draw a bbox of the region of the inset axes in the parent axes and
+# connecting lines between the bbox and the inset axes area
+# mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
+# mark_inset(ax, axins2, loc1=1, loc2=3, fc="none", ec="0.5")
+# plt.draw()
+# plt.show()
+# plt.savefig("foo.pdf", bbox_inches='tight')
 
 ## a = 0.25
 # fig, ax = plt.subplots()
-# ax.plot(x, u_nt, color='blue') #, marker='o')
-# ax.plot(x, u_nt_JS, color='green') #, marker='o')
+# ax.plot(x, u_nt_JS, color='blue') #, marker='o')
+# ax.plot(x, u_nt, color='green') #, marker='o')
 # ax.plot(x, u_t, color='red')
-# ax.plot(x_ex, u_exact, color='black')
+# ax.plot(x, u_exact_adjusted, color='black')
 # ax.legend(('WENO-JS', 'WENO-Z', 'WENO-DS', 'ref. sol.'), loc=(0.6,0.74))
 # ax.set_xlabel('x')
 # ax.set_ylabel('u')
 # #axins = zoomed_inset_axes(ax, 1.5, loc=1)  # zoom = 6
 # axins = inset_axes(ax, width=0.5, height=2.5, loc=1)
-# axins.plot(x, u_nt, color='blue')
-# axins.plot(x, u_nt_JS, color='green')
+# axins.plot(x, u_nt_JS, color='blue')
+# axins.plot(x, u_nt, color='green')
 # axins.plot(x, u_t, color='red')
-# axins.plot(x_ex, u_exact, color='black')
+# axins.plot(x, u_exact_adjusted, color='black')
 # axins.set_xlim(0.60, 0.75)  # Limit the region for zoom
 # axins.set_ylim(0, 0.4)
 # plt.xticks(visible=False)  # Not present ticks
 # plt.yticks(visible=False)
 # axins2 = inset_axes(ax, width=0.75, height=2, loc=2)
-# axins2.plot(x, u_nt, color='blue')
-# axins2.plot(x, u_nt_JS, color='green')
+# axins2.plot(x, u_nt_JS, color='blue')
+# axins2.plot(x, u_nt, color='green')
 # axins2.plot(x, u_t, color='red')
-# axins2.plot(x_ex, u_exact, color='black')
+# axins2.plot(x, u_exact_adjusted, color='black')
 # axins2.set_xlim(-0.2, -0.05)  # Limit the region for zoom
 # axins2.set_ylim(0.05, 0.3)
 # plt.xticks(visible=False)  # Not present ticks
@@ -258,4 +275,4 @@ plt.savefig("foo.pdf", bbox_inches='tight')
 # plt.draw()
 # plt.show()
 # plt.savefig("foo.pdf", bbox_inches='tight')
-#
+

@@ -120,6 +120,25 @@ err_mat[3,:] = err_nt_JS_mean_vec
 err_mat[4,:] = err_nt_mean_vec
 err_mat[5,:] = err_t_mean_vec
 
+err_mat=err_mat.T
+
+ratio_inf = np.zeros((rng))
+for i in range(rng):
+    ratio_inf[i] = min(err_mat[i,0],err_mat[i,1])/err_mat[i,2]
+ratio_l2 = np.zeros((rng))
+for i in range(rng):
+    ratio_l2[i] = min(err_mat[i,3],err_mat[i,4])/err_mat[i,5]
+
+err_mat_ratios = np.zeros((rng,8))
+err_mat_ratios[:,0] = err_nt_JS_max_vec
+err_mat_ratios[:,4] = err_nt_JS_mean_vec
+err_mat_ratios[:,1] = err_nt_max_vec
+err_mat_ratios[:,5] = err_nt_mean_vec
+err_mat_ratios[:,2] = err_t_max_vec
+err_mat_ratios[:,6] = err_t_mean_vec
+err_mat_ratios[:,3] = ratio_inf
+err_mat_ratios[:,7] = ratio_l2
+
 # err_mat = np.zeros((rng,6))
 # err_mat[:,0] = err_nt_JS_max_vec
 # err_mat[:,3] = err_nt_JS_mean_vec

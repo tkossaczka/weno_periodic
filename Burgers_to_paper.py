@@ -29,7 +29,7 @@ err_nt_JS_mean_vec = np.zeros(rng)
 ii=0
 
 # for j in [150,106,113,16,105,140,122,32,101,118,122,107,100]:
-for j in [65]:
+for j in [16]:
     print(j)
     sample_id = j
     u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Validation_set/u_exact128_{}.npy".format(sample_id))
@@ -111,28 +111,28 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 # # problem_65
 # fig, ax = plt.subplots()
-# ax.plot(x, u_nt, color='blue') #, marker='o')
-# ax.plot(x, u_nt_JS, color='green') #, marker='o')
-# ax.plot(x, u_t, color='red')
-# ax.plot(x_ex, u_exact, color='black')
+# ax.plot(x, u_nt_JS, color='blue') #, marker='o')
+# ax.plot(x, u_nt, color='green') #, marker='o')
+# ax.plot(x, u_t, color='red', marker='x')
+# ax.plot(x, u_exact_adjusted, color='black')
 # ax.legend(('WENO-JS', 'WENO-Z', 'WENO-DS', 'ref. sol.'), loc=(0.01,0.74))
 # ax.set_xlabel('x')
 # ax.set_ylabel('u')
 # #axins = zoomed_inset_axes(ax, 1.5, loc=1)  # zoom = 6
 # axins = inset_axes(ax, width=1, height=1, loc=1)
-# axins.plot(x, u_nt, color='blue')
-# axins.plot(x, u_nt_JS, color='green')
-# axins.plot(x, u_t, color='red')
-# axins.plot(x_ex, u_exact, color='black')
+# axins.plot(x, u_nt_JS, color='blue')
+# axins.plot(x, u_nt, color='green')
+# axins.plot(x, u_t, color='red', marker='x')
+# axins.plot(x, u_exact_adjusted, color='black')
 # axins.set_xlim(0.96, 1)  # Limit the region for zoom
 # axins.set_ylim(1.8, 2.05)
 # plt.xticks(visible=False)  # Not present ticks
 # plt.yticks(visible=False)
 # axins2 = inset_axes(ax, width=1, height=1, loc=3)
-# axins2.plot(x, u_nt, color='blue')
-# axins2.plot(x, u_nt_JS, color='green')
-# axins2.plot(x, u_t, color='red')
-# axins2.plot(x_ex, u_exact, color='black')
+# axins2.plot(x, u_nt_JS, color='blue')
+# axins2.plot(x, u_nt, color='green')
+# axins2.plot(x, u_t, color='red', marker='x')
+# axins2.plot(x, u_exact_adjusted, color='black')
 # axins2.set_xlim(0.98,1.04)  # Limit the region for zoom
 # axins2.set_ylim(-2.02,-1.88)
 # plt.xticks(visible=False)  # Not present ticks
@@ -143,32 +143,32 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 # mark_inset(ax, axins2, loc1=1, loc2=4, fc="none", ec="0.5")
 # plt.draw()
 # plt.show()
-# plt.savefig("foo.pdf", bbox_inches='tight')
+# plt.savefig("BE_sin_2,12.pdf", bbox_inches='tight')
 
 # # problem_34
 # fig, ax = plt.subplots()
-# ax.plot(x, u_nt, color='blue') #, marker='o')
-# ax.plot(x, u_nt_JS, color='green') #, marker='o')
-# ax.plot(x, u_t, color='red')
-# ax.plot(x_ex, u_exact, color='black')
+# ax.plot(x, u_nt_JS, color='blue') #, marker='o')
+# ax.plot(x, u_nt, color='green') #, marker='o')
+# ax.plot(x, u_t, color='red', marker='x')
+# ax.plot(x, u_exact_adjusted, color='black')
 # ax.legend(('WENO-JS', 'WENO-Z', 'WENO-DS', 'ref. sol.'), loc=(0.01,0.74))
 # ax.set_xlabel('x')
 # ax.set_ylabel('u')
 # #axins = zoomed_inset_axes(ax, 1.5, loc=1)  # zoom = 6
 # axins = inset_axes(ax, width=1, height=1, loc=1)
-# axins.plot(x, u_nt, color='blue')
-# axins.plot(x, u_nt_JS, color='green')
-# axins.plot(x, u_t, color='red')
-# axins.plot(x_ex, u_exact, color='black')
+# axins.plot(x, u_nt_JS, color='blue')
+# axins.plot(x, u_nt, color='green')
+# axins.plot(x, u_t, color='red', marker='x')
+# axins.plot(x, u_exact_adjusted, color='black')
 # axins.set_xlim(0.95, 1)  # Limit the region for zoom
 # axins.set_ylim(1.5, 1.62)
 # plt.xticks(visible=False)  # Not present ticks
 # plt.yticks(visible=False)
 # axins2 = inset_axes(ax, width=1, height=1, loc=3)
-# axins2.plot(x, u_nt, color='blue')
-# axins2.plot(x, u_nt_JS, color='green')
-# axins2.plot(x, u_t, color='red')
-# axins2.plot(x_ex, u_exact, color='black')
+# axins2.plot(x, u_nt_JS, color='blue')
+# axins2.plot(x, u_nt, color='green')
+# axins2.plot(x, u_t, color='red', marker='x')
+# axins2.plot(x, u_exact_adjusted, color='black')
 # axins2.set_xlim(0.98,1.04)  # Limit the region for zoom
 # axins2.set_ylim(-1.62,-1.52)
 # plt.xticks(visible=False)  # Not present ticks
@@ -179,32 +179,32 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 # mark_inset(ax, axins2, loc1=1, loc2=4, fc="none", ec="0.5")
 # plt.draw()
 # plt.show()
-# plt.savefig("foo.pdf", bbox_inches='tight')
+# plt.savefig("BE_sin_1,6.pdf", bbox_inches='tight')
 
 # # # problem_42
 # fig, ax = plt.subplots()
-# ax.plot(x, u_nt, color='blue') #, marker='o')
-# ax.plot(x, u_nt_JS, color='green') #, marker='o')
-# ax.plot(x, u_t, color='red')
-# ax.plot(x_ex, u_exact, color='black')
+# ax.plot(x, u_nt_JS, color='blue') #, marker='o')
+# ax.plot(x, u_nt, color='green') #, marker='o')
+# ax.plot(x, u_t, color='red', marker='x')
+# ax.plot(x, u_exact_adjusted, color='black')
 # ax.legend(('WENO-JS', 'WENO-Z', 'WENO-DS', 'ref. sol.'), loc=(0.7,0.1))
 # ax.set_xlabel('x')
 # ax.set_ylabel('u')
 # #axins = zoomed_inset_axes(ax, 1.5, loc=1)  # zoom = 6
 # axins = inset_axes(ax, width=1, height=1, loc=9)
-# axins.plot(x, u_nt, color='blue')
-# axins.plot(x, u_nt_JS, color='green')
-# axins.plot(x, u_t, color='red')
-# axins.plot(x_ex, u_exact, color='black')
+# axins.plot(x, u_nt_JS, color='blue')
+# axins.plot(x, u_nt, color='green')
+# axins.plot(x, u_t, color='red', marker='x')
+# axins.plot(x, u_exact_adjusted, color='black')
 # axins.set_xlim(0.25, 0.37)  # Limit the region for zoom
 # axins.set_ylim(2.15, 2.44)
 # plt.xticks(visible=False)  # Not present ticks
 # plt.yticks(visible=False)
 # axins2 = inset_axes(ax, width=1, height=1, loc=10)
-# axins2.plot(x, u_nt, color='blue')
-# axins2.plot(x, u_nt_JS, color='green')
-# axins2.plot(x, u_t, color='red')
-# axins2.plot(x_ex, u_exact, color='black')
+# axins2.plot(x, u_nt_JS, color='blue')
+# axins2.plot(x, u_nt, color='green')
+# axins2.plot(x, u_t, color='red', marker='x')
+# axins2.plot(x, u_exact_adjusted, color='black')
 # axins2.set_xlim(0.36, 0.4)  # Limit the region for zoom
 # axins2.set_ylim(-0.01,0.09)
 # plt.xticks(visible=False)  # Not present ticks
@@ -215,23 +215,23 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 # mark_inset(ax, axins2, loc1=2, loc2=3, fc="none", ec="0.5")
 # plt.draw()
 # plt.show()
-# plt.savefig("foo.pdf", bbox_inches='tight')
+# plt.savefig("BE_step_2,41.pdf", bbox_inches='tight')
 
 # # problem_16
 # fig, ax = plt.subplots()
-# ax.plot(x, u_nt, color='blue') #, marker='o')
-# ax.plot(x, u_nt_JS, color='green') #, marker='o')
-# ax.plot(x, u_t, color='red')
-# ax.plot(x_ex, u_exact, color='black')
+# ax.plot(x, u_nt_JS, color='blue') #, marker='o')
+# ax.plot(x, u_nt, color='green') #, marker='o')
+# ax.plot(x, u_t, color='red', marker='x')
+# ax.plot(x, u_exact_adjusted, color='black')
 # ax.legend(('WENO-JS', 'WENO-Z', 'WENO-DS', 'ref. sol.'), loc=(0.01,0.74))
 # ax.set_xlabel('x')
 # ax.set_ylabel('u')
 # #axins = zoomed_inset_axes(ax, 1.5, loc=1)  # zoom = 6
 # axins = inset_axes(ax, width=1, height=1, loc=1)
-# axins.plot(x, u_nt, color='blue')
-# axins.plot(x, u_nt_JS, color='green')
-# axins.plot(x, u_t, color='red')
-# axins.plot(x_ex, u_exact, color='black')
+# axins.plot(x, u_nt_JS, color='blue')
+# axins.plot(x, u_nt, color='green')
+# axins.plot(x, u_t, color='red', marker='x')
+# axins.plot(x, u_exact_adjusted, color='black')
 # axins.set_xlim(1.24, 1.31)  # Limit the region for zoom
 # axins.set_ylim(0.94,1.01)
 # plt.xticks(visible=False)  # Not present ticks
@@ -241,5 +241,5 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 # mark_inset(ax, axins, loc1=2, loc2=3, fc="none", ec="0.5")
 # plt.draw()
 # plt.show()
-# plt.savefig("foo.pdf", bbox_inches='tight')
-#
+# plt.savefig("BE_exp_29,1.pdf", bbox_inches='tight')
+
