@@ -28,8 +28,8 @@ err_nt_JS_max_vec = np.zeros(rng)
 err_nt_JS_mean_vec = np.zeros(rng)
 ii=0
 
-# for j in [150,106,113,16,105,140,122,32,101,118,122,107,100]:
-for j in [16]:
+for j in [150,106,113,16,105,140,122,32,101,118,122,107,100]:
+# for j in [16]:
     print(j)
     sample_id = j
     u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Burgers_Equation_Data_1024/Validation_set/u_exact128_{}.npy".format(sample_id))

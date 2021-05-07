@@ -42,8 +42,8 @@ if problem == Buckley_Leverett:
     u_ex_4_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Basic_test_set/u_ex_4")
     u_ex_5_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Basic_test_set/u_ex_5")
     u_ex_6_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Basic_test_set/u_ex_6")
-    divider_space = 4 # *2
-    divider_time = 16*4
+    divider_space = 4*2
+    divider_time = 64*4
     u_exs = [u_ex_0_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time], u_ex_1_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time],
              u_ex_2_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time], u_ex_3_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time],
              u_ex_4_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time], u_ex_5_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time],
@@ -121,7 +121,7 @@ for j in range(rng):
     if problem == Buckley_Leverett:
         params = validation_problems(j)
         #params['T'] = 0.2
-        my_problem = problem(ic_numb=6, space_steps=64*2*2, time_steps=None, params=params)
+        my_problem = problem(ic_numb=6, space_steps=64*2, time_steps=None, params=params)
         C = params['C']
     elif problem == Burgers_equation:
         params_vld = validation_problems(j)
@@ -145,7 +145,7 @@ for j in range(rng):
     u_t = u_t.detach().numpy()
     _, x, t = my_problem.transformation(u_nt)
     time_steps = t.shape[0]
-    space_steps = 64*2*2
+    space_steps = 64*2
     h = my_problem.h
     # x_ex = np.linspace(0, 2 - h, 1024)  # Burgers
     x_ex = np.linspace(-1, 1 - h, 1024)    # Buckley

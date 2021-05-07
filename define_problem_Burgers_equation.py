@@ -86,6 +86,7 @@ class Burgers_equation():
 
     def funct_convection(self, u):
         u_conv = (u**2)/(2)
+        # u_conv = (u**4)/16
         return u_conv
 
     def funct_derivative(self,u):

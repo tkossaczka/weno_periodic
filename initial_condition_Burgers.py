@@ -21,5 +21,7 @@ def init_cond_B(ic_numb, x, k = None):
             k = random.uniform(1, 2)
         u0 = np.zeros(x.shape[0])
         u0[x >= xmid] = k*1
+    elif ic_numb == 4:
+        u0 = 1 +  np.sin(4 * np.pi *x)
 
     return u0, numb, xmid, height, width, k
