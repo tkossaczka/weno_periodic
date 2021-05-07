@@ -134,6 +134,7 @@ for j in range(rng):
     _, x, t = my_problem.transformation(u_nt)
     time_steps = t.shape[0]
     h = my_problem.h
+    sp_steps = 64*2
     # x_ex = np.linspace(0, 2 - h, 1024)
     x_ex = np.linspace(-1, 1 - h, 1024)
     # problem_ex = problem(ic_numb=2, space_steps=60 * 2 * 2 * 2, time_steps=None, params=params)
@@ -143,9 +144,9 @@ for j in range(rng):
     error_nt_max = np.max(np.abs(u_nt-u_exact_adjusted.detach().numpy()))
     error_nt_JS_max = np.max(np.abs(u_nt_JS-u_exact_adjusted.detach().numpy()))
     error_t_max = np.max(np.abs(u_t-u_exact_adjusted.detach().numpy()))
-    error_nt_mean = np.sqrt(2/128)*(np.sqrt(np.sum((u_nt-u_exact_adjusted.detach().numpy())**2)))
-    error_nt_JS_mean = np.sqrt(2/128)*(np.sqrt(np.sum((u_nt_JS-u_exact_adjusted.detach().numpy())**2)))
-    error_t_mean = np.sqrt(2/128)*(np.sqrt(np.sum((u_t-u_exact_adjusted.detach().numpy())**2)))
+    error_nt_mean = np.sqrt(2/sp_steps)*(np.sqrt(np.sum((u_nt-u_exact_adjusted.detach().numpy())**2)))
+    error_nt_JS_mean = np.sqrt(2/sp_steps)*(np.sqrt(np.sum((u_nt_JS-u_exact_adjusted.detach().numpy())**2)))
+    error_t_mean = np.sqrt(2/sp_steps)*(np.sqrt(np.sum((u_t-u_exact_adjusted.detach().numpy())**2)))
     err_nt_max_vec[j] = error_nt_max
     err_nt_JS_max_vec[j] = error_nt_JS_max
     err_t_max_vec[j] = error_t_max

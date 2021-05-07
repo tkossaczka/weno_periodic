@@ -4,7 +4,7 @@ from define_WENO_Network import WENONetwork
 from define_problem_transport_eq import transport_equation
 from define_problem_Buckley_Leverett import Buckley_Leverett
 
-nb=6
+nb=8
 with torch.no_grad():
     #train_model = WENONetwork()
     train_model = torch.load('C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_65/45.pt')

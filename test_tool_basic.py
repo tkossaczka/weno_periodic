@@ -42,13 +42,13 @@ if problem == Buckley_Leverett:
     u_ex_4_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Basic_test_set/u_ex_4")
     u_ex_5_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Basic_test_set/u_ex_5")
     u_ex_6_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Basic_test_set/u_ex_6")
-    # divider_space = 4*2
-    # divider_time = 16*4
-    # u_exs = [u_ex_whole_0[0:512 + 1:divider_space, 0:2240 + 1:divider_time], u_ex_whole_1[0:512 + 1:divider_space, 0:2240 + 1:divider_time],
-    #          u_ex_whole_2[0:512 + 1:divider_space, 0:2240 + 1:divider_time], u_ex_whole_3[0:512 + 1:divider_space, 0:2240 + 1:divider_time],
-    #          u_ex_whole_4[0:512 + 1:divider_space, 0:2240 + 1:divider_time], u_ex_whole_5[0:512 + 1:divider_space, 0:2240 + 1:divider_time],
-    #          u_ex_whole_6[0:512 + 1:divider_space, 0:2240 + 1:divider_time]]
-    u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
+    divider_space = 4 # *2
+    divider_time = 16*4
+    u_exs = [u_ex_0_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time], u_ex_1_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time],
+             u_ex_2_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time], u_ex_3_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time],
+             u_ex_4_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time], u_ex_5_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time],
+             u_ex_6_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time]]
+    # u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
     u_exs_whole = [u_ex_0_w, u_ex_1_w, u_ex_2_w, u_ex_3_w, u_ex_4_w, u_ex_5_w, u_ex_6_w]
 elif problem == Burgers_equation:
     train_model = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Burgers_Equation_Test/Models/Model_80/47.pt")
@@ -121,7 +121,7 @@ for j in range(rng):
     if problem == Buckley_Leverett:
         params = validation_problems(j)
         #params['T'] = 0.2
-        my_problem = problem(ic_numb=6, space_steps=64*2, time_steps=None, params=params)
+        my_problem = problem(ic_numb=6, space_steps=64*2*2, time_steps=None, params=params)
         C = params['C']
     elif problem == Burgers_equation:
         params_vld = validation_problems(j)
@@ -145,9 +145,10 @@ for j in range(rng):
     u_t = u_t.detach().numpy()
     _, x, t = my_problem.transformation(u_nt)
     time_steps = t.shape[0]
+    space_steps = 64*2*2
     h = my_problem.h
-    x_ex = np.linspace(0, 2 - h, 1024)
-    # x_ex = np.linspace(-1, 1 - h, 1024)
+    # x_ex = np.linspace(0, 2 - h, 1024)  # Burgers
+    x_ex = np.linspace(-1, 1 - h, 1024)    # Buckley
     # problem_ex = problem(ic_numb=2, space_steps=60 * 2 * 2 * 2, time_steps=None, params=params)
     # _, u_exact_adjusted = train_model.compute_exact_end(Buckley_Leverett, problem_ex, 60, time_steps, just_one_time_step=False, trainable=False)
     u_exact_adjusted = u_exs[j][:,-1] #[0:128 + 1:2, 0:100 + 1:4]
@@ -158,9 +159,9 @@ for j in range(rng):
     error_nt_mean_2 = np.mean((u_nt - u_exact_adjusted.detach().numpy()) ** 2)   # zly error
     error_nt_JS_mean_2 = np.mean((u_nt_JS - u_exact_adjusted.detach().numpy()) ** 2)  # zly error
     error_t_mean_2 = np.mean((u_t - u_exact_adjusted.detach().numpy()) ** 2)  # zly error
-    error_nt_mean = np.sqrt(2 / 128) * (np.sqrt(np.sum((u_nt - u_exact_adjusted.detach().numpy()) ** 2)))
-    error_nt_JS_mean = np.sqrt(2 / 128) * (np.sqrt(np.sum((u_nt_JS - u_exact_adjusted.detach().numpy()) ** 2)))
-    error_t_mean = np.sqrt(2 / 128) * (np.sqrt(np.sum((u_t - u_exact_adjusted.detach().numpy()) ** 2)))
+    error_nt_mean = np.sqrt(2 / space_steps) * (np.sqrt(np.sum((u_nt - u_exact_adjusted.detach().numpy()) ** 2)))
+    error_nt_JS_mean = np.sqrt(2 / space_steps) * (np.sqrt(np.sum((u_nt_JS - u_exact_adjusted.detach().numpy()) ** 2)))
+    error_t_mean = np.sqrt(2 / space_steps) * (np.sqrt(np.sum((u_t - u_exact_adjusted.detach().numpy()) ** 2)))
     err_nt_max_vec[j] = error_nt_max
     err_nt_JS_max_vec[j] = error_nt_JS_max
     err_t_max_vec[j] = error_t_max
