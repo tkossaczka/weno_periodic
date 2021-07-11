@@ -84,7 +84,11 @@ u_ex_4_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckle
 u_ex_5_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Basic_test_set/u_ex_5")
 u_ex_6_w = torch.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/Basic_test_set/u_ex_6")
 # u_exs_whole = [u_ex_whole_0, u_ex_whole_1, u_ex_whole_2, u_ex_whole_3, u_ex_whole_4, u_ex_whole_5, u_ex_whole_6]
-u_exs = [u_ex_0_w[0:1024 + 1:8, 0:8960 + 1:64], u_ex_1_w[0:1024 + 1:8, 0:8960 + 1:64], u_ex_2_w[0:1024 + 1:8, 0:8960 + 1:64], u_ex_3_w[0:1024 + 1:8, 0:8960 + 1:64], u_ex_4_w[0:1024 + 1:8, 0:8960 + 1:64], u_ex_5_w[0:1024 + 1:8, 0:8960 + 1:64], u_ex_6_w[0:1024 + 1:8, 0:8960 + 1:64]]
+divider_space = 4*2*2
+divider_time = 16*4*4
+u_exs = [u_ex_0_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time], u_ex_1_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time], u_ex_2_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time],
+         u_ex_3_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time], u_ex_4_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time], u_ex_5_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time],
+         u_ex_6_w[0:1024 + 1:divider_space, 0:8960 + 1:divider_time]]
 #u_exs = [u_ex_0, u_ex_1, u_ex_2, u_ex_3, u_ex_4, u_ex_5, u_ex_6]
 
 # optimizer = optim.SGD(train_model.parameters(), lr=0.1)
@@ -99,13 +103,13 @@ for j in range(60):
     sample_id=j
     #sample_id = random.randint(0,59)
     u_ex = np.load("C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Buckley_Leverett_Data_1024/u_exact_{}.npy".format(sample_id))
-    u_ex = u_ex[0:1024 + 1:8, 0:8960 + 1:64]
+    u_ex = u_ex[0:1024 + 1:8*2, 0:8960 + 1:64*4]
     u_ex = torch.Tensor(u_ex)
     #width = float(df[df.sample_id==sample_id]["width"])
     #height = float(df[df.sample_id==sample_id]["height"])
     C = float(df[df.sample_id==sample_id]["C"])
     params = {'T': 0.4, 'e': 1e-13, 'L': -1, 'R': 1, 'C': C}
-    problem_main = problem_class(ic_numb=6, space_steps=128, time_steps=None, params=params)
+    problem_main = problem_class(ic_numb=6, space_steps=64, time_steps=None, params=params)
     #problem_main.params["C"] = C
     params = problem_main.get_params()
     ts = problem_main.time_steps
@@ -141,16 +145,16 @@ for j in range(60):
         single_problem_losses.append(loss.detach().numpy().max())
         V_train.detach_()
     losses.append(single_problem_losses)
-    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_65/"
+    base_path = "C:/Users/Tatiana/Desktop/Research/Research_ML_WENO/Buckley_Leverett_Test/Models/Model_66/"
     if not os.path.exists(base_path):
         os.mkdir(base_path)
     path = os.path.join(base_path, "{}.pt".format(j))
     torch.save(train_model, path)
     # TEST IF LOSS IS DECREASING WITH THE NUMBER OF ITERATIONS INCREASING
-    for kk in range(3):
+    for kk in range(7):
         single_problem_loss_test = []
         params = validation_problems(kk)
-        problem_test = problem_class(ic_numb=6, space_steps=128, time_steps=None, params=params)
+        problem_test = problem_class(ic_numb=6, space_steps=64, time_steps=None, params=params)
         u_init, nn = train_model.init_run_weno(problem_test, vectorized=False, just_one_time_step=False)
         u_test = u_init
         for k in range(nn):
